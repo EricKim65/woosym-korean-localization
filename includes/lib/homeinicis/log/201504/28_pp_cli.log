@@ -1,0 +1,45 @@
+0428-133621 - 30146 - T00004SDaLDBmdff - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[8183]+log_level=[3]
+0428-133622 - 30146 - T00004SDaLDBmdff - MSG : PG_서버_접속__정상
+0428-133622 - 30146 - T00004SDaLDBmdff - MSG : PG_서버_요청_전문_전송__정상
+0428-133623 - 30146 - T00004SDaLDBmdff - MSG : PG_서버_응답_전문_수신__정상
+0428-133623 - 30146 - T00004SDaLDBmdff - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=T00004SDaLDBmdffpay_method=PACAorder_no=8183card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=4902208200003095mcht_taxno=1138521083mall_taxno=1138521083ca_order_id=8183tno=20150428919858amount=11800card_mny=11800coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150428133947van_apptime=20150428133947app_no=20387558bizx_numb=725479023quota=00noinf=Npg_txid=0428133947MP01ABYDU0U80000000118000020387558partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC20isp_issuer_nm=우리비씨isp_partner_cd=040100202428681join_cd=0000]
+0428-143305 -  1752 - T00004SEX5DBmdff - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[8184]+log_level=[3]
+0428-143305 -  1752 - T00004SEX5DBmdff - MSG : PG_서버_접속__정상
+0428-143305 -  1752 - T00004SEX5DBmdff - MSG : PG_서버_요청_전문_전송__정상
+0428-143306 -  1752 - T00004SEX5DBmdff - MSG : PG_서버_응답_전문_수신__정상
+0428-143306 -  1752 - T00004SEX5DBmdff - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=T00004SEX5DBmdffpay_method=PACAorder_no=8184card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=4902208200003095mcht_taxno=1138521083mall_taxno=1138521083ca_order_id=8184tno=20150428920011amount=11800card_mny=11800coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150428143630van_apptime=20150428143630app_no=77292931bizx_numb=725479023quota=00noinf=Npg_txid=0428143630MP01AEYFUYEB0000000118000077292931partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC20isp_issuer_nm=우리비씨isp_partner_cd=040100202428681join_cd=0000]
+0428-152700 - 13391 - T00004SFR0DBmdff - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[8185]+log_level=[3]
+0428-152700 - 13391 - T00004SFR0DBmdff - MSG : PG_서버_접속__정상
+0428-152700 - 13391 - T00004SFR0DBmdff - MSG : PG_서버_요청_전문_전송__정상
+0428-152701 - 13391 - T00004SFR0DBmdff - MSG : PG_서버_응답_전문_수신__정상
+0428-152701 - 13391 - T00004SFR0DBmdff - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=T00004SFR0DBmdffpay_method=PACAorder_no=8185card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=4902208200003095mcht_taxno=1138521083mall_taxno=1138521083ca_order_id=8185tno=20150428920214amount=11800card_mny=11800coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150428153025van_apptime=20150428153025app_no=37718885bizx_numb=725479023quota=00noinf=Npg_txid=0428153025MP01AHYHSAPT0000000118000037718885partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC20isp_issuer_nm=우리비씨isp_partner_cd=040100202428681join_cd=0000]
+0428-172310 - 22286 - T00004SHNADBmdff - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[8171]+log_level=[3]
+0428-172311 - 22286 - T00004SHNADBmdff - MSG : PG_서버_접속__정상
+0428-172311 - 22286 - T00004SHNADBmdff - MSG : PG_서버_요청_전문_전송__정상
+0428-172311 - 22286 - T00004SHNADBmdff - MSG : PG_서버_응답_전문_수신__정상
+0428-172311 - 22286 - T00004SHNADBmdff - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=T00004SHNADBmdffpay_method=PACAorder_no=8171card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=4902208200003095mcht_taxno=1138521083mall_taxno=1138521083ca_order_id=8171tno=20150428920616amount=20600card_mny=20600coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150428172636van_apptime=20150428172636app_no=28652121bizx_numb=725479023quota=00noinf=Npg_txid=0428172636MP01ACYLXP9L0000000206000028652121partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC20isp_issuer_nm=우리비씨isp_partner_cd=040100202428681join_cd=0000]
+0428-173005 - 22872 - T00004SHU5Fdts7f - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[8190]+log_level=[3]
+0428-173005 - 22872 - T00004SHU5Fdts7f - MSG : PG_서버_접속__정상
+0428-173005 - 22872 - T00004SHU5Fdts7f - MSG : PG_서버_요청_전문_전송__정상
+0428-173006 - 22872 - T00004SHU5Fdts7f - MSG : PG_서버_응답_전문_수신__정상
+0428-173006 - 22872 - T00004SHU5Fdts7f - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=T00004SHU5Fdts7fpay_method=PACAorder_no=8190card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=4906124300004499mcht_taxno=1138521083mall_taxno=1138521083ca_order_id=8190tno=20150428920628amount=5200card_mny=5200coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150428173330van_apptime=20150428173330app_no=35074761bizx_numb=725479023quota=00noinf=Npg_txid=0428173330MP01AJYM6L9J0000000052000035074761partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC11isp_issuer_nm=농협비씨isp_partner_cd=040100121257071join_cd=0000]
+0428-175129 - 24926 - T00004SHpTFdts7f - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[8191]+log_level=[3]
+0428-175129 - 24926 - T00004SHpTFdts7f - MSG : PG_서버_접속__정상
+0428-175129 - 24926 - T00004SHpTFdts7f - MSG : PG_서버_요청_전문_전송__정상
+0428-175129 - 24926 - T00004SHpTFdts7f - MSG : PG_서버_응답_전문_수신__정상
+0428-175129 - 24926 - T00004SHpTFdts7f - MSG : TX_ENDED - res=[res_cd=CC14res_msg=카드번호 오류res_en_msg=Error in card Number.trace_no=T00004SHpTFdts7fpay_method=PACAorder_no=8191trade_seq=20150428920669card_cd=CCKMcard_name=KB국민카드]
+0428-175626 - 25305 - T00004SHuPFdts7f - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[8191]+log_level=[3]
+0428-175626 - 25305 - T00004SHuPFdts7f - MSG : PG_서버_접속__정상
+0428-175626 - 25305 - T00004SHuPFdts7f - MSG : PG_서버_요청_전문_전송__정상
+0428-175626 - 25305 - T00004SHuPFdts7f - MSG : PG_서버_응답_전문_수신__정상
+0428-175626 - 25305 - T00004SHuPFdts7f - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=T00004SHuPFdts7fpay_method=PACAorder_no=8191card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=4906124300004499mcht_taxno=1138521083mall_taxno=1138521083ca_order_id=8191tno=20150428920676amount=160600card_mny=160600coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150428175951van_apptime=20150428175951app_no=88037796bizx_numb=725479023quota=00noinf=Npg_txid=0428175951MP01ABYN4GNK0000001606000088037796partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC11isp_issuer_nm=농협비씨isp_partner_cd=040100121257071join_cd=0000]
+0428-180357 - 25817 - T00004SI3vFdts7f - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[8192]+log_level=[3]
+0428-180357 - 25817 - T00004SI3vFdts7f - MSG : PG_서버_접속__정상
+0428-180357 - 25817 - T00004SI3vFdts7f - MSG : PG_서버_요청_전문_전송__정상
+0428-180357 - 25817 - T00004SI3vFdts7f - MSG : PG_서버_응답_전문_수신__정상
+0428-180357 - 25817 - T00004SI3vFdts7f - MSG : TX_ENDED - res=[res_cd=CC14res_msg=카드번호 오류res_en_msg=Error in card Number.trace_no=T00004SI3vFdts7fpay_method=PACAorder_no=8192trade_seq=20150428920689card_cd=CCKMcard_name=KB국민카드]
+0428-182153 - 26727 - E83614SILrFdts7f - MSG : TX_START - site_cd=[E8361]+tx_cd=[00100000]+ordr_idxx=[8192]+log_level=[3]
+0428-182154 - 26727 - E83614SILrFdts7f - MSG : PG_서버_접속__정상
+0428-182154 - 26727 - E83614SILrFdts7f - MSG : PG_서버_요청_전문_전송__정상
+0428-182155 - 26727 - E83614SILrFdts7f - MSG : PG_서버_응답_전문_수신__정상
+0428-182155 - 26727 - E83614SILrFdts7f - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=E83614SILrFdts7fpay_method=PACAorder_no=8192card_cd=CCKMcard_name=KB국민카드acqu_cd=CCKMacqu_name=KB국민카드card_no=4579730400004080mcht_taxno=1138521083mall_taxno=2061179299ca_order_id=8192tno=20150428898437amount=36000card_mny=36000coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150428182519van_apptime=20150428182519app_no=30017442bizx_numb=00013219101quota=00noinf=Npg_txid=0428182519MP01CDYO188Q0000000360000030017442partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_partner_cd=040204040090911join_cd=0000]

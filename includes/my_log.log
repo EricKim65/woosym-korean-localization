@@ -1,0 +1,14 @@
+Array
+(
+    [geonyoung] => 건영택배
+    [gyeongdoung] => 경동택배
+    [daeshin] => 대신택배
+    [logen] => 로젠택배
+    [post-office] => 우체국택배
+    [ilyang] => 일양로지스
+    [chunil] => 천일택배
+    [hanjin] => 한진택배
+    [hapdong] => 합동택배
+    [cj-daehan] => CJ대한통운
+    [kgb] => KGB택배
+)

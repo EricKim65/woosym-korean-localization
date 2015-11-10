@@ -1,0 +1,36 @@
+INFO	[2015-06-12 12:28:37:703] <3878> START INIPHP chkfake (V5036-141209)(OS:Linux2.6.32-431.5.1.el6.x86_64,PHP:5.3.3)
+DEBUG	[2015-06-12 12:28:37:703] <3878> inipayhome:/var/zpanel/hostdata/test1/public_html/wp-content/plugins/woosym-korean-localization/includes/lib/inipayhome/
+DEBUG	[2015-06-12 12:28:37:703] <3878> type:chkfake
+DEBUG	[2015-06-12 12:28:37:703] <3878> debug:true
+DEBUG	[2015-06-12 12:28:37:703] <3878> enctype:asym
+DEBUG	[2015-06-12 12:28:37:703] <3878> admin:1111
+DEBUG	[2015-06-12 12:28:37:703] <3878> checkopt:false
+DEBUG	[2015-06-12 12:28:37:703] <3878> mid:buybest000
+DEBUG	[2015-06-12 12:28:37:703] <3878> price:18000
+DEBUG	[2015-06-12 12:28:37:703] <3878> nointerest:no
+DEBUG	[2015-06-12 12:28:37:703] <3878> quotabase:선택:일시불:2개월:3개월:6개월
+INFO	[2015-06-12 12:28:37:703] <3878> Check Field OK
+INFO	[2015-06-12 12:28:37:707] <3878> MERCHANT PRIV KEY LOAD OK
+INFO	[2015-06-12 12:28:37:707] <3878> MERCHANT PUB KEY LOAD OK []
+INFO	[2015-06-12 12:28:37:708] <3878> CHKFAKE KEY MAKE OK:MjAxNTA2MTIxMjI4Mzc3MDc4MTk4OQ==
+
+INFO	[2015-06-12 12:28:37:708] <3878> END chkfake  Laptime:[0.005sec]
+INFO	[2015-06-12 12:28:37:708] <3878> ===============================================================
+INFO	[2015-06-12 12:29:59:953] <4364> START INIPHP chkfake (V5036-141209)(OS:Linux2.6.32-431.5.1.el6.x86_64,PHP:5.3.3)
+DEBUG	[2015-06-12 12:29:59:953] <4364> inipayhome:/var/zpanel/hostdata/test1/public_html/wp-content/plugins/woosym-korean-localization/includes/lib/inipayhome/
+DEBUG	[2015-06-12 12:29:59:953] <4364> type:chkfake
+DEBUG	[2015-06-12 12:29:59:953] <4364> debug:true
+DEBUG	[2015-06-12 12:29:59:953] <4364> enctype:asym
+DEBUG	[2015-06-12 12:29:59:953] <4364> admin:1111
+DEBUG	[2015-06-12 12:29:59:953] <4364> checkopt:false
+DEBUG	[2015-06-12 12:29:59:953] <4364> mid:buybest000
+DEBUG	[2015-06-12 12:29:59:953] <4364> price:18000
+DEBUG	[2015-06-12 12:29:59:953] <4364> nointerest:no
+DEBUG	[2015-06-12 12:29:59:953] <4364> quotabase:선택:일시불:2개월:3개월:6개월
+INFO	[2015-06-12 12:29:59:953] <4364> Check Field OK
+INFO	[2015-06-12 12:29:59:954] <4364> MERCHANT PRIV KEY LOAD OK
+INFO	[2015-06-12 12:29:59:954] <4364> MERCHANT PUB KEY LOAD OK []
+INFO	[2015-06-12 12:29:59:954] <4364> CHKFAKE KEY MAKE OK:MjAxNTA2MTIxMjI5NTk5NTQxMzA2MA==
+
+INFO	[2015-06-12 12:29:59:954] <4364> END chkfake  Laptime:[0.001sec]
+INFO	[2015-06-12 12:29:59:954] <4364> ===============================================================

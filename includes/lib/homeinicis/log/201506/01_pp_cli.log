@@ -1,0 +1,5 @@
+0601-163707 - 31746 - T000061Gb7DBmdff - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[3461]+log_level=[3]
+0601-163707 - 31746 - T000061Gb7DBmdff - MSG : PG_서버_접속__정상
+0601-163707 - 31746 - T000061Gb7DBmdff - MSG : PG_서버_요청_전문_전송__정상
+0601-163707 - 31746 - T000061Gb7DBmdff - MSG : PG_서버_응답_전문_수신__정상
+0601-163707 - 31746 - T000061Gb7DBmdff - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=T000061Gb7DBmdffpay_method=PACAorder_no=3461card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=4902208200003095mcht_taxno=1138521083mall_taxno=1138521083ca_order_id=3461tno=20150601940259amount=7500card_mny=7500coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150601163707van_apptime=20150601163707app_no=49307904bizx_numb=725479023quota=00noinf=Npg_txid=0601163707MP01AI317V9G0000000075000049307904partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC20isp_issuer_nm=우리비씨isp_partner_cd=040100202428681join_cd=0000]

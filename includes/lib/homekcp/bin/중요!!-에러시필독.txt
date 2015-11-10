@@ -1,0 +1,44 @@
+**** 결제가 pp_cli 실행의 문제 로 인하여 잘 되지 않을 경우 해결 방법 ****
+
+1. FTP 로그인 하여  pp_cli 의 화일권한을 755 로 바꾼다. 
+2. 64bit/32bit  실행 화일 문제일 경우 다른 bit의 실행화일로 화일명을 바꾸어 준다
+    64bit/32bit 실행화일은 해당 폴더에 들어가 있습니다. 복사하여 이름바꾸기 하여 사용해주십시요.
+
+추가적으로 9502 오류 발생시 해결방법에 대해 안내드리기 참고 부탁드립니다.
+9502 오류는 해당 서버와 KCP 간의 소켓통신하는 파일(bin\pp_cli)이 정상적으로 실행되지 않았을 때 발생하는 오류로
+이해를 돕기위한 상세설명은 아래와 같습니다.
+   
+(1)	bin아래의 pp_cli파일은 Binary타입으로 서버에 업로드(반드시 Binary타입으로 전송해야 합니다.)
+
+(2) pp_cli 파일에 권한부여
+예1) [root@cisco.co.kr:/kcp/sample/payplus/bin]chmod 777 pp_cli 
+예2) FTP로 접속하시면 해당 파일에 마우스 우클릭하여 “파일권한” -> “755” 이상 권한 부여
+ 
+(3) pp_cli 가 정상적으로 실행되는지 확인
+pp_cli 권한 설정 후 쉘 접속이 가능하시다면 다음과 같이 pp_cli 파일을 실행하여 봅니다.
+예) [root@cisco.co.kr:/kcp/sample/payplus/bin]./pp_cli –h
+
+에러가 나오지 않으면 정상입니다.
+
+ 위와 같이 출력되지 않은 경우 (1), (2)번을 다시 한번 확인하여 주시기 바랍니다.
+
+(4) pp_cli파일이 위치한 현재 로컬경로의 위치를 확인 합니다.
+ 
+
+예)[root@cisco.co.kr:/kcp/sample/payplus/bin]pwd
+/local_home/kcp/sample/payplus/bin
+
+위에서 확인된 경로를 복사하여 pp_ax_hub.php파일(또는 pp_cli_hub) 파일에서 
+
+샘플소스 기준으로 cfg 폴더의 site_conf_inc.php 내 g_conf_home_dir값과 동일한지 확인하시기 바랍니다.
+
+예) g_conf_home_dir = "/local_home/kcp/sample/payplus";
+
+위에서 추출한 경로가 bin경로까지 되어있다면 bin은 제외하시고 위와 같이 입력하시면 됩니다. 
+
+위의 과정을 모두 진행하고도 정상적으로 결제가 안된다면, 
+
+(4) php.ini 파일의 내용 중 safe_mode 값이 On으로 되어 있다면 Off로 셋팅하여 주시기 바랍니다.
+
+감사합니다.
+

@@ -1,0 +1,5 @@
+0907-142639 - 27601 - T000097EQdCfdQDe - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[1640]+log_level=[3]
+0907-142639 - 27601 - T000097EQdCfdQDe - MSG : PG_서버_접속__정상
+0907-142639 - 27601 - T000097EQdCfdQDe - MSG : PG_서버_요청_전문_전송__정상
+0907-142639 - 27601 - T000097EQdCfdQDe - MSG : PG_서버_응답_전문_수신__정상
+0907-142639 - 27601 - T000097EQdCfdQDe - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=T000097EQdCfdQDepay_method=PACAorder_no=1640card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=4902208200003095mcht_taxno=1138521083mall_taxno=1138521083ca_order_id=1640tno=20150907943367amount=18000card_mny=18000coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150907143603van_apptime=20150907143603app_no=45027632bizx_numb=725479023quota=00noinf=Npg_txid=0907143603MP01AI0VTJAC0000000180000045027632partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC20isp_issuer_nm=우리비씨isp_partner_cd=040100202428681join_cd=0000]

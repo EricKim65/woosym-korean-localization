@@ -1,0 +1,15 @@
+0612-223151 -  8873 - T00006CMVpCfdQDe - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[1619]+log_level=[3]
+0612-223151 -  8873 - T00006CMVpCfdQDe - MSG : PG_서버_접속__정상
+0612-223151 -  8873 - T00006CMVpCfdQDe - MSG : PG_서버_요청_전문_전송__정상
+0612-223151 -  8873 - T00006CMVpCfdQDe - MSG : PG_서버_응답_전문_수신__정상
+0612-223151 -  8873 - T00006CMVpCfdQDe - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=T00006CMVpCfdQDepay_method=PACAorder_no=1619card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=4902208200003095mcht_taxno=1138521083mall_taxno=1138521083ca_order_id=1619tno=20150612955741amount=18000card_mny=18000coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150612223718van_apptime=20150612223718app_no=55050212bizx_numb=725479023quota=00noinf=Npg_txid=0612223718MP01AJJ3XG1Y0000000180000055050212partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC20isp_issuer_nm=우리비씨isp_partner_cd=040100202428681join_cd=0000]
+0612-225802 - 10843 - T00006CMw2CfdQDe - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[1623]+log_level=[3]
+0612-225802 - 10843 - T00006CMw2CfdQDe - MSG : PG_서버_접속__정상
+0612-225803 - 10843 - T00006CMw2CfdQDe - MSG : PG_서버_요청_전문_전송__정상
+0612-225803 - 10843 - T00006CMw2CfdQDe - MSG : PG_서버_응답_전문_수신__정상
+0612-225803 - 10843 - T00006CMw2CfdQDe - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=T00006CMw2CfdQDepay_method=PACAorder_no=1623card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=4902208200003095mcht_taxno=1138521083mall_taxno=1138521083ca_order_id=1623tno=20150612955742amount=18000card_mny=18000coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150612230330van_apptime=20150612230330app_no=27343617bizx_numb=725479023quota=00noinf=Npg_txid=0612230330MP01AAJ4V4R10000000180000027343617partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC20isp_issuer_nm=우리비씨isp_partner_cd=040100202428681join_cd=0000]
+0612-232647 - 13035 - T00006CNQlCfdQDe - MSG : TX_START - site_cd=[T0000]+tx_cd=[00100000]+ordr_idxx=[1627]+log_level=[3]
+0612-232648 - 13035 - T00006CNQlCfdQDe - MSG : PG_서버_접속__정상
+0612-232648 - 13035 - T00006CNQlCfdQDe - MSG : PG_서버_요청_전문_전송__정상
+0612-232648 - 13035 - T00006CNQlCfdQDe - MSG : PG_서버_응답_전문_수신__정상
+0612-232648 - 13035 - T00006CNQlCfdQDe - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=T00006CNQlCfdQDepay_method=PACAorder_no=1627card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=4902208200003095mcht_taxno=1138521083mall_taxno=1138521083ca_order_id=1627tno=20150612955744amount=18000card_mny=18000coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150612233215van_apptime=20150612233215app_no=88037796bizx_numb=725479023quota=00noinf=Npg_txid=0612233215MP01ABJ5W3YI0000000180000088037796partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC20isp_issuer_nm=우리비씨isp_partner_cd=040100202428681join_cd=0000]

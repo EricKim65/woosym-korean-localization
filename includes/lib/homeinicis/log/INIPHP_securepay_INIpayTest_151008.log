@@ -1,0 +1,18 @@
+INFO	[2015-10-08 04:47:52:259] <31308> START INIPHP chkfake (V5036-141209)(OS:Linux2.6.32-431.5.1.el6.x86_64,PHP:5.3.3)
+DEBUG	[2015-10-08 04:47:52:259] <31308> inipayhome:/var/zpanel/hostdata/test1/public_html/wp-content/plugins/woosym-korean-localization/includes/lib/homeinicis/
+DEBUG	[2015-10-08 04:47:52:259] <31308> type:chkfake
+DEBUG	[2015-10-08 04:47:52:259] <31308> debug:true
+DEBUG	[2015-10-08 04:47:52:259] <31308> enctype:asym
+DEBUG	[2015-10-08 04:47:52:259] <31308> admin:1111
+DEBUG	[2015-10-08 04:47:52:259] <31308> checkopt:false
+DEBUG	[2015-10-08 04:47:52:259] <31308> mid:INIpayTest
+DEBUG	[2015-10-08 04:47:52:259] <31308> price:52000
+DEBUG	[2015-10-08 04:47:52:259] <31308> nointerest:no
+DEBUG	[2015-10-08 04:47:52:259] <31308> quotabase:선택:일시불:2개월:3개월:6개월
+INFO	[2015-10-08 04:47:52:259] <31308> Check Field OK
+INFO	[2015-10-08 04:47:52:264] <31308> MERCHANT PRIV KEY LOAD OK
+INFO	[2015-10-08 04:47:52:268] <31308> MERCHANT PUB KEY LOAD OK []
+INFO	[2015-10-08 04:47:52:269] <31308> CHKFAKE KEY MAKE OK:MjAxNTEwMDgwNDQ3NTIyNjg1MjQ4OQ==
+
+INFO	[2015-10-08 04:47:52:269] <31308> END chkfake  Laptime:[0.01sec]
+INFO	[2015-10-08 04:47:52:269] <31308> ===============================================================

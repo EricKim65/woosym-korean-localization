@@ -1,0 +1,25 @@
+0429-002241 - 12958 - E83614T0MfBic0gp - MSG : TX_START - site_cd=[E8361]+tx_cd=[00100000]+ordr_idxx=[8194]+log_level=[3]
+0429-002242 - 12958 - E83614T0MfBic0gp - MSG : PG_서버_접속__정상
+0429-002242 - 12958 - E83614T0MfBic0gp - MSG : PG_서버_요청_전문_전송__정상
+0429-002242 - 12958 - E83614T0MfBic0gp - MSG : PG_서버_응답_전문_수신__정상
+0429-002242 - 12958 - E83614T0MfBic0gp - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=E83614T0MfBic0gppay_method=PACAorder_no=8194card_cd=CCKMcard_name=KB국민카드acqu_cd=CCKMacqu_name=KB국민카드card_no=4579730500009009mcht_taxno=1138521083mall_taxno=2061179299ca_order_id=8194tno=20150429121856amount=29400card_mny=29400coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150429002607van_apptime=20150429002607app_no=30022152bizx_numb=00013219101quota=00noinf=Npg_txid=0429002607MP01FGZ0X7X90000000294000030022152partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=1isp_partner_cd=040204040090341join_cd=0000]
+0429-094541 -  8777 - E83614T9jfFdts7f - MSG : TX_START - site_cd=[E8361]+tx_cd=[00100000]+ordr_idxx=[8197]+log_level=[3]
+0429-094541 -  8777 - E83614T9jfFdts7f - MSG : PG_서버_접속__정상
+0429-094542 -  8777 - E83614T9jfFdts7f - MSG : PG_서버_요청_전문_전송__정상
+0429-094542 -  8777 - E83614T9jfFdts7f - MSG : PG_서버_응답_전문_수신__정상
+0429-094542 -  8777 - E83614T9jfFdts7f - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=E83614T9jfFdts7fpay_method=PACAorder_no=8197card_cd=CCKMcard_name=KB국민카드acqu_cd=CCKMacqu_name=KB국민카드card_no=4579730400004080mcht_taxno=1138521083mall_taxno=2061179299ca_order_id=8197tno=20150429185889amount=8500card_mny=8500coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150429094908van_apptime=20150429094908app_no=30017453bizx_numb=00013219101quota=00noinf=Npg_txid=0429094908MP01DJZL19HR0000000085000030017453partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_partner_cd=040204040090911join_cd=0000]
+0429-105848 - 14740 - E83614TAwmDD28PP - MSG : TX_START - site_cd=[E8361]+tx_cd=[00100000]+ordr_idxx=[8199]+log_level=[3]
+0429-105848 - 14740 - E83614TAwmDD28PP - MSG : PG_서버_접속__정상
+0429-105848 - 14740 - E83614TAwmDD28PP - MSG : PG_서버_요청_전문_전송__정상
+0429-105848 - 14740 - E83614TAwmDD28PP - MSG : PG_서버_응답_전문_수신__정상
+0429-105848 - 14740 - E83614TAwmDD28PP - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=E83614TAwmDD28PPpay_method=PACAorder_no=8199card_cd=CCSScard_name=삼성카드acqu_cd=CCSSacqu_name=삼성카드card_no=4009070200003847mcht_taxno=1138521083mall_taxno=2061179299ca_order_id=8199tno=20150429223520amount=59400card_mny=59400coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150429110215van_apptime=20150429110215app_no=62506604bizx_numb=24450105quota=00noinf=Npg_txid=0429110215MP01FGZNNA390000000594000062506604partcanc_yn=Ycard_bin_type_01=1card_bin_type_02=0join_cd=0000]
+0429-110446 - 16138 - E83614TB4k6mlmoQ - MSG : TX_START - site_cd=[E8361]+tx_cd=[00100000]+ordr_idxx=[8200]+log_level=[3]
+0429-110446 - 16138 - E83614TB4k6mlmoQ - MSG : PG_서버_접속__정상
+0429-110446 - 16138 - E83614TB4k6mlmoQ - MSG : PG_서버_요청_전문_전송__정상
+0429-110446 - 16138 - E83614TB4k6mlmoQ - MSG : PG_서버_응답_전문_수신__정상
+0429-110446 - 16138 - E83614TB4k6mlmoQ - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=E83614TB4k6mlmoQpay_method=PACAorder_no=8200card_cd=CCLGcard_name=신한카드acqu_cd=CCLGacqu_name=신한카드card_no=377988020000523mcht_taxno=1138521083mall_taxno=2061179299ca_order_id=8200tno=20150429227976amount=11800card_mny=11800coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150429110813van_apptime=20150429110813app_no=22762116bizx_numb=0013425574quota=00noinf=Npg_txid=0429110813MP01CDZNUYHB0000000118000022762116partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0join_cd=0000]
+0429-112505 - 18137 - E83614TBP510rtsH - MSG : TX_START - site_cd=[E8361]+tx_cd=[00100000]+ordr_idxx=[8201]+log_level=[3]
+0429-112505 - 18137 - E83614TBP510rtsH - MSG : PG_서버_접속__정상
+0429-112505 - 18137 - E83614TBP510rtsH - MSG : PG_서버_요청_전문_전송__정상
+0429-112506 - 18137 - E83614TBP510rtsH - MSG : PG_서버_응답_전문_수신__정상
+0429-112506 - 18137 - E83614TBP510rtsH - MSG : TX_ENDED - res=[res_cd=0000res_msg=정상처리res_en_msg=processing completedtrace_no=E83614TBP510rtsHpay_method=PACAorder_no=8201card_cd=CCBCcard_name=BC카드acqu_cd=CCBCacqu_name=BC카드card_no=9430321100001980mcht_taxno=1138521083mall_taxno=2061179299ca_order_id=8201tno=20150429238329amount=176000card_mny=176000coupon_mny=0escw_yn=Nvan_cd=VNKCapp_time=20150429112832van_apptime=20150429112832app_no=62757265bizx_numb=780284397quota=00noinf=Npg_txid=0429112832MG34DDZOL3C80000001760000062757265partcanc_yn=Ycard_bin_type_01=0card_bin_type_02=0isp_issuer_cd=BC32isp_issuer_nm=부산비씨isp_partner_cd=000100324505374join_cd=0000]
