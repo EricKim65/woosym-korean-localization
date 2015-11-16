@@ -66,7 +66,8 @@ function wskl_get_option_name( $option_name ) {
  * @return boolean 해당 옵션
  */
 function wskl_is_option_enabled( $option_name ) {
-	return filter_var( get_option( wskl_get_option_name( $option_name ), FILTER_VALIDATE_BOOLEAN ));
+	$value = get_option( wskl_get_option_name( $option_name ) );
+	return filter_var( $value , FILTER_VALIDATE_BOOLEAN );
 }
 
 
@@ -164,12 +165,23 @@ function wskl_country_ipblock() {
 }
 
 
-
 require_once( WSKL_PATH . '/includes/class-main.php' );
 new Woosym_Korean_Localization( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
 
+require_once( WSKL_PATH . '/includes/lib/sales/class-sales.php' );
+$sales = new \wskl\lib\sales\Sales();
+
 if ( is_admin() ) {
 	include_once( WSKL_PATH . '/includes/class-settings.php' );
-	new Woosym_Korean_Localization_Settings( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
+	$wskl_setting = new Woosym_Korean_Localization_Settings( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
+
+	/** authorization */
+	require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
+	$auth = new \wskl\lib\auth\Auth( $wskl_setting );
+
+} else {
+
+	require_once( WSKL_PATH . '/includes/lib/auth/class-verification.php' );
+	$verification = new \wskl\lib\auth\Verification();
 }
 
