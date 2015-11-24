@@ -189,7 +189,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'placeholder' => __('', 'wskl'),
                 ),
                 array(
-                    'id' => 'func_d_activate',
+                    'id' => 'marketing_automation_license',
                     'label' => __('마케팅자동화(D) 키값 ', 'wskl'),
                     'description' => $marketing_automation_description,
                     'type' => 'longtext',

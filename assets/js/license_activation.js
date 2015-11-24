@@ -43,4 +43,8 @@ jQuery(document).ready(function ($) {
     $('#extension_license_activation').click(function () {
         activate_license('extension');
     });
+
+    $('#marketing_automation_license_activation').click(function () {
+        activate_license('marketing_automation');
+    });
 });
