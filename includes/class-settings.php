@@ -17,7 +17,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 	}
 
 	public function add_menu_item() {  // Add settings page to admin menu
-		add_menu_page( '심포니-우커머스', '심포니-우커머스', 'manage_options', $this->_token . '_checkout_settings', '', '', 56 );
+		add_menu_page( '다보리', '다보리', 'manage_options', $this->_token . '_checkout_settings', '', '', 56 );
 		add_submenu_page( $this->_token . '_checkout_settings', '설정', '설정', 'manage_options', $this->_token . '_checkout_settings', array(
 			$this,
 			'settings_page'
@@ -49,16 +49,15 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 		$settings['preview'] = array(
 		'title'       => __( '일러두기', 'wskl' ),
-			'description' => __( '심포니-우커머스를 만든 목적과 사용 방법 및 구매와 기술지원 방법과 업그레이드 등을 설명합니다.', 'wskl' ),
+			'description' => __( '다보리를 만든 목적과 사용 방법 및 구매와 기술지원 방법과 업그레이드 등을 설명합니다.', 'wskl' ),
 			'fields'      => array(
 				array(
 					'id'          => 'dummy_1',
 					'label'       => __( '제작 목적', 'wskl' ),
 					'description' => __( '
-						<font size="" color="red">1. "우커머스를 Cafe24처럼" 더 쉽고 더 편리하게 만들었습니다.<br/>
-						2. 플러그인 배포를 통하여 중소상공인을 위한 "마케팅 자동화 네트워크-다보리"를 만들었습니다. <br/></font>
-						3. 최소의 커스터마이징과 최소의 유료 플러그인을 통하여 고품질과 저렴한 제작 단가를 실현합니다. <br/>
-						4. 모든 세팅을 직관적으로 처리했으며 불필요한 php코딩이나 Css 지정을 최소화하도록 하였습니다. <br/>
+						<font size="" color="red">1. "워드프레스와 우커머스를 Cafe24나 고도몰처럼" 더 쉽고 더 편리하게 만들었습니다.<br/>
+						2. 쇼핑몰 영업에 꼭 필요한 기능만을 모두 담아서 최소의 비용으로 제공합니다. <br/>
+						3. "다보리 메타사이트와 연동"하여 중소상공인을 위한 "마케팅 자동화" 서비스를 제공합니다. <br/></font>
 
 					', $this->_folder ),
 					'type'        => 'caption',
@@ -69,7 +68,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'label'       => __( '사용방법', 'wskl' ),
 					'description' => __( '
 						<font size="" color="red">제품인증키로 "제품인증" 전에는 본플러그인의 기능을 사용할 수 없습니다.<br/></font>
-						<a href="http://www.symphonysoft.co.kr/plugins/" target="_blank" >무료 제품인증 페이지로 바로가기</a>
+						<a href="http://www.symphonysoft.co.kr/plugins/" target="_blank" >"다보리 제품인증키 확인" 페이지로 바로가기</a>
 					', $this->_folder ),
 					'type'        => 'caption',
 					'default'     => ''
@@ -103,7 +102,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 		$settings['authentication'] = array(
 			'title'       => __( '제품인증', 'wskl' ),
-			'description' => __( '제품 구매 또는 무료 사용시 심포니웹사이트에서 부여받은 활성키로 개별 기능을 활성화를 합니다.<br/>
+			'description' => __( '제품 구매 또는 무료 사용시 다보리웹사이트에서 부여받은 활성키로 개별 기능을 활성화를 합니다.<br/>
 						<a href="http://www.symphonysoft.co.kr/my-account/view-order/" target="_blank" >제품 활성키 확인하러 가기</a>', 'wskl' ),
 			'fields'      => array(
 				array(
@@ -111,7 +110,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'label'       => __( '사이트 주소(URL)', 'wskl' ),
 					'description' => __( '
 						'. get_option( 'siteurl'). '<br/>
-						<font size="" color="red">인증키는 사이트 주소와 제품 인증(meta) 서버 측과 동기화되어 활성화되므로 <br/>
+						<font size="" color="red">인증키는 사이트 주소와 다보리 메타(meta) 서버 측과 동기화되어 활성화되므로 <br/>
 						관리자모드 "설정"에서 사이트를 변경하는 경우 다시 기능 활성화를 하셔야 합니다. </font>
 					', $this->_folder ),
 					'type'        => 'caption',
@@ -140,8 +139,18 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				),
 				array(
 					'id'          => 'func_c_activate',
-					'label'       => __( '편의/소셜/보안 기능(C,S,B) 키값 ', 'wskl' ),
-					'description' => __( '편의기능 키를 입력후 기능을 활성화하십시요. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.symphonysoft.co.kr/webhosting/" target="_blank" >편의기능 인증</a><br/>
+					'label'       => __( '편의/소셜/보안 기능(C,S,R) 키값 ', 'wskl' ),
+					'description' => __( '편의기능 키를 입력후 기능을 활성화하십시요. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.symphonysoft.co.kr/webhosting/" target="_blank" >확장기능 인증</a><br/>
+					<font size="" color="green">시작일 :  2015/10/15  ~ 만료일 : 2016/10/14  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 남은일자 :    365일</font>					
+						', 'wskl' ),
+					'type'        => 'longtext',
+					'default'     => '',
+					'placeholder' => __( '', 'wskl' ),
+				),
+				array(
+					'id'          => 'func_d_activate',
+					'label'       => __( '마케팅자동화(D) 키값 ', 'wskl' ),
+					'description' => __( '마케팅 자동화기능 키를 입력후 기능을 활성화하십시요. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.symphonysoft.co.kr/webhosting/" target="_blank" >마케팅자동화기능 인증</a><br/>
 					<font size="" color="green">시작일 :  2015/10/15  ~ 만료일 : 2016/10/14  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 남은일자 :    365일</font>					
 						', 'wskl' ),
 					'type'        => 'longtext',
@@ -162,8 +171,8 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 			'fields'      => array(
 				array(
 					'id'          => 'enable_sym_pg',
-					'label'       => __( '심포니PG 사용 설정', 'wskl' ),
-					'description' => __( '심포니 PG 플러그인 기능을 사용여부를 설정합니다.', 'wskl' ),
+					'label'       => __( '다보리PG 사용 설정', 'wskl' ),
+					'description' => __( '다보리 PG 플러그인 기능을 사용여부를 설정합니다.', 'wskl' ),
 					'type'        => 'checkbox',
 					'default'     => ''
 				),
@@ -244,7 +253,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'description' => __( '자체적으로 정한 사이트 이름을 입력해주십시요. (반드시 영문자로 설정하여 주시기 바랍니다.)', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
-						'placeholder' => __( '예) 심포니 쇼핑몰', 'wskl' ),
+						'placeholder' => __( '예) 다보리 쇼핑몰', 'wskl' ),
 					),
 					array(
 						'id'          => 'kcp_sitecd',
@@ -454,6 +463,14 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'type'        => 'checkbox',
 					'default'     => ''
 				),
+				array(
+					'id'          => 'related_products_count',
+					'label'       => __( '관련상품표시 갯수', 'wskl' ),
+					'description' => __( '관련상품에 표시되는 갯수를 결정합니다.<font color="red">(테마에 따라 적용되지 않는 경우도 있으므로 유의하세요.)</font>', 'wskl' ),
+					'type'        => 'shorttext',
+					'default'     => '4',
+					'placeholder' => __( '4', 'wskl' ),
+				),
 				//array(
 				//	'id'          => 'vat',
 				//	'label'       => __( '세금계산서 정보 입력 설정', 'wskl' ),
@@ -506,8 +523,8 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 			'fields'      => array(
 				array(
 					'id'          => 'enable_social_login',
-					'label'       => __( '심포니 소셜 로그인 활성화 ', 'wskl' ),
-					'description' => __( '심포니에서 제공한 로그인을 사용하게 됩니다.', 'wskl' ),
+					'label'       => __( '다보리 소셜 로그인 활성화 ', 'wskl' ),
+					'description' => __( '다보리에서 제공한 로그인을 사용하게 됩니다.', 'wskl' ),
 					'type'        => 'checkbox',
 					'default'     => ''
 				),
@@ -558,7 +575,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						3. 반드시 Site URL에 http://를 포함한 고객의 웹사이트 주소를 입력하십시요. <br/>
 						4. App ID 생성이 완료되면 반드시 해당 App의 Settings 로 가셔서 App Domains와 Website에서 <br/>고객의
 						    웹사이트 주소가 일치하는 지 확인하세요. <font size="" color="red">웹사이트 주소가 바뀔때 반드시 여기와 일치시켜야 합니다.</font><br/>
-						5. App ID와 App Secret 을 확인하신 후 심포니-우커머스 플러그인의 해당 키값을 입력하고 저장하여 주십시요.<br/>
+						5. App ID와 App Secret 을 확인하신 후 다보리 플러그인의 해당 키값을 입력하고 저장하여 주십시요.<br/>
 					', $this->_folder ),
 					'type'        => 'caption',
 					'default'     => ''
@@ -613,7 +630,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						3. PC웹과 모바일 웹에서 고객의  웹사이트 주소를 입력하시고 콜백도 동일하게 입력하십시요. <br/>
                         4. Client ID 생성이 완료되면 어플리케이션 메뉴의 [일반]메뉴로 고객의  PC웹과 모바일 웹사이트 주소가 일치하는 지 확인하세요. <br/>
 						<font size="" color="red">웹사이트 주소가 바뀔때 반드시 여기와 일치시켜야 합니다.</font><br/>
-						5. Client ID와 Client Secret 을 확인하신 후 심포니-우커머스 플러그인의 해당 키값을 입력하고 저장하여 주십시요.<br/>
+						5. Client ID와 Client Secret 을 확인하신 후 다보리 플러그인의 해당 키값을 입력하고 저장하여 주십시요.<br/>
 					', $this->_folder ),
 					'type'        => 'caption',
 					'default'     => ''
@@ -622,7 +639,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 		}
 
 		$settings['b_security'] = array(
-			'title'       => __( '차단보안기능(B)', 'wskl' ),
+			'title'       => __( '차단보안기능(R)', 'wskl' ),
 			'description' => __( '특별한 관리없이 악성댓글이나 악성트래픽이 대폭 감소합니다. 한국인 대상 사이트의 경우 한국,미국만 오픈해도 됩니다.<br/>
 						<a href="http://www.symphonysoft.co.kr/my-account/view-order/" target="_blank" >보안 플러그인 추가개발 요청하기</a>', 'wskl' ),
 			'fields'      => array(
@@ -643,6 +660,49 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'type'        => 'longtext',
 					'default'     => 'KR,US,JP,CN',
 					'placeholder' => __( 'KR,US,JP,CN', 'wskl' ),
+				),
+			)
+		);
+
+		$settings['market_auto'] = array(
+			'title'       => __( '마케팅자동화기능(D)', 'wskl' ),
+			'description' => __( '독립 웹사이트에서 메타 서버로 마케팅 자동화 데이타가 연동됩니다.<br/>
+						<a href="http://www.symphonysoft.co.kr/my-account/view-order/" target="_blank" >보안 플러그인 추가개발 요청하기</a>', 'wskl' ),
+			'fields'      => array(
+				array(
+					'id'          => 'enable_sales_log',
+					'label'       => __( '판매 로그 활성화', 'wskl' ),
+					'description' => __( '결제 완료시 판매 로그가 연동됩니다.', 'wskl' ),
+					'type'        => 'checkbox',
+					'default'     => ''
+				),
+				array(
+					'id'          => 'enable_cart_log',
+					'label'       => __( '장바구니 로그 활성화', 'wskl' ),
+					'description' => __( '장바구니 로그가 연동됩니다.', 'wskl' ),
+					'type'        => 'checkbox',
+					'default'     => ''
+				),
+				array(
+					'id'          => 'enable_wishlist_log',
+					'label'       => __( '위시리스트 로그 활성화', 'wskl' ),
+					'description' => __( '위시리스트 로그가 연동됩니다.', 'wskl' ),
+					'type'        => 'checkbox',
+					'default'     => ''
+				),
+				array(
+					'id'          => 'enable_productview_log',
+					'label'       => __( '오늘 본 상품 로그 활성화', 'wskl' ),
+					'description' => __( '오늘 본 상품 로그가 연동됩니다.', 'wskl' ),
+					'type'        => 'checkbox',
+					'default'     => ''
+				),
+				array(
+					'id'          => 'enable_pageview_log',
+					'label'       => __( '오늘본 페이지 로그 활성화', 'wskl' ),
+					'description' => __( '오늘본 페이지 로그가 연동됩니다.', 'wskl' ),
+					'type'        => 'checkbox',
+					'default'     => ''
 				),
 			)
 		);

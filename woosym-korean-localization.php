@@ -66,7 +66,8 @@ function wskl_get_option_name( $option_name ) {
  * @return boolean 해당 옵션
  */
 function wskl_is_option_enabled( $option_name ) {
-	return filter_var( get_option( wskl_get_option_name( $option_name ), FILTER_VALIDATE_BOOLEAN ));
+	$value = get_option( wskl_get_option_name( $option_name ) );
+	return filter_var( $value, FILTER_VALIDATE_BOOLEAN ) ;
 }
 
 
@@ -106,9 +107,23 @@ add_filter( "plugin_action_links_$plugin", 'wskl_plugin_add_settings_link', 99 )
 
 
 $woo_sym_prefix = 'wskl_';
+
+// 관련상품 표시 갯수
+if ( get_option( $woo_sym_prefix . 'related_products_count' ) != '' ) {
+	add_filter( 'woocommerce_output_related_products_args', 'sym_related_products_args' );
+	  function sym_related_products_args( $args ) {
+		 global $woo_sym_prefix;
+		$args['posts_per_page'] = get_option( $woo_sym_prefix . 'related_products_count'); // 4 related products
+		$args['columns'] = 1; // arranged in 2 columns
+		return $args;
+	}
+}
+
 $sym_checkout_titles = array('credit' => '신용카드', 'remit' => '실시간 계좌이체', 'virtual' => '가상계좌 이체', 'mobile' => '모바일소액결제');
 $sym_checkout_desc = '로 결제합니다.';
 $sym_pg_agency = get_option( $woo_sym_prefix . 'pg_agency');
+
+
 
 if ( wskl_is_option_enabled( 'enable_sym_pg' ) ) {
 
@@ -140,6 +155,7 @@ if ( wskl_is_option_enabled( 'enable_direct_purchase' ) ) {
 	require_once( WSKL_PATH . '/includes/lib/class-direct-purchase.php' );
 }
 
+
 if ( wskl_is_option_enabled( 'enable_countryip_block' ) ) {
 	require_once( WSKL_PATH . '/includes/lib/geoip/geoip.inc' );
 	if ( ! is_admin() )  add_action( 'plugins_loaded', 'wskl_country_ipblock' );
@@ -162,8 +178,6 @@ function wskl_country_ipblock() {
 
 	if( !$in_iplist)  wp_die() ;
 }
-
-
 
 require_once( WSKL_PATH . '/includes/class-main.php' );
 new Woosym_Korean_Localization( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
