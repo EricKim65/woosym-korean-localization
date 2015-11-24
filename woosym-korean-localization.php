@@ -123,8 +123,6 @@ $sym_checkout_titles = array('credit' => '신용카드', 'remit' => '실시간 �
 $sym_checkout_desc = '로 결제합니다.';
 $sym_pg_agency = get_option( $woo_sym_prefix . 'pg_agency');
 
-
-
 if ( wskl_is_option_enabled( 'enable_sym_pg' ) ) {
 
 	// NOTE: 옵션 켜져 있는 것과 pay_gate_agency 찾을 수 있는 것은 별개의 사항으므로 에러 체크가 필요함.
@@ -155,7 +153,6 @@ if ( wskl_is_option_enabled( 'enable_direct_purchase' ) ) {
 	require_once( WSKL_PATH . '/includes/lib/class-direct-purchase.php' );
 }
 
-
 if ( wskl_is_option_enabled( 'enable_countryip_block' ) ) {
 	require_once( WSKL_PATH . '/includes/lib/geoip/geoip.inc' );
 	if ( ! is_admin() )  add_action( 'plugins_loaded', 'wskl_country_ipblock' );
@@ -179,11 +176,24 @@ function wskl_country_ipblock() {
 	if( !$in_iplist)  wp_die() ;
 }
 
+
 require_once( WSKL_PATH . '/includes/class-main.php' );
 new Woosym_Korean_Localization( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
 
+require_once( WSKL_PATH . '/includes/lib/sales/class-sales.php' );
+$sales = new \wskl\lib\sales\Sales();
+
 if ( is_admin() ) {
 	include_once( WSKL_PATH . '/includes/class-settings.php' );
-	new Woosym_Korean_Localization_Settings( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
+	$wskl_setting = new Woosym_Korean_Localization_Settings( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
+
+	/** authorization */
+	require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
+	$auth = new \wskl\lib\auth\Auth( $wskl_setting );
+
+} else {
+
+	require_once( WSKL_PATH . '/includes/lib/auth/class-verification.php' );
+	$verification = new \wskl\lib\auth\Verification();
 }
 

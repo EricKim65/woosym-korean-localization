@@ -5,11 +5,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once( WSKL_PATH . '/includes/lib/delivery-tracking/agents.php' );
+require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
 
 use wskl\delivery_tracking\agents\Agent_Helper;
 
 
 class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
+
+	public $setting_menu_hook = '';
 
 	public function __construct( $prefix = '', $file = '', $version = '1.0.0' ) {
 
@@ -26,6 +29,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 	}
 
 	public function init_settings() { // Initialize settings
+
 		$this->settings = $this->settings_fields();
 	}
 
@@ -97,8 +101,37 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'type'        => 'caption',
 					'default'     => ''
 				),
-			)
+			),
 		);
+
+		$payment_description   = '';
+		$essential_description = '';
+		$extension_description = '';
+
+		if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'authentication' ) {
+
+			$payment_description = sprintf(
+				'%s <a href="#" id="payment_license_activation">%s</a><br/><span id="payment_license_status">%s</span>',
+				__( '지불기능 키를 입력후 기능을 활성화하십시요.', 'wskl' ),
+				__( '지불기능 인증', 'wskl' ),
+				\wskl\lib\auth\Auth::get_license_duration_string( 'payment' )
+			);
+
+
+			$essential_description = sprintf(
+				'%s <a href="#" id="essential_license_activation">%s</a><br/><span id="essential_license_status">%s</span>',
+				__( '핵심기능 키를 입력후 기능을 활성화하십시요.', 'wskl' ),
+				__( '핵심기능 인증', 'wskl' ),
+				\wskl\lib\auth\Auth::get_license_duration_string( 'essential' )
+			);
+
+			$extension_description = sprintf(
+				'%s <a href="#" id="extension_license_activation">%s</a><br/><span id="extension_license_status">%s</span>',
+				__( '편의기능 키를 입력후 기능을 활성화하십시요.', 'wskl' ),
+				__( '편의기능 인증', 'wskl' ),
+				\wskl\lib\auth\Auth::get_license_duration_string( 'extension' )
+			);
+		}
 
 		$settings['authentication'] = array(
 			'title'       => __( '제품인증', 'wskl' ),
@@ -109,39 +142,40 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'id'          => 'dummy_3',
 					'label'       => __( '사이트 주소(URL)', 'wskl' ),
 					'description' => __( '
+						' . get_option( 'siteurl' ) . '<br/>
+						<font size="" color="red">인증키는 사이트 주소와 제품 인증(meta) 서버 측과 동기화되어 활성화되므로 <br/>
 						'. get_option( 'siteurl'). '<br/>
 						<font size="" color="red">인증키는 사이트 주소와 다보리 메타(meta) 서버 측과 동기화되어 활성화되므로 <br/>
 						관리자모드 "설정"에서 사이트를 변경하는 경우 다시 기능 활성화를 하셔야 합니다. </font>
 					', $this->_folder ),
 					'type'        => 'caption',
-					'default'     => ''
+					'default'     => '',
 				),
 
 				array(
-					'id'          => 'func_a_activate',
+					'id'          => 'payment_license',
 					'label'       => __( '지불기능(A) 키값', 'wskl' ),
-					'description' => __( '지불기능 키를 입력후 기능을 활성화하십시요. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.symphonysoft.co.kr/webhosting/" target="_blank" >지불기능 인증</a></br>
-					<font size="" color="green">시작일 :  2015/10/15  ~ 만료일 : 2016/10/14  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 남은일자 :    365일</font>					
-						', 'wskl' ),
+					'description' => $payment_description,
 					'type'        => 'longtext',
 					'default'     => '',
 					'placeholder' => __( '', 'wskl' ),
 				),
 				array(
-					'id'          => 'func_b_activate',
+					'id'          => 'essential_license',
 					'label'       => __( '핵심기능(B) 키값', 'wskl' ),
-					'description' => __( '핵심기능 키를 입력후 기능을 활성화하십시요. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.symphonysoft.co.kr/webhosting/" target="_blank" >핵심기능 인증</a><br/>
-					<font size="" color="green">시작일 :  2015/10/15  ~ 만료일 : 2016/10/14  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 남은일자 :    365일</font>					
-						', 'wskl' ),
+					'description' => $essential_description,
 					'type'        => 'longtext',
 					'default'     => '',
 					'placeholder' => __( '', 'wskl' ),
 				),
 				array(
+					'id'          => 'extension_license',
+					'label'       => __( '편의/소셜/보안 기능(C,S,B) 키값 ', 'wskl' ),
+					'description' => $extension_description,
 					'id'          => 'func_c_activate',
 					'label'       => __( '편의/소셜/보안 기능(C,S,R) 키값 ', 'wskl' ),
 					'description' => __( '편의기능 키를 입력후 기능을 활성화하십시요. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.symphonysoft.co.kr/webhosting/" target="_blank" >확장기능 인증</a><br/>
-					<font size="" color="green">시작일 :  2015/10/15  ~ 만료일 : 2016/10/14  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 남은일자 :    365일</font>					
+					<font size="" color="green">시작일 :  2015/10/15  ~ 만료일 : 2016/10/14  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 남은일자 :    365일</font>
 						', 'wskl' ),
 					'type'        => 'longtext',
 					'default'     => '',
@@ -151,13 +185,13 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'id'          => 'func_d_activate',
 					'label'       => __( '마케팅자동화(D) 키값 ', 'wskl' ),
 					'description' => __( '마케팅 자동화기능 키를 입력후 기능을 활성화하십시요. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.symphonysoft.co.kr/webhosting/" target="_blank" >마케팅자동화기능 인증</a><br/>
-					<font size="" color="green">시작일 :  2015/10/15  ~ 만료일 : 2016/10/14  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 남은일자 :    365일</font>					
+					<font size="" color="green">시작일 :  2015/10/15  ~ 만료일 : 2016/10/14  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 남은일자 :    365일</font>
 						', 'wskl' ),
 					'type'        => 'longtext',
 					'default'     => '',
 					'placeholder' => __( '', 'wskl' ),
 				),
-			)
+			),
 		);
 
 
@@ -174,21 +208,21 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'label'       => __( '다보리PG 사용 설정', 'wskl' ),
 					'description' => __( '다보리 PG 플러그인 기능을 사용여부를 설정합니다.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'enable_testmode',
 					'label'       => __( '테스트 모드로 설정', 'wskl' ),
 					'description' => __( '결제 테스트 모드로 설정되어 실제적인 결제는 되지 않습니다.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'enable_showinputs',
 					'label'       => __( '필드보임 설정', 'wskl' ),
 					'description' => __( '테스트용으로 사용되므로 일반적인경우 비활성화 해주세요.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'pg_agency',
@@ -201,7 +235,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'inicis' => '이니시스',
 						'ags'    => '올더게이트',
 					),
-					'default'     => 'ags'
+					'default'     => 'ags',
 				),
 				array(
 					'id'          => 'checkout_methods',
@@ -212,9 +246,9 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'credit'  => '신용카드',
 						'remit'   => '계좌이체',
 						'virtual' => '가상계좌',
-						'mobile'  => '모바일소액결제'
+						'mobile'  => '모바일소액결제',
 					),
-					'default'     => array( 'credit', '신용카드' )
+					'default'     => array( 'credit', '신용카드' ),
 				),
 				array(
 					'id'          => 'enable_https',
@@ -223,14 +257,14 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;홈페이지 보안 인증 서비스를 받지 않는 사이트의 경우 무시하셔도 됩니다.
 													.', $this->_folder ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'enable_escrow',
 					'label'       => __( '에스크로 설정', 'wskl' ),
 					'description' => __( '에스크로 방식으로 결제를 진행합니다.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'escrow_delivery',
@@ -240,7 +274,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'default'     => '',
 					'placeholder' => __( '', 'wskl' ),
 				),
-			)
+			),
 		);
 
 
@@ -284,7 +318,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
  						<font size="" color="blue">테스트시에는기본 설치된 테스트용 KCP TEST  상점이 사용되므로 참고하세요</font></br>
   					', $this->_folder ),
 						'type'        => 'caption',
-						'default'     => ''
+						'default'     => '',
 					)
 
 				);
@@ -330,7 +364,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
  						<font size="" color="blue">테스트시에는기본 설치된 테스트용 INIpayTest 상점아이디폴더가 사용되므로 참고하세요</font></br>
   					', $this->_folder ),
 						'type'        => 'caption',
-						'default'     => ''
+						'default'     => '',
 					)
 				);
 				break;
@@ -420,7 +454,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						3. "우커머스->설정->결제설정"의 하위메뉴에 들어가서 지정한 각 결제 방법에 대한 세부적인 설정을 추가하여 주십시요.<br/>
 					', $this->_folder ),
 				'type'        => 'caption',
-				'default'     => ''
+				'default'     => '',
 			)
 		);
 
@@ -433,35 +467,35 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'label'       => __( '한국형 주소 찾기', 'wskl' ),
 					'description' => __( '한국형 주소 찾기와 결제페이지를 활성화합니다.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'company',
 					'label'       => __( '회사명 입력 가능', 'wskl' ),
 					'description' => __( '사업자 대상 위주 판매의 경우 회사명을 입력 가능 설정을 합니다.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'korean_won',
 					'label'       => __( '한국 원화 표시 설정', 'wskl' ),
 					'description' => __( '우커머스->설정->일반->통화에서 대한민국(원)표시가 나오도록 합니다.<br/>국내용 우커머스 쇼핑몰은 반드시 <a href="http://www.symphonysoft.co.kr/cs/activity/">우커머스-설정-일반</a> 에서 통화->대한민국(KRW), 통화 기호 위치->오른쪽으로 세팅하여 주십시요 !</br> <font size="" color="red">그렇지 않으면 고객의 결제  진행이 되지 않습니다. </font>', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'disable_sku',
 					'label'       => __( 'SKU(상품코드) 사용해제', 'wskl' ),
 					'description' => __( 'SKU(상품코드) 사용을 해제합니다.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'disable_returntoshop',
 					'label'       => __( '상점으로 돌아가기 버튼해제 ', 'wskl' ),
 					'description' => __( '상점으로 돌아가기 버튼클릭 시 메인 홈으로 가게 합니다.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'related_products_count',
@@ -478,14 +512,14 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				//	'type'        => 'checkbox',
 				//	'default'     => ''
 				//),
-			)
+			),
 		);
 
 		// agent helper added
 		Agent_Helper::init();
-		$agents        = Agent_Helper::get_agent_list();
-		file_put_contents(__DIR__.'/my_log.log', print_r($agents, true));
-		$agents_keys = array_keys( $agents);
+		$agents = Agent_Helper::get_agent_list();
+		file_put_contents( __DIR__ . '/my_log.log', print_r( $agents, TRUE ) );
+		$agents_keys   = array_keys( $agents );
 		$agent_default = $agents_keys[0];
 
 		$settings['ship_tracking'] = array(
@@ -497,7 +531,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'label'       => __( '배송 추적 기능 활성화', 'wskl' ),
 					'description' => __( '배송 추적 기능 사용여부를 설정합니다.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'shipping_companies',
@@ -505,16 +539,16 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'description' => __( '사용중인 배송회사를 지정해 주십시요.', 'wskl' ),
 					'type'        => 'checkbox_multi',
 					'options'     => $agents,  // 하드코드된 것을 없앰.
-					'default'     => array( $agent_default, $agents[ $agent_default ] )
+					'default'     => array( $agent_default, $agents[ $agent_default ] ),
 				),
 				array(
 					'id'          => 'enable_direct_purchase',
 					'label'       => __( '바로구매 버튼 사용', 'wskl' ),
 					'description' => __( '바로구매 버튼을 사용합니다.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
-			)
+			),
 		);
 
 		$settings['social-login'] = array(
@@ -526,16 +560,16 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'label'       => __( '다보리 소셜 로그인 활성화 ', 'wskl' ),
 					'description' => __( '다보리에서 제공한 로그인을 사용하게 됩니다.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'fb_login',
 					'label'       => __( '페이스북  계정으로 로그인 활성화 ', 'wskl' ),
 					'description' => __( '활성화이후  발급키 입력창이 나타납니다.', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
-			)
+			),
 		);
 
 
@@ -578,7 +612,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						5. App ID와 App Secret 을 확인하신 후 다보리 플러그인의 해당 키값을 입력하고 저장하여 주십시요.<br/>
 					', $this->_folder ),
 					'type'        => 'caption',
-					'default'     => ''
+					'default'     => '',
 				)
 			);
 		}
@@ -589,7 +623,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				'label'       => __( '네이버 계정으로 로그인 활성화 ', 'wskl' ),
 				'description' => __( '활성화이후  발급키 입력창이 나타납니다. ', 'wskl' ),
 				'type'        => 'checkbox',
-				'default'     => ''
+				'default'     => '',
 			)
 		);
 
@@ -633,7 +667,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						5. Client ID와 Client Secret 을 확인하신 후 다보리 플러그인의 해당 키값을 입력하고 저장하여 주십시요.<br/>
 					', $this->_folder ),
 					'type'        => 'caption',
-					'default'     => ''
+					'default'     => '',
 				)
 			);
 		}
@@ -649,7 +683,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'description' => __( '국가별 IP를 차단하여 해킹을 미연에 방지합니다.</br>
 						활성화시 반드시 아래의 "화이트리스트 국가코드"를 넣어 주십시요', 'wskl' ),
 					'type'        => 'checkbox',
-					'default'     => ''
+					'default'     => '',
 				),
 				array(
 					'id'          => 'white_ipcode_list',
@@ -661,7 +695,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'default'     => 'KR,US,JP,CN',
 					'placeholder' => __( 'KR,US,JP,CN', 'wskl' ),
 				),
-			)
+			),
 		);
 
 		$settings['market_auto'] = array(
@@ -711,6 +745,4 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 		return $settings;
 	}
-
-
 }
