@@ -24,11 +24,18 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
     public function add_menu_item()
     {  // Add settings page to admin menu
         add_menu_page('다보리', '다보리', 'manage_options', $this->_token . '_checkout_settings', '', '', 56);
-        add_submenu_page($this->_token . '_checkout_settings', '설정', '설정', 'manage_options', $this->_token . '_checkout_settings', array(
-            $this,
-            'settings_page'
-        ));
-        //add_submenu_page($this->_token . '_checkout_settings', '추가', '추가', 'manage_options',  $this->_token . '_checkout_settings', array( $this, 'settings_page' ) );
+
+        $this->setting_menu_hook = add_submenu_page(
+            $this->_token . '_checkout_settings',
+            '설정',
+            '설정',
+            'manage_options',
+            $this->_token . '_checkout_settings',
+            array(
+                $this,
+                'settings_page'
+            )
+        );
     }
 
     public function init_settings()
