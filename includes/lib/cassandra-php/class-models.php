@@ -283,7 +283,7 @@ final class Key extends CreatedUpdatedMixin implements APIResponseHandler {
 		$today = new \DateTime( 'now', new \DateTimeZone( 'Asia/Seoul' ) );
 		$interval = $today->diff( $this->expire_date );
 
-		return $interval->invert == 0 ? $interval->days + 1 : FALSE;
+		return $interval->invert == 0 ? $interval->days : FALSE;
 	}
 
 	/**
