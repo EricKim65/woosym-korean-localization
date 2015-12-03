@@ -133,6 +133,21 @@ if ( wskl_is_option_enabled( 'enable_sym_pg' ) ) {
 
 	/** @noinspection PhpIncludeInspection*/
 	require_once( 'includes/lib/class-pg-' . $pay_gate_agency . '-common.php' );
+
+	/**
+	 * Woocommerce REST API V3 action.
+	 * @see \WC_API::handle_api_requests()
+	 */
+	add_action( 'woocommerce_api_request', 'wskl_add_api_request' );
+
+	if( ! function_exists( 'wskl_add_api_request' ) ) {
+
+		function wskl_add_api_request( $api_request  ) {
+			if( class_exists( $api_request ) ) {
+				$payment_gateway = new $api_request();
+			}
+		}
+	}
 }
 
 /**
