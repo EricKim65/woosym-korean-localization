@@ -107,42 +107,41 @@ class Woosym_Korean_Localization extends Sym_Mvc_Main {
 
 	static function woosym_address_common( $billing_shipping_sw ) {
 
-		$folder = 'woocommerce';
 		$fields = array(
 
 			'first_name' => array(
-				'label'    => __( '이름', $folder ),
+				'label'    => __( '이름', 'woocommerce' ),
 				'required' => TRUE,
 				'class'    => array( 'form-row-first' ),
 			),
 			'company'    => array(
-				'label'    => __( '회사명', $folder ),
+				'label'    => __( '회사명', 'woocommerce' ),
 				'required' => TRUE,
 				'class'    => array( 'form-row-last' ),
 			),
 
 			'filler_1' => array(
 				'type'  => 'clear',
-				'label' => __( 'blank', $folder ),
+				'label' => __( 'blank', 'woocommerce' ),
 				'clear' => TRUE,
 			),
 
 			'zipcode_button' => array(
-				'label' => __( '우편번호 검색', $folder ),
-				'value' => __( '우편번호 검색', $folder ),
+				'label' => __( '우편번호 검색', 'woocommerce' ),
+				'value' => __( '우편번호 검색', 'woocommerce' ),
 				'class' => array( 'form-row-wide' ),
 				'type'  => 'button',
 			),
 
 			'postcode'  => array(
-				'label'       => __( '우편번호', $folder ),
-				'placeholder' => __( '우편번호', $folder ),
+				'label'       => __( '우편번호', 'woocommerce' ),
+				'placeholder' => __( '우편번호', 'woocommerce' ),
 				'required'    => TRUE,
 				'class'       => array( 'form-row-wide', 'address-field' ),
 			),
 			'address_1' => array(
-				'label'             => __( '주소', $folder ),
-				'placeholder'       => _x( '기본주소', 'placeholder', $folder ),
+				'label'             => __( '주소', 'woocommerce' ),
+				'placeholder'       => _x( '기본주소', 'placeholder', 'woocommerce' ),
 				'required'          => TRUE,
 				'class'             => array( 'form-row-wide', 'address-field' ),
 				'custom_attributes' => array(
@@ -150,7 +149,7 @@ class Woosym_Korean_Localization extends Sym_Mvc_Main {
 				),
 			),
 			'address_2' => array(
-				'placeholder'       => _x( '상세주소', 'placeholder', $folder ),
+				'placeholder'       => _x( '상세주소', 'placeholder', 'woocommerce' ),
 				'class'             => array( 'form-row-wide', 'address-field' ),
 				'required'          => FALSE,
 				'custom_attributes' => array(
@@ -159,8 +158,8 @@ class Woosym_Korean_Localization extends Sym_Mvc_Main {
 			),
 
 			'email' => array(
-				'label'             => __( '이메일', $folder ),
-				'placeholder'       => _x( '이메일', 'placeholder', $folder ),
+				'label'             => __( '이메일', 'woocommerce' ),
+				'placeholder'       => _x( '이메일', 'placeholder', 'woocommerce' ),
 				'class'             => array( 'form-row-first', 'address-field' ),
 				'required'          => TRUE,
 				'custom_attributes' => array(
@@ -169,8 +168,8 @@ class Woosym_Korean_Localization extends Sym_Mvc_Main {
 			),
 
 			'phone' => array(
-				'label'             => __( '모바일폰', $folder ),
-				'placeholder'       => _x( '모바일폰', 'placeholder', $folder ),
+				'label'             => __( '모바일폰', 'woocommerce' ),
+				'placeholder'       => _x( '모바일폰', 'placeholder', 'woocommerce' ),
 				'class'             => array( 'form-row-last', 'address-field' ),
 				'required'          => TRUE,
 				'custom_attributes' => array(
