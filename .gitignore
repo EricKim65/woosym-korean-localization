@@ -50,3 +50,6 @@ crashlytics-build.properties
 
 # Any log files
 *.log
+
+# class-api-handler.php backups
+includes/lib/cassandra-php/class-api-handler.php.bak*
