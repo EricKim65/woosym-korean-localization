@@ -28,7 +28,6 @@ class Woosym_Korean_Localization extends Sym_Mvc_Main {
 		add_filter( 'the_title', array( $this, 'order_received_title' ), 10, 2 );
 		add_action( 'woocommerce_thankyou', array( $this, 'order_received_addition' ) );
 
-
 		/**
 		 * @see woocommerce/includes/wc-template-functions.php woocommerce_form_field()
 		 */
