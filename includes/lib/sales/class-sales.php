@@ -20,22 +20,23 @@ class Sales {
 		/**
 		 * @see woocommerce/includes/abstracts/abstract-wc-order.php update_status()
 		 */
-		// add_action( 'woocommerce_order_status_processing', array( $this, 'callback_order_status') );
+		add_action( 'woocommerce_order_status_processing', array( $this, 'callback_order_status') );
 
 		/**
 		 *  @see woocommerce/includes/abstracts/abstract-wc-order.php update_status()
 		 */
-		add_action( 'woocommerce_order_status_completed', array( $this, 'callback_order_status' ) );
+		// add_action( 'woocommerce_order_status_completed', array( $this, 'callback_order_status' ) );
 	}
 
 	public function callback_order_status( $order_id ) {
 
-		$order          = wc_get_order( $order_id );
-		$completed_date = get_post_meta( $order_id, '_completed_date', true );
+		$order = wc_get_order( $order_id );
 
-		if( !empty( $completed_date ) ) {
-			return;
-		}
+		// 중복 전송 금지 하려면 아래 세 줄의 주석을 해제.
+//		$completed_date = get_post_meta( $order_id, '_completed_date', true );
+//		if( !empty( $completed_date ) ) {
+//			return;
+//		}
 
 		$this->send_sales_log( $order );
 	}
