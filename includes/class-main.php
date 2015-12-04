@@ -30,12 +30,13 @@ class Woosym_Korean_Localization extends Sym_Mvc_Main {
 
 
 		/**
-		 * @see includes/wc-template-functions.php woocommerce_form_field()
+		 * @see woocommerce/includes/wc-template-functions.php woocommerce_form_field()
 		 */
 		add_filter( 'woocommerce_form_field_args', array( $this, 'wskl_customize_checkout_field_args' ), 10, 3 );
 		add_filter( 'woocommerce_form_field_email', array( $this, 'wskl_customize_checkout_email_field' ), 10, 4 );
 		// add_filter( 'woocommerce_form_field_tel', array( $this, 'wskl_customize_checkout_tel_field' ), 10, 4 );
 		add_filter( 'woocommerce_form_field_country', array( $this, 'wskl_customize_checkout_country_field' ), 10, 4 );
+		add_filter( 'woocommerce_form_field_button', array( $this, 'wskl_customize_checkout_button_type' ), 10, 4 );
 	} // End __construct ()
 
 	function order_received_title( $title, $id ) {
@@ -228,6 +229,54 @@ class Woosym_Korean_Localization extends Sym_Mvc_Main {
 			$field = sprintf( '<input type="hidden" name="billing_country" id="billing_country" value=%s />', $value );
 		}
 
+		return $field;
+	}
+
+	public function wskl_customize_checkout_button_type( $field, $key, $args, $value ) {
+
+		if( $key == 'billing_zipcode_button' || $key == 'shipping_zipcode_button' ) {
+
+			if( isset( $args['required'] ) && $args['required'] ) {
+				$args['class'][] = 'validate-required';
+				$required = sprintf(
+					'<abbr class="required" title="%s">*</abbr>',
+					esc_attr__( 'required', 'woocommerce' )
+				);
+			} else {
+				$required = '';
+			}
+
+			if( isset( $args['clear'] ) && $args['clear'] ) {
+				$div_clear = '<div class="clear"></div>';
+			} else {
+				$div_clear = '';
+			}
+
+			$escaped_key = esc_attr( $key );
+			$escaped_label = esc_attr( $args['label'] );
+
+			$field = sprintf(
+				'<p class="form-row %s">',
+				esc_attr( implode( ' ', $args['class'] ) )
+			);
+
+			$field .= sprintf(
+				'<label for="%s" class="%s">%s%s</label>',
+				$escaped_key,
+				esc_attr( implode( ' ', $args['label_class'] ) ),
+				$escaped_label,
+				$required
+			);
+
+			$field .= sprintf(
+				'<input type="button" name="%s" id="%s" value="%s" /></p>%s',
+				$escaped_key,
+				$escaped_key,
+				$escaped_label,
+				$div_clear
+			);
+
+		}
 		return $field;
 	}
 }
