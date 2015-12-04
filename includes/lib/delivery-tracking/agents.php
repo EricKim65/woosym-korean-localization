@@ -2,18 +2,6 @@
 
 namespace wskl\delivery_tracking\agents;
 
-
-/**
- * Class InvalidDeliveryAgentException
- * 송장 번호가 올바르지 않은 경우 던지는 예외
- *
- * @package wskl\delivery_tracking\agents
- */
-class InvalidDeliveryAgentException extends \Exception {
-
-}
-
-
 /**
  * 송장 번호로 추적을 할 수 있는 배송 업체 객체
  *
@@ -304,15 +292,16 @@ class Agent_Helper {
 	 * @param $slug
 	 * @see \wksl\delivery_tracking\agents\Agent_Helper::default_delivery_agents()
 	 *
-	 * @return \wskl\delivery_tracking\agents\Tracking_Number_Agent
-	 * @throws \wskl\delivery_tracking\agents\InvalidDeliveryAgentException
+	 * @return \wskl\delivery_tracking\agents\Tracking_Number_Agent|false
 	 */
 	public static function get_tracking_number_agent_by_slug( $slug ) {
 
+		if( empty( $current_agent_slug ) || $current_agent_slug == 'not-available' ) {
+			return FALSE;
+		}
+
 		if ( ! static::$agents or ! isset( static::$agents[ $slug ] ) ) {
-			throw new InvalidDeliveryAgentException(
-				sprintf( "agent '%s' is invalid", $slug )
-			);
+			return FALSE;
 		}
 
 		$agent = static::$agents[ $slug ];
