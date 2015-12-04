@@ -77,6 +77,10 @@ class Verification {
 
 	private function verify() {
 
+		if( !wskl_is_option_enabled( 'enable_sym_pg' ) ) {
+			return TRUE;
+		}
+
 		$info = new Auth_Model( 'payment' );
 
 		$key_type     = $info->get_key_type();
