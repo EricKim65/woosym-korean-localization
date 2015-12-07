@@ -170,14 +170,14 @@ class ClientAPI {
 
 class SalesAPI {
 
-	public static function send_data( $key_type, $key_value, $site_url, $order ) {
+	public static function send_data( $key_type, $key_value, $site_url, $user_id, $order ) {
 
 		$obj = NULL;
 
 		try {
 
 			$url     = WSKL_HOST_API_URL . '/sales/data/';
-			$body    = json_encode( static::create_body( $key_type, $key_value, $site_url, $order ) );
+			$body    = json_encode( static::create_body( $key_type, $key_value, $site_url, $user_id, $order ) );
 			$headers = array( 'content-type' => 'application/json', );
 
 			$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 201, ), $headers );
@@ -202,7 +202,7 @@ class SalesAPI {
 	 *
 	 * @return array
 	 */
-	private static function create_body( $key_type, $key_value, $site_url, $order ) {
+	private static function create_body( $key_type, $key_value, $site_url, $user_id, $order ) {
 
 		$order = wc_get_order( $order );
 
@@ -212,6 +212,8 @@ class SalesAPI {
 			'key_type'            => $key_type,
 			'key_value'           => $key_value,
 			'site_url'            => $site_url,
+			'user_id'             => $user_id,                           // Casper's User ID
+			'order_id'            => $order->id,
 			'order_date'          => $order->order_date,
 			'post_status'         => $order->post_status,
 			'order_currency'      => $order->order_currency,

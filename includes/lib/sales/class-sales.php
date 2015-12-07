@@ -49,9 +49,11 @@ class Sales {
 
 			$key_type  = $auth->get_key_type();
 			$key_value = $auth->get_key_value();
+			$user_id   = $auth->get_value()->get_user_id();
+
 			$site_url  = site_url();
 
-			SalesAPI::send_data( $key_type, $key_value, $site_url, $order_id );
+			SalesAPI::send_data( $key_type, $key_value, $site_url, $user_id, $order_id );
 		}
 	}
 }
