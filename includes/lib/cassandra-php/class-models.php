@@ -43,7 +43,7 @@ function convert_datetime( $datetime, $correct_timezone = TRUE, $timezone = CASS
 		}
 	}
 
-	assert( $obj instanceof \DateTime, sprintf( '$obj is not a \DateTime object' ) );
+	assert( $obj instanceof \DateTime );
 
 	return $obj;
 }
@@ -404,7 +404,7 @@ final class OrderItemRelation implements APIResponseHandler {
 		}
 
 		$obj->user_id = absint( $response->user_id );
-		assert( $obj->user_id !== FALSE, '$response->user_id assertion failed.' );
+		assert( $obj->user_id !== FALSE );
 
 		return $obj;
 	}
