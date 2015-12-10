@@ -14,7 +14,7 @@ function activate_license(key_type) {
                 'key_value': key_value,
                 'site_url': activation_object.site_url,
                 'action': 'activate_action',
-                'activation_nonce': activation_object.activation_nonce,
+                'activation_nonce': activation_object.activation_nonce
             };
 
             jQuery.ajax(
