@@ -234,7 +234,8 @@ class SalesAPI {
 		);
 
 		$sales_sub = &$body['sales_sub'];
-		foreach ( $order->get_items() as $order_item_id => &$item ) {
+		$items = $order->get_items();
+		foreach ( $items as $order_item_id => &$item ) {
 
 			$sales_sub[] = array(
 				'order_item_id'   => $order_item_id,
