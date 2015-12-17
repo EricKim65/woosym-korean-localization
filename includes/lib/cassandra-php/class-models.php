@@ -877,3 +877,79 @@ class SalesSub implements APIResponseHandler {
 		return $obj;
 	}
 }
+
+class AddToCart implements APIResponseHandler {
+
+	public $user_id;
+
+	public $domain;
+
+	public $created;
+
+	public $customer_id;
+
+	public $product_id;
+
+	public $variation_id;
+
+	public $quantity;
+
+	public $price;
+
+	public $product_name;
+
+	public $product_version;
+
+	public $term_name;
+
+	public static function from_response( \stdClass $response ) {
+
+		$obj = new static();
+
+		if( property_exists( $response, 'user_id' ) ) {
+			$obj->user_id = absint( $response->user_id );
+		}
+
+		if( property_exists( $response, 'domain' ) && $response->domain instanceof \stdClass ) {
+			$obj->domain = Domain::from_response( $response->domain );
+		}
+
+		if( property_exists( $response, 'created' ) ) {
+			$obj->created = convert_datetime( $response->created, FALSE );
+		}
+
+		if( property_exists( $response, 'customer_id' ) ) {
+			$obj->customer_id = absint( $response->customer_id );
+		}
+
+		if( property_exists( $response, 'product_id' ) ) {
+			$obj->product_id = absint( $response->product_id );
+		}
+
+		if( property_exists( $response, 'variation_id' ) ) {
+			$obj->variation_id = absint( $response->variation_id );
+		}
+
+		if( property_exists( $response, 'quantity' ) ) {
+			$obj->quantity = absint( $response->quantity );
+		}
+
+		if( property_exists( $response, 'price' ) ) {
+			$obj->price = sanitize_text_field( $response->price );
+		}
+
+		if( property_exists( $response, 'product_name' ) ) {
+			$obj->product_name = sanitize_text_field( $response->product_name );
+		}
+
+		if( property_exists( $response, 'product_version' ) ) {
+			$obj->product_version = sanitize_text_field( $response->product_version );
+		}
+
+		if( property_exists( $response, 'term_name' ) ) {
+			$obj->term_name = sanitize_text_field( $response->term_name );
+		}
+
+		return $obj;
+	}
+}

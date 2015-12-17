@@ -4,7 +4,7 @@ namespace wskl\lib\cassandra;
 
 require_once( 'class-models.php' );
 
-define( 'WSKL_HOST_API_URL', 'http://www.dabory.com/cassandra/api/v1' );  // do not add slashes
+define( 'WSKL_HOST_API_URL', 'http://localhost:8000/api/v1' );  // do not add slashes
 
 
 /**
@@ -130,7 +130,7 @@ class ClientAPI {
 
 	public static function verify( $key_type, $key_value, $site_url ) {
 
-		if( empty( $key_type ) || empty( $key_value ) ) {
+		if ( empty( $key_type ) || empty( $key_value ) ) {
 			return NULL;
 		};
 
@@ -138,9 +138,9 @@ class ClientAPI {
 
 		$url  = WSKL_HOST_API_URL . '/auth/verify/';
 		$body = array(
-				'key_type'  => &$key_type,
-				'key_value' => &$key_value,
-				'site_url'  => &$site_url,
+			'key_type'  => &$key_type,
+			'key_value' => &$key_value,
+			'site_url'  => &$site_url,
 		);
 
 		$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 200, 403, 404, ), array(), FALSE );
@@ -149,7 +149,7 @@ class ClientAPI {
 
 			assert( isset( $response['code'] ) && isset( $response['body'] ) );
 
-			if( $response['code'] == 200 ) {
+			if ( $response['code'] == 200 ) {
 				$obj = OrderItemRelation::from_response( $response['body'] );
 			}
 
@@ -176,7 +176,7 @@ class SalesAPI {
 
 		try {
 
-			$url     = WSKL_HOST_API_URL . '/sales/data/';
+			$url     = WSKL_HOST_API_URL . '/logs/sales/';
 			$body    = json_encode( static::create_body( $key_type, $key_value, $site_url, $user_id, $order ) );
 			$headers = array( 'content-type' => 'application/json', );
 
@@ -198,6 +198,7 @@ class SalesAPI {
 	 * @param string $key_type
 	 * @param string $key_value
 	 * @param string $site_url
+	 * @param string $user_id
 	 * @param mixed  $order
 	 *
 	 * @return array
@@ -208,6 +209,7 @@ class SalesAPI {
 
 		assert( $order instanceof \WC_Order, 'Sale object creation failed: $order is not a \WC_Order object.' );
 
+		/** @noinspection PhpUndefinedFieldInspection */
 		$body = array(
 			'key_type'            => $key_type,
 			'key_value'           => $key_value,
@@ -234,7 +236,7 @@ class SalesAPI {
 		);
 
 		$sales_sub = &$body['sales_sub'];
-		$items = $order->get_items();
+		$items     = $order->get_items();
 		foreach ( $items as $order_item_id => &$item ) {
 
 			$sales_sub[] = array(
@@ -253,3 +255,69 @@ class SalesAPI {
 		return $body;
 	}
 }
+
+
+class AddToCartAPI {
+
+	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id ) {
+
+		$obj = NULL;
+
+		try {
+
+			$url     = WSKL_HOST_API_URL . '/logs/carts/';
+			$body    = json_encode( static::create_body( $key_type, $key_value, $site_url, $user_id, $product_id ) );
+			$headers = array( 'content-type' => 'application/json', );
+
+			$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 201, ), $headers );
+			$obj      = AddToCart::from_response( $response['body'] );
+
+		} catch( BadResponseException $e ) {
+
+			$message = sprintf( 'ClientAPI::verify(): Bad response occurred. "%s"', $e->getMessage() );
+			error_log( $message );
+			wp_die( $message );
+		}
+
+		return $obj;
+	}
+
+	private static function create_body( $key_type, $key_value, $site_url, $user_id, $product_id ) {
+
+		/** @var \WC_Product $product */
+		$product  = wc_get_product( $product_id );
+		$quantity = empty( $_REQUEST['quantity'] ) ? 1 : wc_stock_amount( $_REQUEST['quantity'] ); // empty: string '0' or integer 0 will be true.
+
+		assert( $product instanceof \WC_Product, 'Product object retrieval failed: $product is not a \WC_Product.' );
+		assert( is_numeric( $_REQUEST['quantity'] ), '$_REQUEST[\'quantity\'] is not numeric' );
+
+		$terms = wp_get_post_terms( $product_id, 'product_cat' );
+
+		if ( is_array( $terms ) ) {
+			$term_names = array_map( function ( $t ) { return $t->name; }, $terms );
+			sort( $term_names );
+			$term_name = join( '|', $term_names );
+		} else {
+			$term_name = '';
+		}
+
+		/** @noinspection PhpUndefinedFieldInspection */
+		$body = array(
+			'key_type'        => $key_type,
+			'key_value'       => $key_value,
+			'site_url'        => $site_url,
+			'user_id'         => $user_id,    // Casper's User ID
+			'customer_id'     => get_current_user_id(),
+			'product_id'      => $product->id,
+			'variation_id'    => $product->variation_id,
+			'quantity'        => $quantity,
+			'product_name'    => $product->get_title(),
+			'price'           => $product->get_price(),
+			'product_version' => $product->product_version,
+			'term_name'       => $term_name,
+		);
+
+		return $body;
+	}
+}
+
