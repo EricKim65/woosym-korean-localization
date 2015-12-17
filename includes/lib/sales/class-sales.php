@@ -31,19 +31,12 @@ class Sales {
 	public function callback_order_status( $order_id ) {
 
 		$order = wc_get_order( $order_id );
-
-		// 중복 전송 금지 하려면 아래 세 줄의 주석을 해제.
-//		$completed_date = get_post_meta( $order_id, '_completed_date', true );
-//		if( !empty( $completed_date ) ) {
-//			return;
-//		}
-
 		$this->send_sales_log( $order );
 	}
 
 	private function send_sales_log( $order_id ) {
 
-		$auth = new Auth_Model( 'payment' );
+		$auth = new Auth_Model( 'marketing-automation' );
 
 		if ( $auth->is_verified() ) {
 
