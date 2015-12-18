@@ -45,6 +45,6 @@ jQuery(document).ready(function ($) {
     });
 
     $('#marketing_automation_license_activation').click(function () {
-        activate_license('marketing_automation');
+        activate_license('marketing-automation');
     });
 });
