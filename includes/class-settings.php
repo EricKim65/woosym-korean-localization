@@ -148,7 +148,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                 '%s <a href="#" id="marketing_automation_license_activation">%s</a><br/><span id="marketing_automation_license_status">%s</span>',
                 __('마케팅자동화 키를 입력후 기능을 활성화하십시요.', 'wskl'),
                 __('마케팅자동화 인증', 'wskl'),
-                \wskl\lib\auth\Auth::get_license_duration_string('marketing_automation')
+                \wskl\lib\auth\Auth::get_license_duration_string('marketing-automation')
             );
         }
 
@@ -196,7 +196,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'placeholder' => __('', 'wskl'),
                 ),
                 array(
-                    'id' => 'marketing_automation_license',
+                    'id' => 'marketing-automation_license',
                     'label' => __('마케팅자동화(D) 키값 ', 'wskl'),
                     'description' => $marketing_automation_description,
                     'type' => 'longtext',
