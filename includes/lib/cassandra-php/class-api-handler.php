@@ -287,12 +287,13 @@ class AddToCartAPI {
 		/** @var \WC_Product $product */
 		$product  = wc_get_product( $product_id );
 		$quantity = empty( $_REQUEST['quantity'] ) ? 1 : wc_stock_amount( $_REQUEST['quantity'] ); // empty: string '0' or integer 0 will be true.
+		$variation_id = !empty( $product->variation_id ) ? $product->variation_id : 0;
 
 		assert( $product instanceof \WC_Product, 'Product object retrieval failed: $product is not a \WC_Product.' );
-		assert( is_numeric( $_REQUEST['quantity'] ), '$_REQUEST[\'quantity\'] is not numeric' );
+		assert( is_numeric( $_REQUEST['quantity'] ), '$_REQUEST[\'quantity\'] is not numeric.' );
+		assert( is_numeric( $variation_id ), "\$variation_id is '${variation_id}', which is not numeric." );
 
 		$terms = wp_get_post_terms( $product_id, 'product_cat' );
-
 		if ( is_array( $terms ) ) {
 			$term_names = array_map( function ( $t ) { return $t->name; }, $terms );
 			sort( $term_names );
@@ -309,7 +310,7 @@ class AddToCartAPI {
 			'user_id'         => $user_id,    // Casper's User ID
 			'customer_id'     => get_current_user_id(),
 			'product_id'      => $product->id,
-			'variation_id'    => $product->variation_id,
+			'variation_id'    => $variation_id,
 			'quantity'        => $quantity,
 			'product_name'    => $product->get_title(),
 			'price'           => $product->get_price(),

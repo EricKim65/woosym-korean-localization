@@ -188,15 +188,21 @@ function wskl_country_ipblock() {
 		}
 	}
 
-	if( !$in_iplist)  wp_die() ;
+	if( !$in_iplist ) {
+		die( 'blocked by ip block' ) ;
+	}
 }
 
 
 require_once( WSKL_PATH . '/includes/class-main.php' );
 new Woosym_Korean_Localization( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
 
-require_once( WSKL_PATH . '/includes/lib/sales/class-sales.php' );
+// sales log
+require_once( WSKL_PATH . '/includes/lib/mat-logs/class-sales.php' );
 $sales = new \wskl\lib\sales\Sales();
+
+require_once( WSKL_PATH . '/includes/lib/mat-logs/class-carts.php' );
+$add_to_carts = new \wskl\lib\carts\AddToCarts();
 
 if ( is_admin() ) {
 	include_once( WSKL_PATH . '/includes/class-settings.php' );
