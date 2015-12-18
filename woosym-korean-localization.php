@@ -128,23 +128,26 @@ if ( wskl_is_option_enabled( 'enable_sym_pg' ) ) {
 	// NOTE: 옵션 켜져 있는 것과 pay_gate_agency 찾을 수 있는 것은 별개의 사항으므로 에러 체크가 필요함.
 	$pay_gate_agency = get_option( wskl_get_option_name( 'pg_agency' ) );
 
-	/** @noinspection PhpIncludeInspection*/
-	require_once( 'includes/lib/class-pg-' . $pay_gate_agency . '-main.php' );
+	if( $pay_gate_agency && !empty( $pay_gate_agency ) ) {
 
-	/** @noinspection PhpIncludeInspection*/
-	require_once( 'includes/lib/class-pg-' . $pay_gate_agency . '-common.php' );
+		/** @noinspection PhpIncludeInspection*/
+		require_once( 'includes/lib/class-pg-' . $pay_gate_agency . '-main.php' );
 
-	/**
-	 * Woocommerce REST API V3 action.
-	 * @see \WC_API::handle_api_requests()
-	 */
-	add_action( 'woocommerce_api_request', 'wskl_add_api_request' );
+		/** @noinspection PhpIncludeInspection*/
+		require_once( 'includes/lib/class-pg-' . $pay_gate_agency . '-common.php' );
 
-	if( ! function_exists( 'wskl_add_api_request' ) ) {
+		/**
+		 * Woocommerce REST API V3 action.
+		 * @see \WC_API::handle_api_requests()
+		 */
+		add_action( 'woocommerce_api_request', 'wskl_add_api_request' );
 
-		function wskl_add_api_request( $api_request  ) {
-			if( class_exists( $api_request ) ) {
-				$payment_gateway = new $api_request();
+		if( ! function_exists( 'wskl_add_api_request' ) ) {
+
+			function wskl_add_api_request( $api_request  ) {
+				if( class_exists( $api_request ) ) {
+					$payment_gateway = new $api_request();
+				}
 			}
 		}
 	}
@@ -174,13 +177,15 @@ if ( wskl_is_option_enabled( 'enable_countryip_block' ) ) {
 }
 
 function wskl_country_ipblock() {
+
 	$wskl_geoip = geoip_open(WSKL_PATH . "/includes/lib/geoip/GeoIP.dat",GEOIP_STANDARD);
-	$wskl_country_ipcode = geoip_country_code_by_addr($wskl_geoip, $_SERVER['REMOTE_ADDR']);
+	$wskl_country_ipcode = geoip_country_code_by_addr( $wskl_geoip, $_SERVER['REMOTE_ADDR'] );
 	geoip_close($wskl_geoip);
 
 	$list  = preg_replace('/\s+/', '', get_option( 'wskl_white_ipcode_list' ));
 	$code_arr = (explode(',',$list)) ;
 	$in_iplist  = false ;
+
 	foreach ( $code_arr as $value ) {
 		if ( $value == $wskl_country_ipcode ) {
 			$in_iplist = true;
@@ -193,16 +198,8 @@ function wskl_country_ipblock() {
 	}
 }
 
-
 require_once( WSKL_PATH . '/includes/class-main.php' );
 new Woosym_Korean_Localization( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
-
-// sales log
-require_once( WSKL_PATH . '/includes/lib/mat-logs/class-sales.php' );
-$sales = new \wskl\lib\sales\Sales();
-
-require_once( WSKL_PATH . '/includes/lib/mat-logs/class-carts.php' );
-$add_to_carts = new \wskl\lib\carts\AddToCarts();
 
 if ( is_admin() ) {
 	include_once( WSKL_PATH . '/includes/class-settings.php' );
@@ -214,7 +211,20 @@ if ( is_admin() ) {
 
 } else {
 
+	// verification
 	require_once( WSKL_PATH . '/includes/lib/auth/class-verification.php' );
 	$verification = new \wskl\lib\auth\Verification();
+
+	// sales log
+	if( wskl_is_option_enabled( 'enable_sales_log' ) ) {
+		require_once( WSKL_PATH . '/includes/lib/mat-logs/class-sales.php' );
+		$sales = new \wskl\lib\sales\Sales();
+	}
+
+	// cart
+	if( wskl_is_option_enabled( 'enable_cart_log' ) ) {
+		require_once( WSKL_PATH . '/includes/lib/mat-logs/class-carts.php' );
+		$add_to_carts = new \wskl\lib\carts\AddToCarts();
+	}
 }
 

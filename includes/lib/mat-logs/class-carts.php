@@ -25,7 +25,7 @@ class AddToCarts {
 		add_filter(
 			'woocommerce_add_to_cart_validation',
 			array( $this, 'callback_add_to_cart_validation' ),
-			20, 3
+			20, 5
 		);
 	}
 
@@ -36,10 +36,12 @@ class AddToCarts {
 	 * @param $is_valid
 	 * @param $product_id
 	 * @param $quantity
+	 * @param $variation_id
+	 * @param $variations
 	 *
 	 * @return bool
 	 */
-	public function callback_add_to_cart_validation( $is_valid, $product_id, $quantity ) {
+	public function callback_add_to_cart_validation( $is_valid, $product_id, $quantity, $variation_id = 0, array $variations = array() ) {
 
 		$auth = new Auth_Model( 'marketing-automation' );
 
@@ -51,7 +53,7 @@ class AddToCarts {
 
 			$site_url  = site_url();
 
-			AddToCartAPI::send_data( $key_type, $key_value, $site_url, $user_id, $product_id );
+			AddToCartAPI::send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id, $variations );
 		}
 
 		// Actually this method is nothing to do with validation process.
