@@ -257,24 +257,24 @@ class SalesAPI {
 }
 
 
-class AddToCartAPI {
+abstract class ProductLogAPI {
 
-	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0, $variations = array() ) {
+	public static function send_data($log_type, $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
 
 		$obj = NULL;
 
 		try {
 
 			$url     = WSKL_HOST_API_URL . '/logs/carts/';
-			$body    = json_encode( static::create_body( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id, $variations  ) );
+			$body    = json_encode( static::create_body($log_type, $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id ) );
 			$headers = array( 'content-type' => 'application/json', );
 
 			$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 201, ), $headers );
-			$obj      = AddToCart::from_response( $response['body'] );
+			$obj      = ProductLogs::from_response( $response['body'] );
 
 		} catch( BadResponseException $e ) {
 
-			$message = sprintf( 'ClientAPI::verify(): Bad response occurred. "%s"', $e->getMessage() );
+			$message = sprintf( 'ProductLogAPI::send_data(): Bad response occurred. "%s"', $e->getMessage() );
 			error_log( $message );
 			wp_die( $message );
 		}
@@ -282,7 +282,7 @@ class AddToCartAPI {
 		return $obj;
 	}
 
-	private static function create_body( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id, $variations  ) {
+	private static function create_body($log_type, $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id ) {
 
 		/** @var \WC_Product $product */
 		$product  = wc_get_product( $product_id );
@@ -311,9 +311,37 @@ class AddToCartAPI {
 			'price'           => $product->get_price(),
 			'product_version' => $product->product_version,
 			'term_name'       => $term_name,
+			'log_type'        => $log_type,
 		);
 
 		return $body;
 	}
+
 }
 
+
+class AddToCartAPI extends ProductLogAPI {
+
+	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
+
+		return parent::send_data( 'add-to-cart', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
+	}
+}
+
+
+class TodaySeenAPI extends ProductLogAPI {
+
+	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
+
+		return parent::send_data( 'today-seen', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
+	}
+}
+
+
+class WishListAPI extends ProductLogAPI {
+
+	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
+
+		return parent::send_data( 'wish-list', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
+	}
+}

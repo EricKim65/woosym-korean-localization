@@ -878,7 +878,7 @@ class SalesSub implements APIResponseHandler {
 	}
 }
 
-class AddToCart implements APIResponseHandler {
+class ProductLogs implements APIResponseHandler {
 
 	public $user_id;
 
@@ -901,6 +901,8 @@ class AddToCart implements APIResponseHandler {
 	public $product_version;
 
 	public $term_name;
+
+	public $log_type;
 
 	public static function from_response( \stdClass $response ) {
 
@@ -948,6 +950,10 @@ class AddToCart implements APIResponseHandler {
 
 		if( property_exists( $response, 'term_name' ) ) {
 			$obj->term_name = sanitize_text_field( $response->term_name );
+		}
+
+		if( property_exists( $response, 'log_type' ) ) {
+			$obj->log_type = sanitize_text_field( $response->log_type );
 		}
 
 		return $obj;
