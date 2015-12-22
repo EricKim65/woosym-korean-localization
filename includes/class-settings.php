@@ -723,28 +723,28 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'default' => ''
                 ),
                 array(
-                    'id' => 'enable_cart_log',
+                    'id' => 'enable_add_to_cart_log',
                     'label' => __('장바구니 로그 활성화', 'wskl'),
                     'description' => __('장바구니 로그가 연동됩니다.', 'wskl'),
                     'type' => 'checkbox',
                     'default' => ''
                 ),
                 array(
-                    'id' => 'enable_wishlist_log',
+                    'id' => 'enable_wish_list_log',
                     'label' => __('위시리스트 로그 활성화', 'wskl'),
                     'description' => __('위시리스트 로그가 연동됩니다.', 'wskl'),
                     'type' => 'checkbox',
                     'default' => ''
                 ),
                 array(
-                    'id' => 'enable_productview_log',
+                    'id' => 'enable_today_seen_log',
                     'label' => __('오늘 본 상품 로그 활성화', 'wskl'),
                     'description' => __('오늘 본 상품 로그가 연동됩니다.', 'wskl'),
                     'type' => 'checkbox',
                     'default' => ''
                 ),
                 array(
-                    'id' => 'enable_pageview_log',
+                    'id' => 'enable_page_seen_log',
                     'label' => __('오늘본 페이지 로그 활성화', 'wskl'),
                     'description' => __('오늘본 페이지 로그가 연동됩니다.', 'wskl'),
                     'type' => 'checkbox',
