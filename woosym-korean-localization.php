@@ -221,10 +221,7 @@ if ( is_admin() ) {
 		$sales = new \wskl\lib\sales\Sales();
 	}
 
-	// cart
-	if( wskl_is_option_enabled( 'enable_cart_log' ) ) {
-		require_once( WSKL_PATH . '/includes/lib/mat-logs/class-carts.php' );
-		$add_to_carts = new \wskl\lib\carts\AddToCarts();
-	}
+	require_once( WSKL_PATH . '/includes/lib/mat-logs/class-product-logs.php' );
+	\wskl\lib\logs\Product_Logs::initialize();
 }
 
