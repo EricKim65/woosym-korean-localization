@@ -351,7 +351,7 @@ class PostAPI {
 
 		try {
 
-			$url = WSKL_HOST_API_URL . '/logs/posts/';
+			$url = WSKL_HOST_API_URL . '/posts/';
 
 			$body = array_merge(
 				array(
@@ -372,6 +372,10 @@ class PostAPI {
 
 	private static function create_post_field( $post_id ) {
 
-		return get_post( $post_id, ARRAY_A );
+		$post = get_post( $post_id, ARRAY_A );
+		$post['post_id'] = $post['ID'];
+		unset( $post['ID'] );
+
+		return $post;
 	}
 }

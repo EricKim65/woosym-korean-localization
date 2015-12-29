@@ -209,6 +209,10 @@ if ( is_admin() ) {
 	require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
 	$auth = new \wskl\lib\auth\Auth( $wskl_setting );
 
+	/** post export */
+	require_once( WSKL_PATH . '/includes/lib/mat-logs/class-post-export.php' );
+	\wskl\lib\posts\Post_Export::initialize();
+
 } else {
 
 	// verification
