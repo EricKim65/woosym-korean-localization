@@ -19,6 +19,14 @@ class BadResponseException extends \Exception {
 }
 
 
+function handle_bad_response( $method, BadResponseException &$e ) {
+
+	$message = sprintf( '%s(): Bad response occurred. "%s"', $method, $e->getMessage() );
+	error_log( $message );
+	wp_die( $message );
+}
+
+
 /**
  * Class Rest_Api_Helper
  *
@@ -119,10 +127,7 @@ class ClientAPI {
 			}
 
 		} catch( BadResponseException $e ) {
-
-			$message = sprintf( 'ClientAPI::activate(): Bad response occurred. "%s"', $e->getMessage() );
-			error_log( $message );
-			wp_die( $message );
+			handle_bad_response( __METHOD__, $e );
 		}
 
 		return $obj;
@@ -184,10 +189,7 @@ class SalesAPI {
 			$obj      = Sales::from_response( $response['body'] );
 
 		} catch( BadResponseException $e ) {
-
-			$message = sprintf( 'ClientAPI::verify(): Bad response occurred. "%s"', $e->getMessage() );
-			error_log( $message );
-			wp_die( $message );
+			handle_bad_response( __METHOD__, $e );
 		}
 
 		return $obj;
@@ -272,10 +274,7 @@ abstract class ProductLogAPI {
 			$obj      = ProductLogs::from_response( $response['body'] );
 
 		} catch( BadResponseException $e ) {
-
-			$message = sprintf( 'ProductLogAPI::send_data(): Bad response occurred. "%s"', $e->getMessage() );
-			error_log( $message );
-			wp_die( $message );
+			handle_bad_response( __METHOD__, $e );
 		}
 
 		return $obj;
@@ -284,7 +283,7 @@ abstract class ProductLogAPI {
 	private static function create_body( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id ) {
 
 		/** @var \WC_Product $product */
-		$product  = wc_get_product( $product_id );
+		$product = wc_get_product( $product_id );
 		assert( $product instanceof \WC_Product, 'Product object retrieval failed: $product is not a \WC_Product.' );
 
 		$terms = wp_get_post_terms( $product_id, 'product_cat' );
@@ -301,11 +300,11 @@ abstract class ProductLogAPI {
 			'key_type'        => $key_type,
 			'key_value'       => $key_value,
 			'site_url'        => $site_url,
-			'user_id'         => (int)$user_id,    // Casper's User ID
+			'user_id'         => (int) $user_id,    // Casper's User ID
 			'customer_id'     => get_current_user_id(),
-			'product_id'      => (int)$product_id,
-			'variation_id'    => (int)$variation_id,
-			'quantity'        => (int)$quantity,
+			'product_id'      => (int) $product_id,
+			'variation_id'    => (int) $variation_id,
+			'quantity'        => (int) $quantity,
 			'product_name'    => $product->get_title(),
 			'price'           => $product->get_price(),
 			'product_version' => $product->product_version,
@@ -340,5 +339,29 @@ class WishListAPI extends ProductLogAPI {
 	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
 
 		return parent::send_data( WSKL_HOST_API_URL . '/logs/wish-lists/', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
+	}
+}
+
+
+class PostAPI {
+
+	public static function send_post( $key_type, $key_value, $site_url, $user_id, $post_id ) {
+
+		assert( $key_type && $key_value && $site_url );
+
+		$obj = NULL;
+
+		try {
+
+			$url        = WSKL_HOST_API_URL . '/logs/posts/';
+			$post_array = static::create_post_field( $post_id );
+			$body       = array_merge(
+				array( 'key_type' => $key_type, 'key_value' => $key_value, 'site_url' => $site_url, ),
+				$post_array
+			);
+
+		} catch( BadResponseException $e ) {
+			handle_bad_response( __METHOD__, $e );
+		}
 	}
 }
