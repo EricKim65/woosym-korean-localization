@@ -349,19 +349,29 @@ class PostAPI {
 
 		assert( $key_type && $key_value && $site_url );
 
-		$obj = NULL;
-
 		try {
 
-			$url        = WSKL_HOST_API_URL . '/logs/posts/';
-			$post_array = static::create_post_field( $post_id );
-			$body       = array_merge(
-				array( 'key_type' => $key_type, 'key_value' => $key_value, 'site_url' => $site_url, ),
-				$post_array
+			$url = WSKL_HOST_API_URL . '/logs/posts/';
+
+			$body = array_merge(
+				array(
+					'key_type'  => $key_type,
+					'key_value' => $key_value,
+					'site_url'  => $site_url,
+					'user_id'   => $user_id,
+				),
+				static::create_post_field( $post_id )
 			);
+
+			Rest_Api_Helper::request( $url, 'POST', $body, array( 201, ) );
 
 		} catch( BadResponseException $e ) {
 			handle_bad_response( __METHOD__, $e );
 		}
+	}
+
+	private static function create_post_field( $post_id ) {
+
+		return get_post( $post_id, ARRAY_A );
 	}
 }
