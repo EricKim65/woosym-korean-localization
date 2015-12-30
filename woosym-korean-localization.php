@@ -210,8 +210,11 @@ if ( is_admin() ) {
 	$auth = new \wskl\lib\auth\Auth( $wskl_setting );
 
 	/** post export */
-	require_once( WSKL_PATH . '/includes/lib/mat-logs/class-post-export.php' );
-	\wskl\lib\posts\Post_Export::initialize();
+	if( wskl_is_option_enabled( 'enable_post_export' ) ) {
+
+		require_once( WSKL_PATH . '/includes/lib/mat-logs/class-post-export.php' );
+		\wskl\lib\posts\Post_Export::initialize();
+	}
 
 } else {
 
