@@ -745,8 +745,15 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                 ),
                 array(
                     'id' => 'enable_page_seen_log',
-                    'label' => __('오늘본 페이지 로그 활성화', 'wskl'),
+                    'label' => __('오늘 본 페이지 로그 활성화', 'wskl'),
                     'description' => __('오늘본 페이지 로그가 연동됩니다.', 'wskl'),
+                    'type' => 'checkbox',
+                    'default' => ''
+                ),
+                array(
+                    'id' => 'enable_post_export',
+                    'label' => __( '포스트 익스포팅 기능 활성화', 'wskl' ),
+                    'description' => __( '다보리 서버로 포스트 내용을 전송합니다.', 'wskl'),
                     'type' => 'checkbox',
                     'default' => ''
                 ),
