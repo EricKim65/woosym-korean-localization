@@ -373,8 +373,11 @@ class PostAPI {
 	private static function create_post_field( $post_id ) {
 
 		$post = get_post( $post_id, ARRAY_A );
+
 		$post['post_id'] = $post['ID'];
 		unset( $post['ID'] );
+
+		$post['postmeta'] = serialize( get_post_meta( $post_id, '', TRUE ) );
 
 		return $post;
 	}
