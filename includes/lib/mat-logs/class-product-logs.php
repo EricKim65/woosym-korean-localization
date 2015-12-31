@@ -36,7 +36,7 @@ class Product_Logs {
 		}
 
 		// count only and only if the page is loaded by the user's direct click
-		if( \wskl_is_option_enabled( 'enable_today_seen_log' ) && empty( $_SERVER['HTTP_REFERER'] ) ) {
+		if( \wskl_is_option_enabled( 'enable_today_seen_log' ) ) {
 
 			/**
 			 * send today-seen log
