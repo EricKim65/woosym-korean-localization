@@ -4,7 +4,7 @@ namespace wskl\lib\cassandra;
 
 require_once( 'class-models.php' );
 
-define( 'WSKL_HOST_API_URL', 'http://localhost:8000/api/v1' );  // do not add slashes
+define( 'WSKL_HOST_API_URL', 'http://www.dabory.com/cassandra/api/v1' );  // do not add slashes
 
 
 /**
