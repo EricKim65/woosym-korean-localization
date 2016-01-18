@@ -155,7 +155,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
         $settings['authentication'] = array(
             'title' => __('제품인증', 'wskl'),
             'description' => __('제품 구매 또는 무료 사용시 다보리웹사이트에서 부여받은 활성키로 개별 기능을 활성화를 합니다.<br/>
-						<a href="http://www.symphonysoft.co.kr/my-account/view-order/" target="_blank" >제품 활성키 확인하러 가기</a>', 'wskl'),
+						<a href="https://www.dabory.com/my-account/view-order/" target="_blank" >제품 활성키 확인하러 가기</a>', 'wskl'),
             'fields' => array(
                 array(
                     'id' => 'dummy_3',
