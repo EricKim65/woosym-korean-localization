@@ -13,46 +13,53 @@
  * Domain Path: /lang/
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'Sym_Mvc_Main' ) ) {
-	add_action( 'admin_notices', 'wskl_install_sym_mvc_notice' );	
-	return;  
+	add_action( 'admin_notices', 'wskl_install_sym_mvc_notice' );
+
+	return;
 }
 
 function wskl_install_sym_mvc_notice() {  // Symphony MVC Framework 가 실행될 때만
-   echo ' <div class="error">
+	echo ' <div class="error">
 				 <p><font color="red">우커머스-심포니는 Symphony MVC Framework 플러그인이 활성화된 상태에서만 동작됩니다. Symphony MVC Framework를 설치/활성화하여 주십시요 ! </font></p>
 		  </div>';
 }
 
 if ( ! class_exists( 'WooCommerce' ) ) { // 우커머스가 실행될 때만
-	add_action( 'admin_notices', 'wskl_install_woocommerce_notice' );	
-	return;   
+	add_action( 'admin_notices', 'wskl_install_woocommerce_notice' );
+
+	return;
 }
 
-function wskl_install_woocommerce_notice() {  
-   echo ' <div class="error">
+function wskl_install_woocommerce_notice() {
+
+	echo ' <div class="error">
 				 <p><font color="red">우커머스-심포니는 우커머스 플러그인이 활성화된 상태에서만 동작됩니다. 우커머스를 설치/활성화하여 주십시요 ! </font></p>
 		  </div>';
 }
 
 // plugin's defines
-define( 'WSKL_PATH',      __DIR__ );
-define( 'WSKL_MAIN_FILE', WSKL_PATH . '/woosym-korean-localization.php');
-define( 'WSKL_PREFIX',    'wskl_' );
-define( 'WSKL_VERSION',   '3.2.0' );
+define( 'WSKL_PATH', __DIR__ );
+define( 'WSKL_MAIN_FILE', WSKL_PATH . '/woosym-korean-localization.php' );
+define( 'WSKL_PREFIX', 'wskl_' );
+define( 'WSKL_VERSION', '3.2.0' );
 define( 'SYM_MVC_FRAMEWORK_PATH', WP_PLUGIN_DIR . '/sym-mvc-framework' );
 
 /**
  * prefix 를 붙인 옵션 이름을 리턴
  *
  * @author changwoo
+ *
  * @param $option_name string prefix 문자열을 붙이지 않은 옵션 이름.
  *
  * @return string prefix 문자열을 붙인 옵션 이름
  */
 function wskl_get_option_name( $option_name ) {
+
 	return WSKL_PREFIX . $option_name;
 }
 
@@ -61,29 +68,33 @@ function wskl_get_option_name( $option_name ) {
  * 해당 옵션을 boolean 으로 해석해 true, false 로 리턴
  *
  * @author changwoo
+ *
  * @param $option_name string prefix 문자열을 붙이지 않은 옵션 이름.
  *
  * @return boolean 해당 옵션
  */
 function wskl_is_option_enabled( $option_name ) {
+
 	$value = get_option( wskl_get_option_name( $option_name ) );
-	return filter_var( $value, FILTER_VALIDATE_BOOLEAN ) ;
+
+	return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
 }
 
 
-if ( !class_exists( 'Sym_Mvc_Main' ) ) {
-	$sym_ins_msg =  '"우커머스-심포니 통합 플러그인"을 사용하시려면 먼저 Symphony-MVC-Framework Plugin 을 설치하여 주십시요 !';
-	echo "<script>alert('".$sym_ins_msg."');</script>";
+if ( ! class_exists( 'Sym_Mvc_Main' ) ) {
+	$sym_ins_msg = '"우커머스-심포니 통합 플러그인"을 사용하시려면 먼저 Symphony-MVC-Framework Plugin 을 설치하여 주십시요 !';
+	echo "<script>alert('" . $sym_ins_msg . "');</script>";
+
 	return;
 }
 
 if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<' ) ) {
-	$woocommerce_ver21_less = true ;
+	$woocommerce_ver21_less = true;
 } else {
-	$woocommerce_ver21_less = false ;
+	$woocommerce_ver21_less = false;
 }
 
-if( !function_exists('wskl_plugin_add_settings_link')) {
+if ( ! function_exists( 'wskl_plugin_add_settings_link' ) ) {
 
 	function wskl_plugin_add_settings_link( $links ) {
 
@@ -93,11 +104,12 @@ if( !function_exists('wskl_plugin_add_settings_link')) {
 			__( 'Settings' )
 		);
 
-		if( isset( $links['0'] ) &&  FALSE !== strstr( $links[0], 'Settings') )  {
+		if ( isset( $links['0'] ) && false !== strstr( $links[0], 'Settings' ) ) {
 			unset( $links[0] );
 		}
 
 		$links['settings'] = $settings_link;
+
 		return $links;
 	}
 }
@@ -111,41 +123,48 @@ $woo_sym_prefix = 'wskl_';
 // 관련상품 표시 갯수
 if ( get_option( $woo_sym_prefix . 'related_products_count' ) != '' ) {
 	add_filter( 'woocommerce_output_related_products_args', 'sym_related_products_args' );
-	  function sym_related_products_args( $args ) {
-		 global $woo_sym_prefix;
-		$args['posts_per_page'] = get_option( $woo_sym_prefix . 'related_products_count'); // 4 related products
-		$args['columns'] = 1; // arranged in 2 columns
+	function sym_related_products_args( $args ) {
+
+		global $woo_sym_prefix;
+		$args['posts_per_page'] = get_option( $woo_sym_prefix . 'related_products_count' ); // 4 related products
+		$args['columns']        = 1; // arranged in 2 columns
 		return $args;
 	}
 }
 
-$sym_checkout_titles = array('credit' => '신용카드', 'remit' => '실시간 계좌이체', 'virtual' => '가상계좌 이체', 'mobile' => '모바일소액결제');
-$sym_checkout_desc = '로 결제합니다.';
-$sym_pg_agency = get_option( $woo_sym_prefix . 'pg_agency');
+$sym_checkout_titles = array( 'credit'  => '신용카드',
+                              'remit'   => '실시간 계좌이체',
+                              'virtual' => '가상계좌 이체',
+                              'mobile'  => '모바일소액결제',
+);
+$sym_checkout_desc   = '로 결제합니다.';
+$sym_pg_agency       = get_option( $woo_sym_prefix . 'pg_agency' );
 
 if ( wskl_is_option_enabled( 'enable_sym_pg' ) ) {
 
 	// NOTE: 옵션 켜져 있는 것과 pay_gate_agency 찾을 수 있는 것은 별개의 사항으므로 에러 체크가 필요함.
 	$pay_gate_agency = get_option( wskl_get_option_name( 'pg_agency' ) );
 
-	if( $pay_gate_agency && !empty( $pay_gate_agency ) ) {
+	if ( $pay_gate_agency && ! empty( $pay_gate_agency ) ) {
 
-		/** @noinspection PhpIncludeInspection*/
+		/** @noinspection PhpIncludeInspection */
 		require_once( 'includes/lib/class-pg-' . $pay_gate_agency . '-main.php' );
 
-		/** @noinspection PhpIncludeInspection*/
+		/** @noinspection PhpIncludeInspection */
 		require_once( 'includes/lib/class-pg-' . $pay_gate_agency . '-common.php' );
 
 		/**
 		 * Woocommerce REST API V3 action.
+		 *
 		 * @see \WC_API::handle_api_requests()
 		 */
 		add_action( 'woocommerce_api_request', 'wskl_add_api_request' );
 
-		if( ! function_exists( 'wskl_add_api_request' ) ) {
+		if ( ! function_exists( 'wskl_add_api_request' ) ) {
 
-			function wskl_add_api_request( $api_request  ) {
-				if( class_exists( $api_request ) ) {
+			function wskl_add_api_request( $api_request ) {
+
+				if ( class_exists( $api_request ) ) {
 					$payment_gateway = new $api_request();
 				}
 			}
@@ -173,28 +192,30 @@ if ( wskl_is_option_enabled( 'enable_direct_purchase' ) ) {
 
 if ( wskl_is_option_enabled( 'enable_countryip_block' ) ) {
 	require_once( WSKL_PATH . '/includes/lib/geoip/geoip.inc' );
-	if ( ! is_admin() )  add_action( 'plugins_loaded', 'wskl_country_ipblock' );
+	if ( ! is_admin() ) {
+		add_action( 'plugins_loaded', 'wskl_country_ip_block' );
+	}
 }
 
-function wskl_country_ipblock() {
+function wskl_country_ip_block() {
 
-	$wskl_geoip = geoip_open(WSKL_PATH . "/includes/lib/geoip/GeoIP.dat",GEOIP_STANDARD);
+	$wskl_geoip          = geoip_open( WSKL_PATH . "/includes/lib/geoip/GeoIP.dat", GEOIP_STANDARD );
 	$wskl_country_ipcode = geoip_country_code_by_addr( $wskl_geoip, $_SERVER['REMOTE_ADDR'] );
-	geoip_close($wskl_geoip);
+	geoip_close( $wskl_geoip );
 
-	$list  = preg_replace('/\s+/', '', get_option( 'wskl_white_ipcode_list' ));
-	$code_arr = (explode(',',$list)) ;
-	$in_iplist  = false ;
+	$list     = preg_replace( '/\s+/', '', get_option( 'wskl_white_ipcode_list' ) );
+	$code_arr = ( explode( ',', $list ) );
+	$ip_list  = false;
 
 	foreach ( $code_arr as $value ) {
 		if ( $value == $wskl_country_ipcode ) {
-			$in_iplist = true;
-			break ;
+			$ip_list = true;
+			break;
 		}
 	}
 
-	if( !$in_iplist ) {
-		die( 'blocked by ip block' ) ;
+	if ( ! $ip_list ) {
+		wp_die( 'Blocked by IP' );
 	}
 }
 
@@ -210,7 +231,7 @@ if ( is_admin() ) {
 	$auth = new \wskl\lib\auth\Auth( $wskl_setting );
 
 	/** post export */
-	if( wskl_is_option_enabled( 'enable_post_export' ) ) {
+	if ( wskl_is_option_enabled( 'enable_post_export' ) ) {
 
 		require_once( WSKL_PATH . '/includes/lib/mat-logs/class-post-export.php' );
 		\wskl\lib\posts\Post_Export::initialize();
@@ -223,7 +244,7 @@ if ( is_admin() ) {
 	$verification = new \wskl\lib\auth\Verification();
 
 	// sales log
-	if( wskl_is_option_enabled( 'enable_sales_log' ) ) {
+	if ( wskl_is_option_enabled( 'enable_sales_log' ) ) {
 		require_once( WSKL_PATH . '/includes/lib/mat-logs/class-sales.php' );
 		$sales = new \wskl\lib\sales\Sales();
 	}
