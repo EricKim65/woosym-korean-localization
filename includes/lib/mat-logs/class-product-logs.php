@@ -64,7 +64,7 @@ class Product_Logs {
 	 */
 	public static function callback_add_to_cart_validation( $is_valid, $product_id, $quantity, $variation_id = 0 /*, array $variations = array() */) {
 
-		$auth = new Auth_Model( 'marketing-automation' );
+		$auth = new Auth_Model( 'marketing' );
 
 		if( $auth->is_verified() ) {
 
@@ -83,7 +83,7 @@ class Product_Logs {
 
 	public static function callback_woocommerce_before_single_product() {
 
-		$auth = new Auth_Model( 'marketing-automation' );
+		$auth = new Auth_Model( 'marketing' );
 
 		if( $auth->is_verified() ) {
 

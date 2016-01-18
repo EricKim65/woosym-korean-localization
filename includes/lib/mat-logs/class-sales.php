@@ -36,7 +36,7 @@ class Sales {
 
 	private function send_sales_log( $order_id ) {
 
-		$auth = new Auth_Model( 'marketing-automation' );
+		$auth = new Auth_Model( 'marketing' );
 
 		if ( $auth->is_verified() ) {
 

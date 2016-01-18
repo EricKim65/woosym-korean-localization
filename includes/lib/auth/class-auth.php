@@ -49,7 +49,7 @@ class Auth {
 		//인증 관련.
 		if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'authentication' ) {
 
-			wp_register_script( 'license_activation', plugin_dir_url( WSKL_MAIN_FILE ) . '/assets/js/license_activation.js', array( 'jquery', ), NULL, TRUE );
+			wp_register_script( 'license_activation', plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/license-activation.js', array( 'jquery', ), NULL, TRUE );
 			wp_localize_script(
 				'license_activation',
 				'activation_object',

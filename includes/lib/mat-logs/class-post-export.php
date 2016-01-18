@@ -45,7 +45,7 @@ class Post_Export {
 			return;
 		}
 
-		$auth = new Auth_Model( 'marketing-automation' );
+		$auth = new Auth_Model( 'marketing' );
 
 		if ( $auth->is_verified() ) {
 
