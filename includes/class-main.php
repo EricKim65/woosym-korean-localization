@@ -81,7 +81,13 @@ class Woosym_Korean_Localization extends Sym_Mvc_Main {
 	public function js_and_css() {
 
 		// Load frontend JS & CSS
-		wp_enqueue_script( 'daum_maps', 'http://dmaps.daum.net/map_js_init/postcode.js' );  //맨앞에 넣음
+		if( is_ssl() ) {
+			$daum_zip_api_url = 'https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js';
+		} else {
+			$daum_zip_api_url = 'http://dmaps.daum.net/map_js_init/postcode.v2.js';
+		}
+
+		wp_enqueue_script( 'daum_maps', $daum_zip_api_url, NULL, NULL, FALSE );  //맨앞에 넣음
 		wp_enqueue_script( 'daum_zipcode', $this->assets_url . 'js/daum-zipcode.js', NULL, NULL, TRUE );  //맨뒤에 넣음
 	}
 
