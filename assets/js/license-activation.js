@@ -22,7 +22,7 @@ function activate_license(key_type) {
                     'data': data,
                     'method': 'post',
                     'success': function (response) {
-                        location.reload(true);
+                        jQuery('form').submit();
                     }
                 }
             );
@@ -45,6 +45,6 @@ jQuery(document).ready(function ($) {
     });
 
     $('#marketing_automation_license_activation').click(function () {
-        activate_license('marketing-automation');
+        activate_license('marketing');
     });
 });
