@@ -73,7 +73,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'description' => __('
 						<font size="" color="red">1. "워드프레스와 우커머스를 Cafe24나 고도몰처럼" 더 쉽고 더 편리하게 만들었습니다.<br/>
 						2. 쇼핑몰 영업에 꼭 필요한 기능만을 모두 담아서 최소의 비용으로 제공합니다. <br/>
-						3. "다보리 메타사이트와 연동"하여 중소상공인을 위한 "마케팅 자동화" 서비스를 제공합니다. <br/></font>
+						3. "다보리 마케팅 자동화 서버와 연동"하여 중소상공인을 위한 "마케팅 자동화" 서비스를 제공합니다. <br/></font>
 
 					', $this->_folder),
                     'type' => 'caption',
@@ -83,8 +83,13 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'id' => 'dummy_2',
                     'label' => __('사용방법', 'wskl'),
                     'description' => __('
+<<<<<<< Updated upstream
 						<font size="" color="red">제품인증키로 "제품인증" 전에는 본플러그인의 기능을 사용할 수 없습니다.<br/></font>
 						<a href="http://www.symphonysoft.co.kr/plugins/" target="_blank" >"다보리 제품인증키 확인" 페이지로 바로가기</a>
+=======
+						<font size="" color="red">플러그인 인증키로 "제품 인증"을 하기 전에는 본플러그인의 기능을 사용할 수 없습니다.<br/></font>
+						<a href="https://www.dabory.com/" target="_blank" >"다보리 플러그인 인증키 확인" 페이지로 바로가기</a>
+>>>>>>> Stashed changes
 					', $this->_folder),
                     'type' => 'caption',
                     'default' => ''
@@ -93,7 +98,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'id' => 'dummy_5',
                     'label' => __('업데이트/기술지원', 'wskl'),
                     'description' => __('
-						<a href="http://www.symphonysoft.co.kr/%ED%94%8C%EB%9F%AC%EA%B7%B8%EC%9D%B8/" target="_blank" >플러그인 다운로드</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.symphonysoft.co.kr/cs/service/" target="_blank">기술지원 요청 바로가기<a href="http://www.symphonysoft.co.kr/webhosting/" target="_blank" >전용관리 웹호스팅 알아보기</a><br/>
+						<a href="http://www.symphonysoft.co.kr/%ED%94%8C%EB%9F%AC%EA%B7%B8%EC%9D%B8/" target="_blank" >플러그인 다운로드</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.dabory.co.kr/cs/service/" target="_blank">기술지원 요청 바로가기</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.dabory.com/shoppingmall/webhosting/" target="_blank" >전용관리 웹호스팅 알아보기</a><br/>
 					', $this->_folder),
                     'type' => 'caption',
                     'default' => ''
@@ -139,8 +144,8 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
 
             $extension_description = sprintf(
                 '%s <a href="#" id="extension_license_activation">%s</a><br/><span id="extension_license_status">%s</span>',
-                __('편의기능 키를 입력후 기능을 활성화하십시요.', 'wskl'),
-                __('편의기능 인증', 'wskl'),
+                __('확장기능 키를 입력후 기능을 활성화하십시요.', 'wskl'),
+                __('확장기능 인증', 'wskl'),
                 \wskl\lib\auth\Auth::get_license_duration_string('extension')
             );
 
@@ -154,8 +159,13 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
 
         $settings['authentication'] = array(
             'title' => __('제품인증', 'wskl'),
+<<<<<<< Updated upstream
             'description' => __('제품 구매 또는 무료 사용시 다보리웹사이트에서 부여받은 활성키로 개별 기능을 활성화를 합니다.<br/>
 						<a href="https://www.dabory.com/my-account/view-order/" target="_blank" >제품 활성키 확인하러 가기</a>', 'wskl'),
+=======
+            'description' => __('제품 구매 또는 무료 사용시 www.dabory.com에서 부여된 활성화키로 플러그인을 먼저 활성화후 사용 가능합니다.<br/>
+						<a href="https://www.dabory.com/my-account/view-order/" target="_blank" ><font size="2" color="red">"다보리 플러그인 인증키 확인" 페이지로 바로가기</font></a>', 'wskl'),
+>>>>>>> Stashed changes
             'fields' => array(
                 array(
                     'id' => 'dummy_3',
@@ -189,7 +199,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                 ),
                 array(
                     'id' => 'extension_license',
-                    'label' => __('편의/소셜/보안 기능(C,S,B) 키값 ', 'wskl'),
+                    'label' => __('확장기능(C,S,B) 키값 ', 'wskl'),
                     'description' => $extension_description,
                     'type' => 'longtext',
                     'default' => '',
@@ -239,13 +249,20 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                 array(
                     'id' => 'pg_agency',
                     'label' => __('결제대행업체', 'wskl'),
-                    'description' => __('<font color="red">지불 대행업체 지정후 "변경사항저장"을 하시면 추가 입력 항목이 나타납니다.</font> ', 'wskl'),
-                    'type' => 'radio',
+                    'description' => __('</br><font color="red">지불 대행업체 지정후 "변경사항저장"을 하시면 추가 입력 항목이 나타납니다.</font></br><font color="blue">.</font> ', 'wskl'),
+                    'description' => __('</br><font color="red">지불 대행업체 지정후 "변경사항저장"을 하시면 추가 입력 항목이 나타납니다.</font></br><font color="blue">(아임포트)로 명시된 것은 아임포트 서버를 거쳐서 지불 결제가 됩니다.</font> ', 'wskl'),
+                    'type' => 'select',
                     'options' => array(
+                        'payapp' => '페이앱',
                         'kcp' => 'KCP',
-                        'lgu+' => 'LGU+(개발중)',
                         'inicis' => '이니시스',
                         'ags' => '올더게이트',
+                        'kakao-imp' => '카카오페이(아임포트)',
+                        'inicisweb-imp' => '이니시스-웹표준(아임포트)',
+                        'inicisx-imp' => '이니시스-기존방(아임포트)',
+                        'lgu+-imp' => 'LGU+(아임포트)',
+                        'nice-imp' => '나이스정보통신(아임포트)',
+                        'jtnet-imp' => 'JT-NET(아임포트)',
                     ),
                     'default' => 'ags',
                 ),
@@ -686,8 +703,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
 
         $settings['b_security'] = array(
             'title' => __('차단보안기능(R)', 'wskl'),
-            'description' => __('특별한 관리없이 악성댓글이나 악성트래픽이 대폭 감소합니다. 한국인 대상 사이트의 경우 한국,미국만 오픈해도 됩니다.<br/>
-						<a href="http://www.symphonysoft.co.kr/my-account/view-order/" target="_blank" >보안 플러그인 추가개발 요청하기</a>', 'wskl'),
+            'description' => __('특별한 관리없이 악성댓글이나 악성트래픽이 대폭 감소합니다. 한국인 대상 사이트의 경우 한국,미국만 오픈해도 됩니다.', 'wskl'),
             'fields' => array(
                 array(
                     'id' => 'enable_countryip_block',
@@ -712,48 +728,47 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
 
         $settings['market_auto'] = array(
             'title' => __('마케팅자동화기능(D)', 'wskl'),
-            'description' => __('독립 웹사이트에서 메타 서버로 마케팅 자동화 데이타가 연동됩니다.<br/>
-						<a href="http://www.symphonysoft.co.kr/my-account/view-order/" target="_blank" >보안 플러그인 추가개발 요청하기</a>', 'wskl'),
+            'description' => __('독립 웹사이트에서 마케팅 자동화 서버로 관련 데이타가 연동됩니다.', 'wskl'),
             'fields' => array(
                 array(
                     'id' => 'enable_sales_log',
-                    'label' => __('판매 로그 활성화', 'wskl'),
+                    'label' => __('판매 로그 사용', 'wskl'),
                     'description' => __('결제 완료시 판매 로그가 연동됩니다.', 'wskl'),
                     'type' => 'checkbox',
                     'default' => ''
                 ),
                 array(
                     'id' => 'enable_add_to_cart_log',
-                    'label' => __('장바구니 로그 활성화', 'wskl'),
+                    'label' => __('장바구니 로그 사용', 'wskl'),
                     'description' => __('장바구니 로그가 연동됩니다.', 'wskl'),
                     'type' => 'checkbox',
                     'default' => ''
                 ),
                 array(
                     'id' => 'enable_wish_list_log',
-                    'label' => __('위시리스트 로그 활성화', 'wskl'),
+                    'label' => __('위시리스트 로그 사용', 'wskl'),
                     'description' => __('위시리스트 로그가 연동됩니다.', 'wskl'),
                     'type' => 'checkbox',
                     'default' => ''
                 ),
                 array(
                     'id' => 'enable_today_seen_log',
-                    'label' => __('오늘 본 상품 로그 활성화', 'wskl'),
+                    'label' => __('오늘 본 상품 로그 사용', 'wskl'),
                     'description' => __('오늘 본 상품 로그가 연동됩니다.', 'wskl'),
                     'type' => 'checkbox',
                     'default' => ''
                 ),
                 array(
                     'id' => 'enable_page_seen_log',
-                    'label' => __('오늘 본 페이지 로그 활성화', 'wskl'),
+                    'label' => __('오늘 본 페이지 로그 사용', 'wskl'),
                     'description' => __('오늘본 페이지 로그가 연동됩니다.', 'wskl'),
                     'type' => 'checkbox',
                     'default' => ''
                 ),
                 array(
                     'id' => 'enable_post_export',
-                    'label' => __( '포스트 익스포팅 기능 활성화', 'wskl' ),
-                    'description' => __( '다보리 서버로 포스트 내용을 전송합니다.', 'wskl'),
+                    'label' => __( '블로그 자동 포스팅 기능 활성화', 'wskl' ),
+                    'description' => __( '블로그/상품/이벤트를 네이버/다음/티스토리에 자동으로 포스팅하도록 설정합니다.', 'wskl'),
                     'type' => 'checkbox',
                     'default' => ''
                 ),
