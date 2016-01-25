@@ -173,6 +173,26 @@ if ( wskl_is_option_enabled( 'enable_sym_pg' ) ) {
 }
 
 /**
+ * 배송자 이메일 전화번호 보여지 않기
+ */
+if ( !wskl_is_option_enabled( 'disable_show_delivery_phone' ) ) {
+	add_filter( 'woocommerce_admin_shipping_fields', 'woo_add_shipping_fields' );
+	// woocommerce order meta box
+	// adding shipping email, phone data
+	function woo_add_shipping_fields( $fields ) {
+
+		return array_merge( $fields, array(
+			'email' => array(
+				'label' => __( 'Email', 'woocommerce' ),
+			),
+			'phone' => array(
+				'label' => __( 'Phone', 'woocommerce' ),
+			),
+		));
+	}
+}
+
+/**
  * 모듈 배송추적
  */
 if ( wskl_is_option_enabled( 'enable_ship_track' ) ) {
