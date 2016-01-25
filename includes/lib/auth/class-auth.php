@@ -112,7 +112,7 @@ class Auth {
 
 				$days_left = $info->get_value()->get_key()->get_days_left();
 
-				$text = sprintf(
+				$text = '<font size="" color="blue">'. sprintf(
 						'%s: %s, %s: %s, %s: %s %s',
 						__( '발급일', 'wskl' ),
 						static::to_date_string( $info->get_value()->get_key()->get_issue_date() ),
@@ -121,19 +121,20 @@ class Auth {
 						__( '남은 기간', 'wskl' ),
 						( $info->is_expired() ? __( '만료됨', 'wskl-') : $days_left ),
 						_n( '일', '일', $days_left, 'wskl' )
-				);
+					). '</font>';
 
 			} else {
 
-				$text = __( '인증되지 않은 키입니다.', 'wskl' );
+				$text = __( '<font size="" color="red">활성화키가 인증되지 않아 기능이 실행되지 않습니다.</font>', 'wskl' );
 			}
+
 
 		} else {
 
 			if( empty( $key_type ) ) {
 				$text = __( '키를 입력하지 않았습니다.', 'wskl' );
 			} else {
-				$text = __( '인증되지 않은 키입니다.', 'wskl' );
+				$text = __( '<font size="" color="red">활성화키가 인증되지 않아 기능이 실행되지 않습니다.</font>', 'wskl' );
 			}
 		}
 

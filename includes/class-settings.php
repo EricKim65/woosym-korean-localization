@@ -83,13 +83,8 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'id' => 'dummy_2',
                     'label' => __('사용방법', 'wskl'),
                     'description' => __('
-<<<<<<< Updated upstream
-						<font size="" color="red">제품인증키로 "제품인증" 전에는 본플러그인의 기능을 사용할 수 없습니다.<br/></font>
-						<a href="http://www.symphonysoft.co.kr/plugins/" target="_blank" >"다보리 제품인증키 확인" 페이지로 바로가기</a>
-=======
 						<font size="" color="red">플러그인 인증키로 "제품 인증"을 하기 전에는 본플러그인의 기능을 사용할 수 없습니다.<br/></font>
 						<a href="https://www.dabory.com/" target="_blank" >"다보리 플러그인 인증키 확인" 페이지로 바로가기</a>
->>>>>>> Stashed changes
 					', $this->_folder),
                     'type' => 'caption',
                     'default' => ''
@@ -159,13 +154,8 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
 
         $settings['authentication'] = array(
             'title' => __('제품인증', 'wskl'),
-<<<<<<< Updated upstream
-            'description' => __('제품 구매 또는 무료 사용시 다보리웹사이트에서 부여받은 활성키로 개별 기능을 활성화를 합니다.<br/>
-						<a href="https://www.dabory.com/my-account/view-order/" target="_blank" >제품 활성키 확인하러 가기</a>', 'wskl'),
-=======
             'description' => __('제품 구매 또는 무료 사용시 www.dabory.com에서 부여된 활성화키로 플러그인을 먼저 활성화후 사용 가능합니다.<br/>
 						<a href="https://www.dabory.com/my-account/view-order/" target="_blank" ><font size="2" color="red">"다보리 플러그인 인증키 확인" 페이지로 바로가기</font></a>', 'wskl'),
->>>>>>> Stashed changes
             'fields' => array(
                 array(
                     'id' => 'dummy_3',
