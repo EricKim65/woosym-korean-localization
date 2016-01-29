@@ -10,7 +10,7 @@
  */
 function init_wc_gateway_payapp() {
 
-	if ( class_exists( 'WC_Payment_Gateway' ) && ! class_exists( 'WC_Gate_PayApp' ) ) {
+	if ( class_exists( 'WC_Payment_Gateway' ) && ! class_exists( 'WC_Gateway_PayApp' ) ) {
 
 		/**
 		 * Class WC_Gateway_PayApp
@@ -164,7 +164,7 @@ function init_wc_gateway_payapp() {
 						'title'       => __( 'Description', 'woocommerce' ),
 						'type'        => 'textarea',
 						'description' => __( 'Payment method description that the customer will see on your checkout.', 'woocommerce' ),
-						'default'     => __( '페이앱(http://payapp.co.kr)의 비 Active-X 방식(카드사에 따라 차이 있음)의 결제 방식을 사용합니다. ', 'woocommerce' ),
+						'default'     => __( '페이앱(http://payapp.co.kr)의 비 Active-X 방식(카드사에 따라 차이 있음)의 결제 방식을 사용합니다. ', 'wskl' ),
 						'desc_tip'    => true,
 					),
 					'payapp_user_id'       => array(
