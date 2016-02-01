@@ -52,7 +52,7 @@ class WSKL_Iamport_Main {
 				function () {
 					printf(
 						'<div class="error"><p class="wskl-warning">%s</p></div>',
-						__( '기존 우커머스용 아임포트가 설치되어 있습니다! 다보리 아임포트 지불 기능과 겹칩니다.', 'wskl' )
+						__( '"우커머스용 아임포트 플러그인"이 활성화되어 있습니다! 다보리의 아임포트 지불 기능과 겹칩니다. "우커머스용 아임포트 플러그인"을 비활성화시켜 주세요.', 'wskl' )
 					);
 				}
 			);
