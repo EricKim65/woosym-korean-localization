@@ -125,7 +125,7 @@ class Auth {
 
 			} else {
 
-				$text = __( '<font size="" color="red">활성화키가 인증되지 않아 기능이 실행되지 않습니다.</font>', 'wskl' );
+				$text = '<span class="wskl-notice">' . __( '활성화키가 인증되지 않아 기능이 실행되지 않습니다.', 'wskl' ) . '</span>';
 			}
 
 
@@ -134,7 +134,7 @@ class Auth {
 			if( empty( $key_type ) ) {
 				$text = __( '키를 입력하지 않았습니다.', 'wskl' );
 			} else {
-				$text = __( '<font size="" color="red">활성화키가 인증되지 않아 기능이 실행되지 않습니다.</font>', 'wskl' );
+				$text = '<span class="wskl-notice">' . __( '활성화키가 인증되지 않아 기능이 실행되지 않습니다.', 'wskl' ) . '</span>';
 			}
 		}
 
