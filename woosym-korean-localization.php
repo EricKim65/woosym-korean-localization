@@ -16,19 +16,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Sym_Mvc_Main' ) ) {
-	add_action( 'admin_notices', 'wskl_install_sym_mvc_notice' );
+// plugin's defines
+define( 'WSKL_PATH', __DIR__ );
+define( 'WSKL_MAIN_FILE', __FILE__ );
+define( 'WSKL_PREFIX', 'wskl_' );
+define( 'WSKL_VERSION', '3.2.2' );
 
-	return;
-}
-
-function wskl_install_sym_mvc_notice() {  // Symphony MVC Framework 가 실행될 때만
-	echo ' <div class="error">
-				 <p><font color="red">우커머스-심포니는 Symphony MVC Framework 플러그인이 활성화된 상태에서만 동작됩니다. Symphony MVC Framework를 설치/활성화하여 주십시요 ! </font></p>
-		  </div>';
-}
+require_once( WSKL_PATH . '/includes/lib/sym-mvc/sym-mvc-framework.php' );
 
 if ( ! class_exists( 'WooCommerce' ) ) { // 우커머스가 실행될 때만
+
 	add_action( 'admin_notices', 'wskl_install_woocommerce_notice' );
 
 	return;
@@ -36,17 +33,12 @@ if ( ! class_exists( 'WooCommerce' ) ) { // 우커머스가 실행될 때만
 
 function wskl_install_woocommerce_notice() {
 
-	echo ' <div class="error">
-				 <p><font color="red">우커머스-심포니는 우커머스 플러그인이 활성화된 상태에서만 동작됩니다. 우커머스를 설치/활성화하여 주십시요 ! </font></p>
-		  </div>';
+	printf(
+		'<div class="error"><p><font color="red">%s</font></p></div>',
+		__( '우커머스-심포니는 우커머스 플러그인이 활성화된 상태에서만 동작됩니다. 우커머스를 설치/활성화하여 주십시요 !', 'wskl')
+	);
 }
 
-// plugin's defines
-define( 'WSKL_PATH', __DIR__ );
-define( 'WSKL_MAIN_FILE', __FILE__ );
-define( 'WSKL_PREFIX', 'wskl_' );
-define( 'WSKL_VERSION', '3.2.2' );
-define( 'SYM_MVC_FRAMEWORK_PATH', WP_PLUGIN_DIR . '/sym-mvc-framework' );
 
 /**
  * prefix 를 붙인 옵션 이름을 리턴
@@ -79,13 +71,6 @@ function wskl_is_option_enabled( $option_name ) {
 	return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
 }
 
-
-if ( ! class_exists( 'Sym_Mvc_Main' ) ) {
-	$sym_ins_msg = '"우커머스-심포니 통합 플러그인"을 사용하시려면 먼저 Symphony-MVC-Framework Plugin 을 설치하여 주십시요 !';
-	echo "<script>alert('" . $sym_ins_msg . "');</script>";
-
-	return;
-}
 
 if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<' ) ) {
 	$woocommerce_ver21_less = true;
@@ -131,10 +116,11 @@ if ( get_option( $woo_sym_prefix . 'related_products_count' ) != '' ) {
 	}
 }
 
-$sym_checkout_titles = array( 'credit'  => '신용카드',
-                              'remit'   => '실시간 계좌이체',
-                              'virtual' => '가상계좌 이체',
-                              'mobile'  => '모바일소액결제',
+$sym_checkout_titles = array(
+	'credit'  => '신용카드',
+	'remit'   => '실시간 계좌이체',
+	'virtual' => '가상계좌 이체',
+	'mobile'  => '모바일소액결제',
 );
 $sym_checkout_desc   = '로 결제합니다.';
 $sym_pg_agency       = get_option( $woo_sym_prefix . 'pg_agency' );
@@ -174,7 +160,7 @@ if ( wskl_is_option_enabled( 'enable_sym_pg' ) ) {
 /**
  * 배송자 이메일 전화번호 보여지 않기
  */
-if ( !wskl_is_option_enabled( 'disable_show_delivery_phone' ) ) {
+if ( ! wskl_is_option_enabled( 'disable_show_delivery_phone' ) ) {
 	add_filter( 'woocommerce_admin_shipping_fields', 'woo_add_shipping_fields' );
 	// woocommerce order meta box
 	// adding shipping email, phone data
@@ -187,7 +173,7 @@ if ( !wskl_is_option_enabled( 'disable_show_delivery_phone' ) ) {
 			'phone' => array(
 				'label' => __( 'Phone', 'woocommerce' ),
 			),
-		));
+		) );
 	}
 }
 
