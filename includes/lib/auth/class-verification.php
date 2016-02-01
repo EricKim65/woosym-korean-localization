@@ -92,7 +92,7 @@ class Verification {
 
 		if ( $verification instanceof OrderItemRelation ) {
 
-			$info->set_value( $verification );
+			$info->set_oir( $verification );
 			$info->save();
 
 			return TRUE;

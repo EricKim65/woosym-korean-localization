@@ -18,7 +18,7 @@ class Auth_Model {
 	private $meta_key     = '';
 
 	/** @var  OrderItemRelation */
-	private $value;
+	private $oir;
 
 	public function __construct( $license_type ) {
 
@@ -30,29 +30,29 @@ class Auth_Model {
 
 	public function load() {
 
-		$this->value = get_option( $this->meta_key, FALSE );
+		$this->oir = get_option( $this->meta_key, FALSE );
 	}
 
 	public function save() {
 
-		update_option( $this->meta_key, $this->value );
+		update_option( $this->meta_key, $this->oir );
 	}
 
-	public function &get_value() {
+	public function &get_oir() {
 
-		return $this->value;
+		return $this->oir;
 	}
 
-	public function set_value( OrderItemRelation $value ) {
+	public function set_oir( OrderItemRelation $oir ) {
 
-		$this->value = $value;
+		$this->oir = $oir;
 	}
 
 	public function is_available() {
 
-		if ( $this->value instanceof OrderItemRelation ) {
+		if ( $this->oir instanceof OrderItemRelation ) {
 
-			return $this->value->get_order_item_id() > 0 && $this->value->get_key() && $this->value->get_user_id() > 0;
+			return $this->oir->get_order_item_id() > 0 && $this->oir->get_key() && $this->oir->get_user_id() > 0;
 		}
 
 		return FALSE;
@@ -62,7 +62,7 @@ class Auth_Model {
 
 		if ( $this->is_available() ) {
 
-			return $this->get_value()->get_key()->is_active();
+			return $this->get_oir()->get_key()->is_active();
 		}
 
 		return FALSE;
@@ -72,7 +72,7 @@ class Auth_Model {
 
 		if ( $this->is_available() ) {
 
-			return $this->get_value()->get_key()->is_expired();
+			return $this->get_oir()->get_key()->is_expired();
 		}
 
 		return FALSE;
@@ -80,19 +80,19 @@ class Auth_Model {
 
 	public function is_verified() {
 
-		return $this->is_active() && ! $this->is_expired();
+		return ( $this->get_oir()->get_domain()->get_url() == site_url() ) && $this->is_active() && ! $this->is_expired();
 	}
 
 	public function reset() {
 
-		$this->value = FALSE;
+		$this->oir = FALSE;
 		$this->save();
 	}
 
 	public function get_key_value() {
 
 		if ( $this->is_available() ) {
-			return $this->get_value()->get_key()->get_key();
+			return $this->get_oir()->get_key()->get_key();
 		}
 
 		return NULL;
@@ -102,7 +102,7 @@ class Auth_Model {
 
 		if ( $this->is_available() ) {
 
-			return $this->get_value()->get_key()->get_type();
+			return $this->get_oir()->get_key()->get_type();
 		}
 
 		return NULL;

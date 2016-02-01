@@ -82,7 +82,7 @@ class Auth {
 
 		if ( $activation instanceof OrderItemRelation ) {
 
-			$info_model->set_value( $activation );
+			$info_model->set_oir( $activation );
 			$info_model->save();
 
 			wp_send_json_success();
@@ -110,14 +110,14 @@ class Auth {
 
 			if( $info->is_verified() ) {
 
-				$days_left = $info->get_value()->get_key()->get_days_left();
+				$days_left = $info->get_oir()->get_key()->get_days_left();
 
 				$text = '<font size="" color="blue">'. sprintf(
 						'%s: %s, %s: %s, %s: %s %s',
 						__( '발급일', 'wskl' ),
-						static::to_date_string( $info->get_value()->get_key()->get_issue_date() ),
+						static::to_date_string( $info->get_oir()->get_key()->get_issue_date() ),
 						__( '만료일', 'wskl' ),
-						static::to_date_string( $info->get_value()->get_key()->get_expire_date() ),
+						static::to_date_string( $info->get_oir()->get_key()->get_expire_date() ),
 						__( '남은 기간', 'wskl' ),
 						( $info->is_expired() ? __( '만료됨', 'wskl-') : $days_left ),
 						_n( '일', '일', $days_left, 'wskl' )
