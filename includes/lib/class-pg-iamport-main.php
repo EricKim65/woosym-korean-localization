@@ -21,6 +21,11 @@ class WSKL_Iamport_Main {
 		 * @uses init_wc_gateway_iamport 파일 class-pg-iamport-common.php 에 정의.
 		 */
 		add_action( 'plugins_loaded', 'init_wc_gateway_wskl_iamport' );
+
+		/**
+		 *
+		 */
+		add_action( 'admin_init', array( __CLASS__, 'check_original_iamport_plugin_in_use' ) );
 	}
 
 	/**
@@ -37,6 +42,21 @@ class WSKL_Iamport_Main {
 		$wskl_iamport_methods = WC_Gateway_WSKL_Iamport::get_gateway_methods();
 
 		return array_merge( $methods, $wskl_iamport_methods );
+	}
+
+	public static function check_original_iamport_plugin_in_use() {
+
+		if( is_plugin_active(  'iamport-for-woocommerce/IamportPlugin.php' ) ) {
+			add_action(
+				'admin_notices',
+				function () {
+					printf(
+						'<div class="error"><p class="wskl-warning">%s</p></div>',
+						__( '기존 우커머스용 아임포트가 설치되어 있습니다! 다보리 아임포트 지불 기능과 겹칩니다.', 'wskl' )
+					);
+				}
+			);
+		}
 	}
 }
 
