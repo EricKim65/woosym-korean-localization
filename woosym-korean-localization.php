@@ -22,7 +22,7 @@ define( 'WSKL_MAIN_FILE', __FILE__ );
 define( 'WSKL_PREFIX', 'wskl_' );
 define( 'WSKL_VERSION', '3.2.2' );
 
-if( is_admin() ) {
+if ( is_admin() ) {
 
 	add_action( 'admin_enqueue_scripts', 'wskl_admin_style' );
 
@@ -44,7 +44,7 @@ function wskl_install_woocommerce_notice() {
 
 	printf(
 		'<div class="error"><p class="wskl-warning">%s</p></div>',
-		__( '우커머스-심포니는 우커머스 플러그인이 활성화된 상태에서만 동작됩니다. 우커머스를 설치/활성화하여 주십시요 !', 'wskl')
+		__( '우커머스-심포니는 우커머스 플러그인이 활성화된 상태에서만 동작됩니다. 우커머스를 설치/활성화하여 주십시요 !', 'wskl' )
 	);
 }
 
@@ -141,11 +141,31 @@ if ( wskl_is_option_enabled( 'enable_sym_pg' ) ) {
 
 	if ( $pay_gate_agency && ! empty( $pay_gate_agency ) ) {
 
-		/** @noinspection PhpIncludeInspection */
-		require_once( 'includes/lib/class-pg-' . $pay_gate_agency . '-main.php' );
+		$pg_main_path   = WSKL_PATH . '/includes/lib/class-pg-' . $pay_gate_agency . '-main.php';
+		$pg_common_path = WSKL_PATH . '/includes/lib/class-pg-' . $pay_gate_agency . '-common.php';
 
-		/** @noinspection PhpIncludeInspection */
-		require_once( 'includes/lib/class-pg-' . $pay_gate_agency . '-common.php' );
+		if ( file_exists( $pg_main_path ) && file_exists( $pg_common_path ) ) {
+
+			/** @noinspection PhpIncludeInspection */
+			require_once( $pg_main_path );
+
+			/** @noinspection PhpIncludeInspection */
+			require_once( $pg_common_path );
+
+		} else {
+
+			add_action(
+				'admin_notices',
+				function () use ( $pay_gate_agency ) {
+
+					printf(
+						'<div class="error"><p class="wskl-warning">%s: %s</p></div>',
+						__( '다음 PG 모듈이 발견되지 않았습니다.', 'wskl' ),
+						$pay_gate_agency
+					);
+				}
+			);
+		}
 
 		/**
 		 * Woocommerce REST API V3 action.
@@ -266,3 +286,4 @@ if ( is_admin() ) {
 	require_once( WSKL_PATH . '/includes/lib/mat-logs/class-product-logs.php' );
 	\wskl\lib\logs\Product_Logs::initialize();
 }
+
