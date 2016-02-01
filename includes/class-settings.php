@@ -23,7 +23,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
 
     public function add_menu_item()
     {  // Add settings page to admin menu
-        add_menu_page('다보리', '다보리', 'manage_options', $this->_token . '_checkout_settings', '', '', 56);
+        add_menu_page('다보리', '다보리', 'manage_options', $this->_token . '_checkout_settings', '', 'dashicons-cart', 56);
 
         $this->setting_menu_hook = add_submenu_page(
             $this->_token . '_checkout_settings',
@@ -71,9 +71,9 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'id' => 'dummy_1',
                     'label' => __('제작 목적', 'wskl'),
                     'description' => __('
-						<font size="" color="red">1. "워드프레스와 우커머스를 Cafe24나 고도몰처럼" 더 쉽고 더 편리하게 만들었습니다.<br/>
+						<span class="wskl-notice">1. "워드프레스와 우커머스를 Cafe24나 고도몰처럼" 더 쉽고 더 편리하게 만들었습니다.<br/>
 						2. 쇼핑몰 영업에 꼭 필요한 기능만을 모두 담아서 최소의 비용으로 제공합니다. <br/>
-						3. "다보리 마케팅 자동화 서버와 연동"하여 중소상공인을 위한 "마케팅 자동화" 서비스를 제공합니다. <br/></font>
+						3. "다보리 마케팅 자동화 서버와 연동"하여 중소상공인을 위한 "마케팅 자동화" 서비스를 제공합니다. <br/></span>
 
 					', $this->_folder),
                     'type' => 'caption',
@@ -83,7 +83,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'id' => 'dummy_2',
                     'label' => __('사용방법', 'wskl'),
                     'description' => __('
-						<font size="" color="red">플러그인 인증키로 "제품 인증"을 하기 전에는 본플러그인의 기능을 사용할 수 없습니다.<br/></font>
+						<span class="wskl-notice">플러그인 인증키로 "제품 인증"을 하기 전에는 본플러그인의 기능을 사용할 수 없습니다.<br/></span>
 						<a href="https://www.dabory.com/" target="_blank" >"다보리 플러그인 인증키 확인" 페이지로 바로가기</a>
 					', $this->_folder),
                     'type' => 'caption',
@@ -102,13 +102,13 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'id' => 'dummy_10',
                     'label' => __('디버그 방법', 'wskl'),
                     'description' => __("
-						<font size='' color='red'>wp-config.php를 아래와 같이 수정하십시요.<br/></font>
+						<span class=\"wskl-notice\">wp-config.php를 아래와 같이 수정하십시요.<br/></span>
 						//define('WP_DEBUG', false); <br/>
 						define('WP_DEBUG',         true);  // Turn debugging ON <br/>
 						define('WP_DEBUG_DISPLAY', true); // Turn forced display OFF <br/>
 						define('WP_DEBUG_LOG',     true);  // Turn logging to wp-content/debug.log ON <br/> <br/>
 
-						<font size='' color='red'><a href='" . $debug_link . "' target='_blank'>디버그 링크를 클릭하면 누적된 에러메시지가 보입니다.</a><br/></font>
+						<span class=\"wskl-notice\"><a href='" . $debug_link . "' target='_blank'>디버그 링크를 클릭하면 누적된 에러메시지가 보입니다.</a><br/></span>
 					", $this->_folder),
                     'type' => 'caption',
                     'default' => ''
@@ -155,17 +155,17 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
         $settings['authentication'] = array(
             'title' => __('제품인증', 'wskl'),
             'description' => __('제품 구매 또는 무료 사용시 www.dabory.com에서 부여된 활성화키로 플러그인을 먼저 활성화후 사용 가능합니다.<br/>
-						<a href="https://www.dabory.com/my-account/view-order/" target="_blank" ><font size="2" color="red">"다보리 플러그인 인증키 확인" 페이지로 바로가기</font></a>', 'wskl'),
+						<a href="https://www.dabory.com/my-account/view-order/" target="_blank" ><span class="wskl-notice">"다보리 플러그인 인증키 확인" 페이지로 바로가기</span></a>', 'wskl'),
             'fields' => array(
                 array(
                     'id' => 'dummy_3',
                     'label' => __('사이트 주소(URL)', 'wskl'),
                     'description' => __('
 						' . get_option('siteurl') . '<br/>
-						<font size="" color="red">인증키는 사이트 주소와 제품 인증(meta) 서버 측과 동기화되어 활성화되므로 <br/>
+						<span class="wskl-notice">인증키는 사이트 주소와 제품 인증(meta) 서버 측과 동기화되어 활성화되므로 <br/>
 						' . get_option('siteurl') . '<br/>
-						<font size="" color="red">인증키는 사이트 주소와 다보리 메타(meta) 서버 측과 동기화되어 활성화되므로 <br/>
-						관리자모드 "설정"에서 사이트를 변경하는 경우 다시 기능 활성화를 하셔야 합니다. </font>
+						<span class="wskl-notice">인증키는 사이트 주소와 다보리 메타(meta) 서버 측과 동기화되어 활성화되므로 <br/>
+						관리자모드 "설정"에서 사이트를 변경하는 경우 다시 기능 활성화를 하셔야 합니다. </span>
 					', $this->_folder),
                     'type' => 'caption',
                     'default' => '',
@@ -210,7 +210,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
         $settings['checkout-paymentgate'] = array(
             'title' => __('지불기능(A)', 'wskl'),
             'description' => __('국내의 모든 지불 대행 회사의 결제 플러그인을 지원합니다.<br/>
-						<font size="" color="red">현재 지원되지 않는 플러그인은 무료로 개발해드립니다.</font><br/>
+						<span class="wskl-notice">현재 지원되지 않는 플러그인은 무료로 개발해드립니다.</span><br/>
 			            결제대행(PG)회사를 추가하기를 원하는 경우  service@econoq.co.kr 로 메일 주시면  1주일이내에 개발해 드리겠습니다.<br/>
 						<a href="http://www.symphonysoft.co.kr/" target="_blank">신규 플러그인 개발 요청 하러 가기</a><br/>
 										', $this->_folder),
@@ -239,8 +239,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                 array(
                     'id' => 'pg_agency',
                     'label' => __('결제대행업체', 'wskl'),
-                    'description' => __('</br><font color="red">지불 대행업체 지정후 "변경사항저장"을 하시면 추가 입력 항목이 나타납니다.</font></br><font color="blue">.</font> ', 'wskl'),
-                    'description' => __('</br><font color="red">지불 대행업체 지정후 "변경사항저장"을 하시면 추가 입력 항목이 나타납니다.</font></br><font color="blue">(아임포트)로 명시된 것은 아임포트 서버를 거쳐서 지불 결제가 됩니다.</font> ', 'wskl'),
+                    'description' => __('</br><span class="wskl-notice">지불 대행업체 지정후 "변경사항저장"을 하시면 추가 입력 항목이 나타납니다.</span><br/><span class="wskl-info">(아임포트)로 명시된 것은 아임포트 서버를 거쳐서 지불 결제가 됩니다.</span> ', 'wskl'),
                     'type' => 'select',
                     'options' => array(
                         'payapp' => __( '페이앱', 'wskl' ),
@@ -329,13 +328,13 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                         'id' => 'dummy_11',
                         'label' => __('상점등록', 'wskl'),
                         'description' => __('
-						<font size="" color="red">상점등록 과정은 매우 중요한 사항이므로  정확히 숙지하고 실행해주셔야 합니다. </font></br>
+						<span class="wskl-notice">상점등록 과정은 매우 중요한 사항이므로  정확히 숙지하고 실행해주셔야 합니다. </span></br>
 						1. KCP와 계약 체결 후 다음의 내용을 발급 받습니다.</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;A.Site Code와 Site Key를 입력하고 저장합니다.</br>
                          2. 당 플러그인의 KCP 홈 폴더중 “bin” 폴더에 있는 pp_cli 화일의 실행권한을 755로 바꾸어 줍니다. 그대로 둘 경우 결제 않됨.</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;예)/public_html/wp-content/plugins/wskl/includes/lib/homekcp/bin/pp_cli</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;ssh로 로그인, 해당폴더에서 "chmod 755 pp_cli"  또는 화일질라에서 우측마우스누르고 " 화일 권한 수정"</br>
- 						<font size="" color="blue">테스트시에는기본 설치된 테스트용 KCP TEST  상점이 사용되므로 참고하세요</font></br>
+ 						<font size="" color="blue">테스트시에는기본 설치된 테스트용 KCP TEST  상점이 사용되므로 참고하세요</span></br>
   					', $this->_folder),
                         'type' => 'caption',
                         'default' => '',
@@ -374,14 +373,14 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                         'id' => 'dummy_11',
                         'label' => __('상점등록', 'wskl'),
                         'description' => __('
-						<font size="" color="red">상점등록 과정은 매우 중요한 사항이므로  정확히 숙지하고 실행해주셔야 합니다. </font></br>
+						<span class="wskl-notice">상점등록 과정은 매우 중요한 사항이므로  정확히 숙지하고 실행해주셔야 합니다. </span></br>
 						1. 이니시스와 계약 체결 후 다음의 내용을 발급 받습니다.</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;A. 키패스워드(숫자 4자리)와  상점 아이디(10자리)를 해당설정에 입력하고 저장합니다.</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;B.키화일 등  4개 (keypass.enc, mcert.pem, mpriv.pem, readme.txt)</br>
                         2. 당 플러그인의 이니페이 홈 폴더중 “key” 폴더에 상점아이디와 동일한 이름의 서브 디렉터리를 만듭니다(대소문자 구별함.).</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;예)/public_html/wp-content/plugins/wskl/includes/lib/homeinicis/key/[상점아이디]</br>
                         3. 발급받은 화일  4개 (keypass.enc, mcert.pem, mpriv.pem, readme.txt)를 2.에서 만든 폴더에 복사합니다.</br>
- 						<font size="" color="blue">테스트시에는기본 설치된 테스트용 INIpayTest 상점아이디폴더가 사용되므로 참고하세요</font></br>
+ 						<font size="" color="blue">테스트시에는기본 설치된 테스트용 INIpayTest 상점아이디폴더가 사용되므로 참고하세요</span></br>
   					', $this->_folder),
                         'type' => 'caption',
                         'default' => '',
@@ -467,7 +466,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                 'id' => 'dummy_1',
                 'label' => __('추가설정내용', 'wskl'),
                 'description' => __('
-						<font size="" color="red">해당페이지 설정후 반드시 추가해야할 "우커머스 결제설정" 내용입니다.</font>   <a href="./admin.php?page=wc-settings&tab=checkout">결제설정 바로가기</a><br/>
+						<span class="wskl-notice">해당페이지 설정후 반드시 추가해야할 "우커머스 결제설정" 내용입니다.</span>   <a href="./admin.php?page=wc-settings&tab=checkout">결제설정 바로가기</a><br/>
 						1. "해당 페이지를 설정하면 우커머스->설정->결제 설정"의 하위메뉴에 지정한 결제 방법이 추가됩니다. <br/>
 						   &nbsp;&nbsp;&nbsp;각각의 하위메뉴로 들어가서 활성화에 체크하여 주십시요.  <br/>
 						2. "우커머스->설정->결제옵션->지불기능웨이"에서 결제페이지에 보일 결제 방법의 순서를 결정하여 주십시요.<br/>
@@ -499,7 +498,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                 array(
                     'id' => 'korean_won',
                     'label' => __('한국 원화 표시 설정', 'wskl'),
-                    'description' => __('우커머스->설정->일반->통화에서 대한민국(원)표시가 나오도록 합니다.<br/>국내용 우커머스 쇼핑몰은 반드시 <a href="http://www.symphonysoft.co.kr/cs/activity/">우커머스-설정-일반</a> 에서 통화->대한민국(KRW), 통화 기호 위치->오른쪽으로 세팅하여 주십시요 !</br> <font size="" color="red">그렇지 않으면 고객의 결제  진행이 되지 않습니다. </font>', 'wskl'),
+                    'description' => __('우커머스->설정->일반->통화에서 대한민국(원)표시가 나오도록 합니다.<br/>국내용 우커머스 쇼핑몰은 반드시 <a href="http://www.symphonysoft.co.kr/cs/activity/">우커머스-설정-일반</a> 에서 통화->대한민국(KRW), 통화 기호 위치->오른쪽으로 세팅하여 주십시요 !</br> <span class="wskl-notice">그렇지 않으면 고객의 결제  진행이 되지 않습니다. </span>', 'wskl'),
                     'type' => 'checkbox',
                     'default' => '',
                 ),
@@ -520,7 +519,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                 array(
                     'id' => 'related_products_count',
                     'label' => __('관련상품표시 갯수', 'wskl'),
-                    'description' => __('관련상품에 표시되는 갯수를 결정합니다.<font color="red">(테마에 따라 적용되지 않는 경우도 있으므로 유의하세요.)</font>', 'wskl'),
+                    'description' => __('관련상품에 표시되는 갯수를 결정합니다.<font color="red">(테마에 따라 적용되지 않는 경우도 있으므로 유의하세요.)</span>', 'wskl'),
                     'type' => 'shorttext',
                     'default' => '4',
                     'placeholder' => __('4', 'wskl'),
@@ -623,12 +622,12 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'id' => 'dummy_13',
                     'label' => __('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[페이스북] 키발급', 'wskl'),
                     'description' => __('
-						<font size="" color="red">반드시 https://developers.facebook.com 에서 키발급을 먼저 받으십시요.</font>   <a href="https://developers.facebook.com" target="_blank" >키발급 바로가기</a><br/>
+						<span class="wskl-notice">반드시 https://developers.facebook.com 에서 키발급을 먼저 받으십시요.</span>   <a href="https://developers.facebook.com" target="_blank" >키발급 바로가기</a><br/>
 						1. My App 메뉴에서 Add a New App 을 클릭한 후 Website 를 선택하십시요. <br/>
 						2. 해당웹사이트의 이름을 입력하시고 Create New Facebook ID 하십시요. <br/>
 						3. 반드시 Site URL에 http://를 포함한 고객의 웹사이트 주소를 입력하십시요. <br/>
 						4. App ID 생성이 완료되면 반드시 해당 App의 Settings 로 가셔서 App Domains와 Website에서 <br/>고객의
-						    웹사이트 주소가 일치하는 지 확인하세요. <font size="" color="red">웹사이트 주소가 바뀔때 반드시 여기와 일치시켜야 합니다.</font><br/>
+						    웹사이트 주소가 일치하는 지 확인하세요. <span class="wskl-notice">웹사이트 주소가 바뀔때 반드시 여기와 일치시켜야 합니다.</span><br/>
 						5. App ID와 App Secret 을 확인하신 후 다보리 플러그인의 해당 키값을 입력하고 저장하여 주십시요.<br/>
 					', $this->_folder),
                     'type' => 'caption',
@@ -678,12 +677,12 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'id' => 'dummy_14',
                     'label' => __('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[네이버] 키발급', 'wskl'),
                     'description' => __('
-						<font size="" color="red">반드시  http://developer.naver.com/wiki/pages/NaverLogin 에서 키발급을 먼저 받으십시요.</font>   <a href=" http://developer.naver.com/wiki/pages/NaverLogin" target="_blank" >키발급 바로가기</a><br/>
+						<span class="wskl-notice">반드시  http://developer.naver.com/wiki/pages/NaverLogin 에서 키발급을 먼저 받으십시요.</span>   <a href=" http://developer.naver.com/wiki/pages/NaverLogin" target="_blank" >키발급 바로가기</a><br/>
 						1. [키발급 관리]를 선택한 후 네이버 로그인을 선택하십시요.. <br/>
 						2. 새 애플리케이션을 등록하고 서비스 환경은 [www-Web]으로 선택하십시요.. <br/>
 						3. PC웹과 모바일 웹에서 고객의  웹사이트 주소를 입력하시고 콜백도 동일하게 입력하십시요. <br/>
                         4. Client ID 생성이 완료되면 어플리케이션 메뉴의 [일반]메뉴로 고객의  PC웹과 모바일 웹사이트 주소가 일치하는 지 확인하세요. <br/>
-						<font size="" color="red">웹사이트 주소가 바뀔때 반드시 여기와 일치시켜야 합니다.</font><br/>
+						<span class="wskl-notice">웹사이트 주소가 바뀔때 반드시 여기와 일치시켜야 합니다.</span><br/>
 						5. Client ID와 Client Secret 을 확인하신 후 다보리 플러그인의 해당 키값을 입력하고 저장하여 주십시요.<br/>
 					', $this->_folder),
                     'type' => 'caption',
@@ -708,7 +707,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings
                     'id' => 'white_ipcode_list',
                     'label' => __('화이트 IP 코드 리스트', 'wskl'),
                     'description' => __('차단하지 않을 국가의 IP 코드를 추가합니다. 컴마로 분리</br>
-					<font size="" color="green">예)KR,US,JP,CN => KR-한국 US-미국, JP-일본, CN-중국</font>					
+					<font size="" color="green">예)KR,US,JP,CN => KR-한국 US-미국, JP-일본, CN-중국</span>					
 						', 'wskl'),
                     'type' => 'longtext',
                     'default' => 'KR,US,JP,CN',
