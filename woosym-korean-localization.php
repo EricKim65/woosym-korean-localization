@@ -22,6 +22,15 @@ define( 'WSKL_MAIN_FILE', __FILE__ );
 define( 'WSKL_PREFIX', 'wskl_' );
 define( 'WSKL_VERSION', '3.2.2' );
 
+if( is_admin() ) {
+
+	add_action( 'admin_enqueue_scripts', 'wskl_admin_style' );
+
+	function wskl_admin_style() {
+
+		wp_enqueue_style( 'wskl-admin-css', plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/admin.css' );
+	}
+}
 require_once( WSKL_PATH . '/includes/lib/sym-mvc/sym-mvc-framework.php' );
 
 if ( ! class_exists( 'WooCommerce' ) ) { // 우커머스가 실행될 때만
@@ -34,7 +43,7 @@ if ( ! class_exists( 'WooCommerce' ) ) { // 우커머스가 실행될 때만
 function wskl_install_woocommerce_notice() {
 
 	printf(
-		'<div class="error"><p><font color="red">%s</font></p></div>',
+		'<div class="error"><p class="wskl-warning">%s</p></div>',
 		__( '우커머스-심포니는 우커머스 플러그인이 활성화된 상태에서만 동작됩니다. 우커머스를 설치/활성화하여 주십시요 !', 'wskl')
 	);
 }
@@ -117,10 +126,10 @@ if ( get_option( $woo_sym_prefix . 'related_products_count' ) != '' ) {
 }
 
 $sym_checkout_titles = array(
-	'credit'  => '신용카드',
-	'remit'   => '실시간 계좌이체',
-	'virtual' => '가상계좌 이체',
-	'mobile'  => '모바일소액결제',
+	'credit'  => __( '신용카드', 'wskl' ),
+	'remit'   => __( '실시간 계좌이체', 'wskl' ),
+	'virtual' => __( '가상계좌 이체', 'wskl' ),
+	'mobile'  => __( '모바일소액결제', 'wskl' ),
 );
 $sym_checkout_desc   = '로 결제합니다.';
 $sym_pg_agency       = get_option( $woo_sym_prefix . 'pg_agency' );

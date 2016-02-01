@@ -1,0 +1,12 @@
+.wskl-warning {
+    color: #FF0000;
+    font-weight: bold;
+}
+
+.wskl-notice {
+    color: #E03333;
+}
+
+.wskl-info {
+    color: #3333E0;
+}
