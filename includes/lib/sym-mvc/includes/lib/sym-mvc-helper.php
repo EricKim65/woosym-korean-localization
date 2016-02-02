@@ -1,10 +1,16 @@
 <?php
 
-/* Debug & Log Helper   Last Update 2015.3.6 */
-function sym__alert( $str ) {
+if ( ! function_exists( 'sym__alert' ) ) :
 
-	echo "<script>alert('" . $str . "');</script>";
-}
+	/* Debug & Log Helper   Last Update 2015.3.6 */
+	function sym__alert( $str ) {
+
+		echo "<script>alert('" . $str . "');</script>";
+	}
+
+endif;
+
+if ( ! function_exists( 'sym__log' ) ) :
 
 function sym__log( $message, $showpage = false ) {
 
@@ -27,3 +33,5 @@ function sym__log( $message, $showpage = false ) {
 	};
 
 }
+
+endif;
