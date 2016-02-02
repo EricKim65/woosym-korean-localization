@@ -22,7 +22,10 @@ define( 'WSKL_MAIN_FILE', __FILE__ );
 define( 'WSKL_PREFIX', 'wskl_' );
 define( 'WSKL_VERSION', '3.2.3-branch' );
 
-require_once( WSKL_PATH . '/includes/lib/sym-mvc/sym-mvc-framework.php' );
+require_once( WSKL_PATH . '/includes/lib/wskl-functions.php' );
+require_once( WSKL_PATH . '/includes/class-wskl-sym-mvc-deactivation.php' );
+require_once( WSKL_PATH . '/includes/class-wskl-woocommerce-activation.php' );
+require_once( WSKL_PATH . '/includes/class-wskl-iamport-notice.php' );
 
 if ( is_admin() ) {
 
@@ -33,54 +36,6 @@ if ( is_admin() ) {
 		wp_enqueue_style( 'wskl-admin-css', plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/admin.css' );
 	}
 }
-
-if ( ! class_exists( 'WooCommerce' ) ) { // 우커머스가 실행될 때만
-
-	add_action( 'admin_notices', 'wskl_install_woocommerce_notice' );
-
-	return;
-}
-
-function wskl_install_woocommerce_notice() {
-
-	printf(
-		'<div class="error"><p class="wskl-warning">%s</p></div>',
-		__( '우커머스-심포니는 우커머스 플러그인이 활성화된 상태에서만 동작됩니다. 우커머스를 설치/활성화하여 주십시요 !', 'wskl' )
-	);
-}
-
-
-/**
- * prefix 를 붙인 옵션 이름을 리턴
- *
- * @author changwoo
- *
- * @param $option_name string prefix 문자열을 붙이지 않은 옵션 이름.
- *
- * @return string prefix 문자열을 붙인 옵션 이름
- */
-function wskl_get_option_name( $option_name ) {
-
-	return WSKL_PREFIX . $option_name;
-}
-
-
-/**
- * 해당 옵션을 boolean 으로 해석해 true, false 로 리턴
- *
- * @author changwoo
- *
- * @param $option_name string prefix 문자열을 붙이지 않은 옵션 이름.
- *
- * @return boolean 해당 옵션
- */
-function wskl_is_option_enabled( $option_name ) {
-
-	$value = get_option( wskl_get_option_name( $option_name ) );
-
-	return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
-}
-
 
 if ( version_compare( WOOCOMMERCE_VERSION, '2.1', '<' ) ) {
 	$woocommerce_ver21_less = true;
@@ -110,7 +65,6 @@ if ( ! function_exists( 'wskl_plugin_add_settings_link' ) ) {
 
 $plugin = plugin_basename( __FILE__ );
 add_filter( "plugin_action_links_$plugin", 'wskl_plugin_add_settings_link', 99 );
-
 
 $woo_sym_prefix = 'wskl_';
 
@@ -154,17 +108,11 @@ if ( wskl_is_option_enabled( 'enable_sym_pg' ) ) {
 			require_once( $pg_common_path );
 
 		} else {
-
 			add_action(
-				'admin_notices',
-				function () use ( $pay_gate_agency ) {
+				'admin_notices', function () use ( $pay_gate_agency ) {
 
-					printf(
-						'<div class="error"><p class="wskl-warning">%s: %s</p></div>',
-						__( '다음 PG 모듈이 발견되지 않았습니다.', 'wskl' ),
-						$pay_gate_agency
-					);
-				}
+				printf( '<div class="error"><p class="wskl-warning">%s: %s</p></div>', __( '다음 PG 모듈이 발견되지 않았습니다.', 'wskl' ), $pay_gate_agency );
+			}
 			);
 		}
 
@@ -180,7 +128,7 @@ if ( wskl_is_option_enabled( 'enable_sym_pg' ) ) {
 			function wskl_add_api_request( $api_request ) {
 
 				if ( class_exists( $api_request ) ) {
-					$payment_gateway = new $api_request();
+					new $api_request();
 				}
 			}
 		}
@@ -254,8 +202,6 @@ function wskl_country_ip_block() {
 	}
 }
 
-require_once( WSKL_PATH . '/includes/class-main.php' );
-new Woosym_Korean_Localization( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
 
 if ( is_admin() ) {
 	include_once( WSKL_PATH . '/includes/class-settings.php' );
@@ -288,3 +234,4 @@ if ( is_admin() ) {
 	\wskl\lib\logs\Product_Logs::initialize();
 }
 
+require_once( WSKL_PATH . '/includes/class-main.php' );

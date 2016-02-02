@@ -20,6 +20,7 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 	}
 
 	public function add_menu_item() {  // Add settings page to admin menu
+
 		add_menu_page( '다보리', '다보리', 'manage_options', $this->_token . '_checkout_settings', '', 'dashicons-cart', 56 );
 
 		$this->setting_menu_hook = add_submenu_page(
@@ -237,10 +238,10 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'description' => __( '</br><span class="wskl-notice">지불 대행업체 지정후 "변경사항저장"을 하시면 추가 입력 항목이 나타납니다.</span><br/><span class="wskl-info">(아임포트)로 명시된 것은 아임포트 서버를 거쳐서 지불 결제가 됩니다.</span> ', 'wskl' ),
 					'type'        => 'select',
 					'options'     => array(
-						'payapp'       => __( '페이앱', 'wskl' ),
-						'kcp'          => __( 'KCP', 'wskl' ),
-						'inicis'       => __( '이니시스', 'wskl' ),
-						'ags'          => __( '올더게이트', 'wskl' ),
+						'payapp'  => __( '페이앱', 'wskl' ),
+						'kcp'     => __( 'KCP', 'wskl' ),
+						'inicis'  => __( '이니시스', 'wskl' ),
+						'ags'     => __( '올더게이트', 'wskl' ),
 						'iamport' => __( '아임포트', 'wskl' ),
 					),
 					'default'     => 'ags',
