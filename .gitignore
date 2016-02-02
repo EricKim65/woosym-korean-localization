@@ -53,3 +53,10 @@ crashlytics-build.properties
 
 # class-api-handler.php backups
 includes/lib/cassandra-php/class-api-handler.php.bak*
+
+# WordPress Test facilities
+.travis.yml
+phpunit.xml.dist
+phpunit.xml
+bin
+tests
