@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:       우커머스-심포니 통합 플러그인
- * Version:           3.2.2
+ * Version:           3.2.3-branch
  * Plugin URI:        https://www.dabory.com/
  * Description:       우커머스를 카페24 같이 편리하게 만들어주는 한국 쇼핑몰 환경 표준 플러그인.
  * Author:            (주)심포니소프트 - Dabory
@@ -9,7 +9,7 @@
  * Requires at least: 4.1
  * Tested up to:      4.0004
  * Text Domain:       wskl
- * Domain Path:       /lang/
+ * Domain Path:       /lang
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WSKL_PATH', __DIR__ );
 define( 'WSKL_MAIN_FILE', __FILE__ );
 define( 'WSKL_PREFIX', 'wskl_' );
-define( 'WSKL_VERSION', '3.2.2' );
+define( 'WSKL_VERSION', '3.2.3-branch' );
+
+require_once( WSKL_PATH . '/includes/lib/sym-mvc/sym-mvc-framework.php' );
 
 if ( is_admin() ) {
 
@@ -31,7 +33,6 @@ if ( is_admin() ) {
 		wp_enqueue_style( 'wskl-admin-css', plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/admin.css' );
 	}
 }
-require_once( WSKL_PATH . '/includes/lib/sym-mvc/sym-mvc-framework.php' );
 
 if ( ! class_exists( 'WooCommerce' ) ) { // 우커머스가 실행될 때만
 
