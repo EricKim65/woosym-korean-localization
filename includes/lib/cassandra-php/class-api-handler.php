@@ -53,7 +53,7 @@ class Rest_Api_Helper {
 	 *
 	 * @throws BadResponseException 의도한 응답 코드가 아닐 경우 던지는 예외. $throws 가 TRUE 일 때 동작 (기본)
 	 */
-	public static function request( $url, $method, $body = NULL, array $accepts = array( 200, ), array $headers = array(), $throws = TRUE ) {
+	public static function request( $url, $method, $body = NULL, array $accepts = array( 200, ), array $headers = array(), $throws = FALSE ) {
 
 		$args = array(
 			'headers' => &$headers,
@@ -84,6 +84,7 @@ class Rest_Api_Helper {
 					sprintf( "Invalid response code '%s', message: %s", $response_code, $response_body )
 				);
 			} else {
+				error_log( sprintf( "Invalid response code '%s', message: %s", $response_code, $response_body ) );
 				return FALSE;
 			}
 		}
