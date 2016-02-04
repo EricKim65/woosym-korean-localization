@@ -330,10 +330,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			/**
 			 * 모듈 배송추적
 			 */
-			if ( wskl_is_option_enabled( 'enable_ship_track' ) ) {
-
-				require_once( WSKL_PATH . '/includes/class-wskl-shipping-tracking.php' );
-			}
+			require_once( WSKL_PATH . '/includes/class-wskl-shipping-tracking.php' );
 		}
 
 		public function is_request( $type ) {
