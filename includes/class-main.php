@@ -8,6 +8,8 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			parent::__construct( $file, $version );
 
+			$this->includes();
+
 			if ( get_option( $this->_prefix . 'enable_sym_checkout' ) == 'on' ) {
 				add_action( 'woocommerce_init', array( $this, 'woosym_daum_kaddress' ), 1 );
 				add_action( 'wp_enqueue_scripts', array( $this, 'js_and_css' ) );
@@ -288,6 +290,63 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			}
 
 			return $field;
+		}
+
+		public function includes() {
+
+			if ( $this->is_request( 'admin') ) {
+				include_once( WSKL_PATH . '/includes/class-settings.php' );
+				$wskl_setting = new Woosym_Korean_Localization_Settings( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
+
+				/** authorization */
+				require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
+				$auth = new \wskl\lib\auth\Auth( $wskl_setting );
+
+				/** post export */
+				if ( wskl_is_option_enabled( 'enable_post_export' ) ) {
+
+					require_once( WSKL_PATH . '/includes/lib/mat-logs/class-post-export.php' );
+					\wskl\lib\posts\Post_Export::initialize();
+				}
+
+			}
+
+			if( $this->is_request( 'front' ) ) {
+
+				// verification
+				require_once( WSKL_PATH . '/includes/lib/auth/class-verification.php' );
+				$verification = new \wskl\lib\auth\Verification();
+
+				// sales log
+				if ( wskl_is_option_enabled( 'enable_sales_log' ) ) {
+					require_once( WSKL_PATH . '/includes/lib/mat-logs/class-sales.php' );
+					$sales = new \wskl\lib\sales\Sales();
+				}
+
+				require_once( WSKL_PATH . '/includes/lib/mat-logs/class-product-logs.php' );
+				\wskl\lib\logs\Product_Logs::initialize();
+			}
+
+			/**
+			 * 모듈 배송추적
+			 */
+			if ( wskl_is_option_enabled( 'enable_ship_track' ) ) {
+
+				require_once( WSKL_PATH . '/includes/class-wskl-shipping-tracking.php' );
+			}
+		}
+
+		public function is_request( $type ) {
+			switch ( $type ) {
+				case 'admin' :
+					return is_admin();
+				case 'ajax' :
+					return defined( 'DOING_AJAX' );
+				case 'cron' :
+					return defined( 'DOING_CRON' );
+				case 'frontend' :
+					return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
+			}
 		}
 	}
 
