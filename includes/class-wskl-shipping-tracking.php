@@ -155,17 +155,20 @@ if ( ! class_exists( 'WSKL_Shipping_Tracking' ) ) :
     function shortcode_shipping_tracking( $args ) {
 
       $context = array(
-          'cj-daehan'   => array( '690044118373' ),
-          'logen'       => array( '98941423184' ),
-          'hanjin'      => array( '407868999370' ),
-          'post-office' => array( '6899090674745' ),
-          'hyeondae'    => array( '690044118373' ),
-          'kg-logis'    => array( '148826701553' ),
-          'kgb'         => array( '2514499400' ),
+          'agents' => array(
+              'cj-daehan'   => array( '690044118373', '691054781954' ),   // CJ 대한통운 (CJ GLS)
+              'logen'       => array( '98941423184' ),
+              'hanjin'      => array( '407868999370' ),
+              'post-office' => array( '6899090674745' ),
+              'hyeondae'    => array( '224791520494' ),   // 현대택배
+              'kg-logis'    => array( '148826701553' ),   // KG로지스
+              'kgb'         => array( '2514499400' ),
+          ),
       );
 
       ob_start();
       wc_get_template( 'shipping-tracking-template.php', $context, '', WSKL_PATH . '/includes/lib/shipping-tracking/' );
+
       return ob_get_clean();
     }
   }
