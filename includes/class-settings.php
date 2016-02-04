@@ -522,7 +522,6 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 		);
 
 		// agent helper added
-//		Agent_Helper::init();
 		$agents        = WSKL_Agent_Helper::get_agent_list();
 		$agents_keys   = array_keys( $agents );
 		$agent_default = $agents_keys[0];
