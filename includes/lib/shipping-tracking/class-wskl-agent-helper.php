@@ -13,15 +13,7 @@ if ( ! class_exists( 'WSKL_Agent_Helper' ) ) :
 		 */
 		public static function init() {
 
-			// just to reset the data.
-			// delete_option( 'delivery-agents' );
-
-			static::$agents = get_option( 'delivery-agents' );
-
-			if ( ! static::$agents ) {
-				static::$agents = static::default_delivery_agents();
-				update_option( 'delivery-agents', static::$agents );
-			}
+			static::$agents = static::default_delivery_agents();
 		}
 
 		/**
@@ -124,7 +116,7 @@ if ( ! class_exists( 'WSKL_Agent_Helper' ) ) :
 					'query_url_template' => '',
 				),
 
-				// CJ대한통운
+				// CJ대한통운 (CJ GLS)
 				'cj-daehan'   => (object) array(
 					'slug'               => 'cj-daehan',
 					'name'               => 'CJ대한통운',
@@ -163,7 +155,7 @@ if ( ! class_exists( 'WSKL_Agent_Helper' ) ) :
 				'kg-logis' => (object) array(
 					'slug'               => 'kg-logis',
 					'name'               => 'KG로지스',
-					'query_url_template' => '',
+					'query_url_template' => 'http://www.kglogis.co.kr/delivery/delivery_result.jsp?item_no=%s',
 				),
 
 				// KGB택배
