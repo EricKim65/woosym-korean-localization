@@ -4,10 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once( WSKL_PATH . '/includes/lib/delivery-tracking/agents.php' );
 require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
-
-use wskl\delivery_tracking\agents\Agent_Helper;
 
 
 class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
@@ -525,9 +522,8 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 		);
 
 		// agent helper added
-		Agent_Helper::init();
-		$agents = Agent_Helper::get_agent_list();
-		file_put_contents( __DIR__ . '/my_log.log', print_r( $agents, true ) );
+//		Agent_Helper::init();
+		$agents        = WSKL_Agent_Helper::get_agent_list();
 		$agents_keys   = array_keys( $agents );
 		$agent_default = $agents_keys[0];
 
@@ -548,7 +544,8 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'description' => __( '사용중인 배송회사를 지정해 주십시요.', 'wskl' ),
 					'type'        => 'checkbox_multi',
 					'options'     => $agents,  // 하드코드된 것을 없앰.
-					'default'     => array( $agent_default, $agents[ $agent_default ] ),
+					'data'        => get_option( 'shipping_companies' ),
+					'default'     => $agents[ $agent_default ], // array( $agent_default, $agents[ $agent_default ] ),
 				),
 				array(
 					'id'          => 'enable_direct_purchase',
