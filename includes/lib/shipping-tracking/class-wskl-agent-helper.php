@@ -14,6 +14,22 @@ if ( ! class_exists( 'WSKL_Agent_Helper' ) ) :
 		public static function init() {
 
 			static::$agents = static::default_delivery_agents();
+
+			add_action( 'wc_ajax_' . 'wskl-ship-track', array( __CLASS__, 'wskl_indirect_ship_track' ) );
+		}
+
+		public function wskl_indirect_ship_track() {
+
+			$slug   = ( isset( $_GET['agent'] ) ) ? esc_textarea( $_GET['agent'] ) : '';
+			$number = ( isset( $_GET['number'] ) ) ? esc_textarea( $_GET['number'] ) : '';
+
+			$agent = WSKL_Agent_Helper::get_tracking_number_agent_by_slug( $slug );
+			if ( $agent && ! empty( $number ) ) {
+				$url = $agent->get_query_url_template();
+				include "track-template-{$slug}.php";
+			}
+
+			die();
 		}
 
 		/**
@@ -110,11 +126,12 @@ if ( ! class_exists( 'WSKL_Agent_Helper' ) ) :
 				),
 
 				// 현대택배
-//				'hyeondae' => (object) array(
-//					'slug'               => 'hyeondae',
-//					'name'               => '현대택배',
-//					'query_url_template' => '',
-//				),
+				'hyeondae'    => (object) array(
+					'slug'               => 'hyeondae',
+					'name'               => '현대택배',
+					'query_url_template' => 'http://wskl-client.local:8080/?wc-ajax=wskl-ship-track&agent=hyeondae&number=%s',
+					// using indirect
+				),
 
 				// CJ대한통운 (CJ GLS)
 				'cj-daehan'   => (object) array(
@@ -152,7 +169,7 @@ if ( ! class_exists( 'WSKL_Agent_Helper' ) ) :
 //			),
 //
 				// KG로지스
-				'kg-logis' => (object) array(
+				'kg-logis'    => (object) array(
 					'slug'               => 'kg-logis',
 					'name'               => 'KG로지스',
 					'query_url_template' => 'http://www.kglogis.co.kr/delivery/delivery_result.jsp?item_no=%s',
@@ -187,7 +204,7 @@ if ( ! class_exists( 'WSKL_Agent_Helper' ) ) :
 				return false;
 			}
 
-			$agent = (array)static::$agents[ $slug ];
+			$agent = (array) static::$agents[ $slug ];
 
 			$instance = new WSKL_Shipping_Agents(
 				$agent['slug'],
