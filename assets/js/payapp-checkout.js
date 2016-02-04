@@ -5,12 +5,15 @@ jQuery(function ($) {
     var checkout_form = jQuery('form[name="checkout"]');
 
     checkout_form.on('submit', function(){
-        payAppWin = window.open(
-            payapp_checkout.loadingPopupUrl,
-            'payapp'
-            //, 'toolbar=no,menubar=no,left=0,top=0'
-        );
-        payAppWin.blur();
+
+        var gatewayName = checkout_form.find('input[name="payment_method"]:checked').val();
+        if(gatewayName=='payapp') {
+            payAppWin = window.open(
+                payapp_checkout.loadingPopupUrl,
+                '_blank'
+            );
+            payAppWin.blur();
+        }
     });
 
     checkout_form.on('checkout_place_order_payapp ', function () {
