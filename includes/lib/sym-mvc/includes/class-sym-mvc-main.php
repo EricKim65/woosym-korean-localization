@@ -37,7 +37,7 @@ if ( ! class_exists( 'Sym_Mvc_Main' ) ) :
 		public static function instance( $prefix, $file, $version ) {
 
 			if ( is_null( self::$_instance ) ) {
-				self::$_instance = new self( $prefix, $file, $version );
+				self::$_instance = new static( $prefix, $file, $version );
 			}
 
 			return self::$_instance;
