@@ -7,8 +7,8 @@ jQuery(function ($) {
     checkout_form.on('submit', function(){
         payAppWin = window.open(
             payapp_checkout.loadingPopupUrl,
-            'payapp',
-            'toolbar=no,menubar=no,left=0,top=0'
+            'payapp'
+            //, 'toolbar=no,menubar=no,left=0,top=0'
         );
         payAppWin.blur();
     });
