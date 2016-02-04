@@ -110,11 +110,11 @@ if ( ! class_exists( 'WSKL_Agent_Helper' ) ) :
 				),
 
 				// 현대택배
-				'hyeondae' => (object) array(
-					'slug'               => 'hyeondae',
-					'name'               => '현대택배',
-					'query_url_template' => '',
-				),
+//				'hyeondae' => (object) array(
+//					'slug'               => 'hyeondae',
+//					'name'               => '현대택배',
+//					'query_url_template' => '',
+//				),
 
 				// CJ대한통운 (CJ GLS)
 				'cj-daehan'   => (object) array(
