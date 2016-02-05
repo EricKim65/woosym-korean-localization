@@ -4,10 +4,32 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 	final class Woosym_Korean_Localization extends Sym_Mvc_Main {
 
+		protected static $_instance = null;
+
+		public static function instance( $prefix, $file, $version ) {
+
+			if ( is_null( self::$_instance ) ) {
+				self::$_instance = new static( $prefix, $file, $version );
+			}
+
+			return self::$_instance;
+		}
+
+		public function __clone() {
+
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wskl' ), '2.1' );
+		}
+
+		public function __wakeup() {
+
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wskl' ), '2.1' );
+		}
+
 		public function __construct( $file = '', $version = '1.0.0' ) {
 
 			parent::__construct( $file, $version );
 
+			// 모듈 삽입.
 			$this->includes();
 
 			if ( get_option( $this->_prefix . 'enable_sym_checkout' ) == 'on' ) {
@@ -81,8 +103,6 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			return get_site_url();
 		}
-
-//Add local Method here
 
 		public function js_and_css() {
 
@@ -294,7 +314,8 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 		public function includes() {
 
-			if ( $this->is_request( 'admin') ) {
+			if ( $this->is_request( 'admin' ) ) {
+
 				include_once( WSKL_PATH . '/includes/class-settings.php' );
 				$wskl_setting = new Woosym_Korean_Localization_Settings( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
 
@@ -308,10 +329,14 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 					require_once( WSKL_PATH . '/includes/lib/mat-logs/class-post-export.php' );
 					\wskl\lib\posts\Post_Export::initialize();
 				}
-
 			}
 
-			if( $this->is_request( 'front' ) ) {
+			if ( $this->is_request( 'frontend' ) ) {
+
+				/** IP blocking */
+				if ( wskl_is_option_enabled( 'enable_countryip_block' ) ) {
+					require_once( WSKL_PATH . '/includes/class-wskl-ip-block.php' );
+				}
 
 				// verification
 				require_once( WSKL_PATH . '/includes/lib/auth/class-verification.php' );
@@ -327,13 +352,24 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				\wskl\lib\logs\Product_Logs::initialize();
 			}
 
-			/**
-			 * 모듈 배송추적
-			 */
+			/** 모듈 배송추적 (frontend/admin 둘 다 요구) */
 			require_once( WSKL_PATH . '/includes/class-wskl-shipping-tracking.php' );
+
+			/** 결제 (frontend/admin 둘 다 요구 ) */
+			require_once( WSKL_PATH . '/includes/class-wskl-pay-gates.php' );
 		}
 
+		/**
+		 * clone of WooCommerce::is_request
+		 *
+		 * @see \WooCommerce::is_request
+		 *
+		 * @param $type
+		 *
+		 * @return bool
+		 */
 		public function is_request( $type ) {
+
 			switch ( $type ) {
 				case 'admin' :
 					return is_admin();
@@ -350,6 +386,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 endif;
 
 function WSKL() {
+
 	return Woosym_Korean_Localization::instance( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
 }
 

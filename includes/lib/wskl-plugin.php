@@ -1,5 +1,5 @@
 <?php
-if( !defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	return;
 }
 
@@ -44,4 +44,15 @@ function wskl_is_plugin_active( $plugin ) {
 function wskl_is_plugin_inactive( $plugin ) {
 
 	return ! wskl_is_plugin_active( $plugin );
+}
+
+
+function wskl_woocommerce_found() {
+
+	if ( ! did_action( 'plugins_loaded' ) ) {
+		_doing_it_wrong( __FUNCTION__, 'This function must be called after action \'plugins_loaded\'', '3.2.3' );
+		// wp_die( 'This function must be called after action \'plugins_loaded\'!' );
+	}
+
+	return class_exists( 'WooCommerce' );
 }
