@@ -138,10 +138,6 @@ function wskl_startup_plugin() {
 		}
 	}
 
-
-
-	export_globals();
-
 	/**
 	 * 배송자 이메일 전화번호 보여지 않기
 	 */
