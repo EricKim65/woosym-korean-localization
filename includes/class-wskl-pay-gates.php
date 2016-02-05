@@ -1,5 +1,6 @@
 <?php
 
+
 class WSKL_Pay_Gates {
 
 	private static $pay_gate;
@@ -46,23 +47,20 @@ class WSKL_Pay_Gates {
 	 */
 	private static function export_globals() {
 
-		function export_globals() {
+		global $pay_gate_agency;
+		global $sym_checkout_titles;
+		global $sym_checkout_desc;
+		global $sym_pg_agency;
 
-			global $pay_gate_agency;
-			global $sym_checkout_titles;
-			global $sym_checkout_desc;
-			global $sym_pg_agency;
-
-			$pay_gate_agency = get_option( wskl_get_option_name( 'pg_agency' ) );
-			$sym_checkout_titles = array(
-				'credit'  => __( '신용카드', 'wskl' ),
-				'remit'   => __( '실시간 계좌이체', 'wskl' ),
-				'virtual' => __( '가상계좌 이체', 'wskl' ),
-				'mobile'  => __( '모바일소액결제', 'wskl' ),
-			);
-			$sym_checkout_desc   = '로 결제합니다.';
-			$sym_pg_agency       = get_option( wskl_get_option_name( 'pg_agency' ) );
-		}
+		$pay_gate_agency     = get_option( wskl_get_option_name( 'pg_agency' ) );
+		$sym_checkout_titles = array(
+			'credit'  => __( '신용카드', 'wskl' ),
+			'remit'   => __( '실시간 계좌이체', 'wskl' ),
+			'virtual' => __( '가상계좌 이체', 'wskl' ),
+			'mobile'  => __( '모바일소액결제', 'wskl' ),
+		);
+		$sym_checkout_desc   = '로 결제합니다.';
+		$sym_pg_agency       = get_option( wskl_get_option_name( 'pg_agency' ) );
 	}
 
 	public static function add_api_request( $api_request ) {
@@ -73,6 +71,7 @@ class WSKL_Pay_Gates {
 	}
 
 	public static function output_pay_gate_error() {
+
 		printf(
 			'<div class="notice error"><p class="wskl-warning">%s: %s</p></div>',
 			__( '다음 PG 모듈이 발견되지 않았습니다.', 'wskl' ),
@@ -80,5 +79,6 @@ class WSKL_Pay_Gates {
 		);
 	}
 }
+
 
 WSKL_Pay_Gates::init();
