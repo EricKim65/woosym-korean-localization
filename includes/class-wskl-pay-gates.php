@@ -1,5 +1,6 @@
 <?php
 
+
 class WSKL_Pay_Gates {
 
 	private static $pay_gate;
@@ -11,7 +12,10 @@ class WSKL_Pay_Gates {
 			// NOTE: 옵션 켜져 있는 것과 pay_gate_agency 찾을 수 있는 것은 별개의 사항으므로 에러 체크가 필요함.
 			static::$pay_gate = get_option( wskl_get_option_name( 'pg_agency' ) );
 
-			if ( static::$pay_gate && ! empty( $pay_gate_agency ) ) {
+			// NOTE: 이전 버전 (<=3.2.0) 기능 호환을 위해 사용. 앞으로는 글로벌 변수는 사용을 자제할 것.
+			static::export_globals();
+
+			if ( static::$pay_gate && ! empty( static::$pay_gate ) ) {
 
 				$pg_main_path   = WSKL_PATH . '/includes/lib/class-pg-' . static::$pay_gate . '-main.php';
 				$pg_common_path = WSKL_PATH . '/includes/lib/class-pg-' . static::$pay_gate . '-common.php';
@@ -38,6 +42,27 @@ class WSKL_Pay_Gates {
 		}
 	}
 
+	/**
+	 * 이전 버전 기능 호환을 위해
+	 */
+	private static function export_globals() {
+
+		global $pay_gate_agency;
+		global $sym_checkout_titles;
+		global $sym_checkout_desc;
+		global $sym_pg_agency;
+
+		$pay_gate_agency     = get_option( wskl_get_option_name( 'pg_agency' ) );
+		$sym_checkout_titles = array(
+			'credit'  => __( '신용카드', 'wskl' ),
+			'remit'   => __( '실시간 계좌이체', 'wskl' ),
+			'virtual' => __( '가상계좌 이체', 'wskl' ),
+			'mobile'  => __( '모바일소액결제', 'wskl' ),
+		);
+		$sym_checkout_desc   = '로 결제합니다.';
+		$sym_pg_agency       = get_option( wskl_get_option_name( 'pg_agency' ) );
+	}
+
 	public static function add_api_request( $api_request ) {
 
 		if ( class_exists( $api_request ) ) {
@@ -46,6 +71,7 @@ class WSKL_Pay_Gates {
 	}
 
 	public static function output_pay_gate_error() {
+
 		printf(
 			'<div class="notice error"><p class="wskl-warning">%s: %s</p></div>',
 			__( '다음 PG 모듈이 발견되지 않았습니다.', 'wskl' ),
@@ -53,5 +79,6 @@ class WSKL_Pay_Gates {
 		);
 	}
 }
+
 
 WSKL_Pay_Gates::init();

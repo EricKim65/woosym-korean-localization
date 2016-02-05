@@ -60,7 +60,6 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
     }
     function local_settings() {
         global $sym_checkout_methods;
-        global $woo_sym_prefix;
         global $sym_pg_title;
         global $sym_checkout_titles;
         global $sym_checkout_desc;
@@ -70,7 +69,7 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
         $this->frontend_title = $sym_checkout_titles[$this->method];
         $this->frontend_desc = $sym_checkout_titles[$this->method] . $sym_checkout_desc;
 
-        $this->_prefix = $woo_sym_prefix;
+        $this->_prefix = WSKL_PREFIX;
         $this->_pg_agency = $pay_gate_agency;
 
         $tmp_arr = explode('/', dirname(__FILE__));
@@ -528,9 +527,8 @@ class Kcp_Pay_Callback extends WC_Payment_Gateway {
     //public $method = "신용카드";
 
     public function __construct() {
-        global $woo_sym_prefix;
 
-        $this->_prefix = $woo_sym_prefix;
+        $this->_prefix = WSKL_PREFIX;
 
         $tmp_arr = explode("/", dirname( __FILE__ ));
         $this->_folder = $tmp_arr[count($tmp_arr)-3]; //_folder = plugin folder name
