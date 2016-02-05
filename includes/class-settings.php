@@ -216,23 +216,9 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'default'     => '',
 				),
 				array(
-					'id'          => 'enable_testmode',
-					'label'       => __( '테스트 모드로 설정', 'wskl' ),
-					'description' => __( '결제 테스트 모드로 설정되어 실제적인 결제는 되지 않습니다.', 'wskl' ),
-					'type'        => 'checkbox',
-					'default'     => '',
-				),
-				array(
-					'id'          => 'enable_showinputs',
-					'label'       => __( '필드보임 설정', 'wskl' ),
-					'description' => __( '테스트용으로 사용되므로 일반적인경우 비활성화 해주세요.', 'wskl' ),
-					'type'        => 'checkbox',
-					'default'     => '',
-				),
-				array(
 					'id'          => 'pg_agency',
 					'label'       => __( '결제대행업체', 'wskl' ),
-					'description' => __( '</br><span class="wskl-notice">지불 대행업체 지정후 "변경사항저장"을 하시면 추가 입력 항목이 나타납니다.</span><br/><span class="wskl-info">(아임포트)로 명시된 것은 아임포트 서버를 거쳐서 지불 결제가 됩니다.</span> ', 'wskl' ),
+					'description' => __( '<span class="wskl-notice">지불 대행업체 지정후 "변경사항저장"을 하시면 추가 입력 항목이 나타납니다.</span> ', 'wskl' ),
 					'type'        => 'select',
 					'options'     => array(
 						'payapp'  => __( '페이앱', 'wskl' ),
@@ -241,50 +227,161 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'ags'     => __( '올더게이트', 'wskl' ),
 						'iamport' => __( '아임포트', 'wskl' ),
 					),
-					'default'     => 'ags',
-				),
-				array(
-					'id'          => 'checkout_methods',
-					'label'       => __( '결제방식 지정', 'wskl' ),
-					'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시요.', 'wskl' ),
-					'type'        => 'checkbox_multi',
-					'options'     => array(
-						'credit'  => '신용카드',
-						'remit'   => '계좌이체',
-						'virtual' => '가상계좌',
-						'mobile'  => '모바일소액결제',
-					),
-					'default'     => array( 'credit', '신용카드' ),
-				),
-				array(
-					'id'          => 'enable_https',
-					'label'       => __( 'HTTPS 사용', 'wskl' ),
-					'description' => __( '결제페이지 스크립트을 HTTPS(보안모드)방식으로 호출합니다.<br/>
-													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;홈페이지 보안 인증 서비스를 받지 않는 사이트의 경우 무시하셔도 됩니다.
-													.', $this->_folder ),
-					'type'        => 'checkbox',
-					'default'     => '',
-				),
-				array(
-					'id'          => 'enable_escrow',
-					'label'       => __( '에스크로 설정', 'wskl' ),
-					'description' => __( '에스크로 방식으로 결제를 진행합니다.', 'wskl' ),
-					'type'        => 'checkbox',
-					'default'     => '',
-				),
-				array(
-					'id'          => 'escrow_delivery',
-					'label'       => __( '에스크로 예상 배송일', 'wskl' ),
-					'description' => __( '에스크로 설정시 배송소요기간(일). (에스크로아닌 경우 해당사항 없슴)', 'wskl' ),
-					'type'        => 'shorttext',
-					'default'     => '',
-					'placeholder' => __( '', 'wskl' ),
+					'default'     => 'payapp',
 				),
 			),
 		);
 
 
+
 		switch ( get_option( $this->_prefix . 'pg_agency' ) ) {
+			case 'kcp':
+			case 'inicis':
+			case 'allthegate':
+				array_push( $settings['checkout-paymentgate']['fields'],
+
+					array(
+						'id'          => 'enable_testmode',
+						'label'       => __( '테스트 모드로 설정', 'wskl' ),
+						'description' => __( '결제 테스트 모드로 설정되어 실제적인 결제는 되지 않습니다.', 'wskl' ),
+						'type'        => 'checkbox',
+						'default'     => '',
+					),
+					array(
+						'id'          => 'enable_showinputs',
+						'label'       => __( '필드보임 설정', 'wskl' ),
+						'description' => __( '테스트용으로 사용되므로 일반적인경우 비활성화 해주세요.', 'wskl' ),
+						'type'        => 'checkbox',
+						'default'     => '',
+					),
+					array(
+						'id'          => 'checkout_methods',
+						'label'       => __( '결제방식 지정', 'wskl' ),
+						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시요.', 'wskl' ),
+						'type'        => 'checkbox_multi',
+						'options'     => array(
+							'credit'  => '신용카드',
+							'remit'   => '계좌이체',
+							'virtual' => '가상계좌',
+							'mobile'  => '모바일소액결제',
+						),
+						'default'     => array( 'credit', '신용카드' ),
+					),
+					array(
+						'id'          => 'enable_https',
+						'label'       => __( 'HTTPS 사용', 'wskl' ),
+						'description' => __( '결제페이지 스크립트을 HTTPS(보안모드)방식으로 호출합니다.<br/>
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;홈페이지 보안 인증 서비스를 받지 않는 사이트의 경우 무시하셔도 됩니다.
+													.', $this->_folder ),
+						'type'        => 'checkbox',
+						'default'     => '',
+					),
+					array(
+						'id'          => 'enable_escrow',
+						'label'       => __( '에스크로 설정', 'wskl' ),
+						'description' => __( '에스크로 방식으로 결제를 진행합니다.', 'wskl' ),
+						'type'        => 'checkbox',
+						'default'     => '',
+					),
+					array(
+						'id'          => 'escrow_delivery',
+						'label'       => __( '에스크로 예상 배송일', 'wskl' ),
+						'description' => __( '에스크로 설정시 배송소요기간(일). (에스크로아닌 경우 해당사항 없슴)', 'wskl' ),
+						'type'        => 'shorttext',
+						'default'     => '',
+						'placeholder' => __( '', 'wskl' ),
+					)
+
+				);
+				break;
+
+			case 'payapp':
+				array_push( $settings['checkout-paymentgate']['fields'],
+
+					array(
+						'id'          => 'checkout_methods',
+						'label'       => __( '결제방식 지정', 'wskl' ),
+						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시요.', 'wskl' ),
+						'type'        => 'checkbox_multi',
+						'options'     => array(
+							'credit'  => '신용카드',
+							'remit'   => '계좌이체',
+							'virtual' => '가상계좌',
+							'mobile'  => '모바일소액결제',
+						),
+						'default'     => array( 'credit', '신용카드' ),
+					)
+
+				);
+				break;
+
+			case 'iamport':
+				array_push( $settings['checkout-paymentgate']['fields'],
+
+					array(
+						'id'          => 'checkout_methods',
+						'label'       => __( '결제방식 지정', 'wskl' ),
+						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시요.', 'wskl' ),
+						'type'        => 'checkbox_multi',
+						'options'     => array(
+							'credit'  => '신용카드',
+							'remit'   => '계좌이체',
+							'virtual' => '가상계좌',
+							'mobile'  => '모바일소액결제',
+							'kakaopay'  => '카카오페이',
+						),
+						'default'     => array( 'credit', '신용카드' ),
+					),
+
+					array(
+						'id'          => 'dummy_33',
+						'label'       => __( '아임포트 결정방법', 'wskl' ),
+						'description' => __( '
+						<span class="wskl-notice">아임포트 결제처리와 련된 모든 내용은 아임포트 서버에서 실행되는 내용이므로 다보리에서 책임지지 않습니다. </span><br><a href="https://admin.iamport.kr" target="_blank">아임포트 PG 설정 바로가기</a><br/>
+						1. 아임포트에서는 현재 카카오페이, LGU+, KCP, 이니시스, JT-Net,나이스정보통신이 지원되며 <br>가맹점 설정은 아임포트 사이트에 회원가입/로그인한 후 설정하여야 합니다.
+					', $this->_folder ),
+						'type'        => 'caption',
+						'default'     => '',
+					)
+
+
+
+				);
+				break;
+		}
+
+
+		switch ( get_option( $this->_prefix . 'pg_agency' ) ) {
+
+			case 'payapp':
+				array_push( $settings['checkout-paymentgate']['fields'],
+					array(
+						'id'          => 'ags_storenm',
+						'label'       => __( '판매자 아이디', 'wskl' ),
+						'description' => __( '올더게이트 상점명을 입력해주십시요', 'wskl' ),
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => __( '예) 올더게이트', 'wskl' ),
+					),
+					array(
+						'id'          => 'ags_storeid',
+						'label'       => __( '연동 Key', 'wskl' ),
+						'description' => __( '올더게이트에서 발급된 상점ID를 정확히 입력해주십시요.(중요)', 'wskl' ),
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => __( '예) aegis', 'wskl' ),
+					),
+					array(
+						'id'          => 'ags_mallurl',
+						'label'       => __( '연동 Value', 'wskl' ),
+						'description' => __( '상점의 홈페이지 주소를 입력해주십시요.( http://포함 )', 'wskl' ),
+						'type'        => 'longtext',
+						'default'     => '',
+						'placeholder' => __( '예) http://www.allthegate.com', 'wskl' ),
+					)
+				);
+
+
 			case 'kcp':
 				array_push( $settings['checkout-paymentgate']['fields'],
 					array(
@@ -446,6 +543,36 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				);
 				break;
 
+
+			case 'iamport':
+				array_push( $settings['checkout-paymentgate']['fields'],
+					array(
+						'id'          => 'ags_storenm',
+						'label'       => __( '가맹점 식별코드', 'wskl' ),
+						'description' => __( '올더게이트 상점명을 입력해주십시요', 'wskl' ),
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => __( '예) 올더게이트', 'wskl' ),
+					),
+					array(
+						'id'          => 'ags_storeid',
+						'label'       => __( 'REST API 키', 'wskl' ),
+						'description' => __( '올더게이트에서 발급된 상점ID를 정확히 입력해주십시요.(중요)', 'wskl' ),
+						'type'        => 'text',
+						'default'     => '',
+						'placeholder' => __( '예) aegis', 'wskl' ),
+					),
+					array(
+						'id'          => 'ags_mallurl',
+						'label'       => __( 'REST API Secret', 'wskl' ),
+						'description' => __( '상점의 홈페이지 주소를 입력해주십시요.( http://포함 )', 'wskl' ),
+						'type'        => 'longtext',
+						'default'     => '',
+						'placeholder' => __( '예) http://www.allthegate.com', 'wskl' ),
+					)
+				);
+				break;
+
 		}
 
 		array_push( $settings['checkout-paymentgate']['fields'],
@@ -453,11 +580,11 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				'id'          => 'dummy_1',
 				'label'       => __( '추가설정내용', 'wskl' ),
 				'description' => __( '
-						<span class="wskl-notice">해당페이지 설정후 반드시 추가해야할 "우커머스 결제설정" 내용입니다.</span>   <a href="./admin.php?page=wc-settings&tab=checkout">결제설정 바로가기</a><br/>
+						<span class="wskl-notice">해당페이지 설정후 반드시 추가해야할 "우커머스 결제설정" 내용입니다.</span>   <a href="./admin.php?page=wc-settings&tab=checkout" target="_blank">결제설정 바로가기</a><br/>
 						1. "해당 페이지를 설정하면 우커머스->설정->결제 설정"의 하위메뉴에 지정한 결제 방법이 추가됩니다. <br/>
 						   &nbsp;&nbsp;&nbsp;각각의 하위메뉴로 들어가서 활성화에 체크하여 주십시요.  <br/>
-						2. "우커머스->설정->결제옵션->지불기능웨이"에서 결제페이지에 보일 결제 방법의 순서를 결정하여 주십시요.<br/>
-						3. "우커머스->설정->결제설정"의 하위메뉴에 들어가서 지정한 각 결제 방법에 대한 세부적인 설정을 추가하여 주십시요.<br/>
+						2. "우커머스->설정->결제옵션->지불게이트웨이"에서 고객의 결제페이지에 보일 결제 방법의 순서를 결정하여 주십시요.<br/>
+						3. "우커머스->설정->결제설정"의 하위메뉴에 들어가서 고객의 결제페이지에 보일 결제방식에 대한 안내문을 수정하여 주십시요.<br/>
 					', $this->_folder ),
 				'type'        => 'caption',
 				'default'     => '',
