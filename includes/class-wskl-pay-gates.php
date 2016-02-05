@@ -11,7 +11,7 @@ class WSKL_Pay_Gates {
 			// NOTE: 옵션 켜져 있는 것과 pay_gate_agency 찾을 수 있는 것은 별개의 사항으므로 에러 체크가 필요함.
 			static::$pay_gate = get_option( wskl_get_option_name( 'pg_agency' ) );
 
-			if ( static::$pay_gate && ! empty( $pay_gate_agency ) ) {
+			if ( static::$pay_gate && ! empty( static::$pay_gate ) ) {
 
 				$pg_main_path   = WSKL_PATH . '/includes/lib/class-pg-' . static::$pay_gate . '-main.php';
 				$pg_common_path = WSKL_PATH . '/includes/lib/class-pg-' . static::$pay_gate . '-common.php';

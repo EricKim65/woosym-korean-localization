@@ -83,7 +83,7 @@ if ( ! function_exists( 'wskl_plugin_monitor' ) ) :
 endif;
 
 
-add_action( 'plugins_loaded', 'wskl_startup_plugin' );
+add_action( 'plugins_loaded', 'wskl_startup_plugin', 2 );
 
 if ( ! function_exists( 'wskl_startup_plugin' ) ) {
 
