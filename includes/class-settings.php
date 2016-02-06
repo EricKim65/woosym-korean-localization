@@ -337,8 +337,8 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'id'          => 'dummy_33',
 						'label'       => __( '아임포트 결정방법', 'wskl' ),
 						'description' => __( '
-						<span class="wskl-notice">아임포트 결제처리와 련된 모든 내용은 아임포트 서버에서 실행되는 내용이므로 다보리에서 책임지지 않습니다. </span><br><a href="https://admin.iamport.kr" target="_blank">아임포트 PG 설정 바로가기</a><br/>
-						1. 아임포트에서는 현재 카카오페이, LGU+, KCP, 이니시스, JT-Net,나이스정보통신이 지원되며 <br>가맹점 설정은 아임포트 사이트에 회원가입/로그인한 후 설정하여야 합니다.
+						<span class="wskl-notice">아임포트 결제와 관련된 내용은 아임포트 서버에서 실행되는 내용이므로 다보리에서 책임지지 않습니다. </span><br><a href="https://admin.iamport.kr/settings" target="_blank">아임포트 PG 설정 바로가기</a><br/>
+						1. 아임포트에서는 현재 카카오페이, LGU+, KCP, 이니시스, JT-Net, 나이스정보통신이 지원되며 <br>가맹점 설정은 아임포트 사이트에 회원가입/로그인한 후 설정하여야 합니다.
 					', $this->_folder ),
 						'type'        => 'caption',
 						'default'     => '',
@@ -356,30 +356,44 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 			case 'payapp':
 				array_push( $settings['checkout-paymentgate']['fields'],
 					array(
-						'id'          => 'ags_storenm',
+						'id'          => 'payapp_userid',
 						'label'       => __( '판매자 아이디', 'wskl' ),
-						'description' => __( '올더게이트 상점명을 입력해주십시요', 'wskl' ),
+						'description' => __( '페이앱 판매자 아이디를 입력해주십시요', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
-						'placeholder' => __( '예) 올더게이트', 'wskl' ),
+						'placeholder' => __( '', 'wskl' ),
 					),
 					array(
-						'id'          => 'ags_storeid',
+						'id'          => 'payapp_linkkey',
 						'label'       => __( '연동 Key', 'wskl' ),
-						'description' => __( '올더게이트에서 발급된 상점ID를 정확히 입력해주십시요.(중요)', 'wskl' ),
-						'type'        => 'text',
-						'default'     => '',
-						'placeholder' => __( '예) aegis', 'wskl' ),
-					),
-					array(
-						'id'          => 'ags_mallurl',
-						'label'       => __( '연동 Value', 'wskl' ),
-						'description' => __( '상점의 홈페이지 주소를 입력해주십시요.( http://포함 )', 'wskl' ),
+						'description' => __( '페이앱 연동 KEY를 입력해주십시요(중요)', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
-						'placeholder' => __( '예) http://www.allthegate.com', 'wskl' ),
+						'placeholder' => __( '', 'wskl' ),
+					),
+					array(
+						'id'          => 'payapp_linkval',
+						'label'       => __( '연동 Value', 'wskl' ),
+						'description' => __( '페이앱 연동 VAKUE를 입력해주십시요(중요)', 'wskl' ),
+						'type'        => 'longtext',
+						'default'     => '',
+						'placeholder' => __( '', 'wskl' ),
+					),
+					array(
+						'id'          => 'dummy_34',
+						'label'       => __( '판매자 등록', 'wskl' ),
+						'description' => __( '
+						<span class="wskl-notice">판매자 등록 과정은 매우 중요한 사항이므로  정확히 숙지하고 실행해주셔야 합니다. </span></br>
+						1. 다보리와 계약시 메일로 전달된 판매자 아이디를 입력합니다.</br>
+                        &nbsp;&nbsp;PayApp 판매자로 로그인 한 후 확인한 연동 KEY 와 연동 VALUE를 입력하고 저장합니다.</br><a href="https://seller.payapp.kr/c/apiconnect_info.html" target="_blank">https://seller.payapp.kr/c/apiconnect_info.html  연동정보 확인하러 가기</a></br>
+ 						<font size="" color="blue">페이앱에서는 테스트 모드가 제공되지 않습니다. 대신 결제 실패의 경우가 발생하지 않습니다.<br>불편하시겠지만 결제 테스트 후 판매자 관리자로 로그인하여 해당 결제를 취소하여 주십시요.</font></br>
+  					', $this->_folder ),
+						'type'        => 'caption',
+						'default'     => '',
 					)
+
 				);
+				break;
 
 
 			case 'kcp':
@@ -417,7 +431,8 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
                         &nbsp;&nbsp;&nbsp;&nbsp;A.Site Code와 Site Key를 입력하고 저장합니다.</br>
                          2. 당 플러그인의 KCP 홈 폴더중 “bin” 폴더에 있는 pp_cli 화일의 실행권한을 755로 바꾸어 줍니다. 그대로 둘 경우 결제 않됨.</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;예)/public_html/wp-content/plugins/wskl/includes/lib/homekcp/bin/pp_cli</br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;ssh로 로그인, 해당폴더에서 "chmod 755 pp_cli"  또는 화일질라에서 우측마우스누르고 " 화일 권한 수정"</br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;(1) ssh로 로그인 후, 해당폴더에서 "chmod 755 pp_cli" 실행 또는</br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;(2) FTP 로 접속하여 해당 화일에 오른쪽 마우스를 클릭 - "화일 권한" 확인 후 755 로 저장</br>
  						<font size="" color="blue">테스트시에는기본 설치된 테스트용 KCP TEST  상점이 사용되므로 참고하세요</span></br>
   					', $this->_folder ),
 						'type'        => 'caption',
@@ -547,29 +562,46 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 			case 'iamport':
 				array_push( $settings['checkout-paymentgate']['fields'],
 					array(
-						'id'          => 'ags_storenm',
+						'id'          => 'iamport_user_code',
 						'label'       => __( '가맹점 식별코드', 'wskl' ),
-						'description' => __( '올더게이트 상점명을 입력해주십시요', 'wskl' ),
+						'description' => __( '아임포트의 가맹점 식별코드를 입력하여 주십시요.', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
-						'placeholder' => __( '예) 올더게이트', 'wskl' ),
+						'placeholder' => __( '', 'wskl' ),
 					),
 					array(
-						'id'          => 'ags_storeid',
+						'id'          => '',
 						'label'       => __( 'REST API 키', 'wskl' ),
-						'description' => __( '올더게이트에서 발급된 상점ID를 정확히 입력해주십시요.(중요)', 'wskl' ),
+						'description' => __( '아임포트의 REST API 키를 입력하여 주십시요.', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
-						'placeholder' => __( '예) aegis', 'wskl' ),
+						'placeholder' => __( '', 'wskl' ),
 					),
 					array(
-						'id'          => 'ags_mallurl',
-						'label'       => __( 'REST API Secret', 'wskl' ),
-						'description' => __( '상점의 홈페이지 주소를 입력해주십시요.( http://포함 )', 'wskl' ),
+						'id'          => 'iamport_api_secret',
+						'label'       => __( 'REST API secret', 'wskl' ),
+						'description' => __( '아임포트의 REST API secret 입력하여 주십시요.', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
-						'placeholder' => __( '예) http://www.allthegate.com', 'wskl' ),
+						'placeholder' => __( '', 'wskl' ),
+					),
+					array(
+						'id'          => 'dummy_31',
+						'label'       => __( '가맹점 등록', 'wskl' ),
+						'description' => __( '
+						<span class="wskl-notice">아임포트의 가맹점 등록 과정은 좀 특이하므로 세심한 주의를 요합니다.<br>고객의 결제 진행시 결제 정보를 아임포트 서버로 보내주면 아임포트 서버가 결제 처리를 대행하는<br> 구조이므로 각 결제 업체의 PG 연동 정보가 아임포트 회원 정보에 설정되어야 합니다.</span></br><font size="" color="blue">
+						1. 아임포트 회원가입/로그인 후 시스템설정->내정보 에서 확인된 정보를 입력합니다.</br>
+                        &nbsp;&nbsp;아임포트 회원로그인 후 확인한 REST API 정보를 입력하고 저장합니다.</br><a href="https://admin.iamport.kr/settings" target="_blank">https://admin.iamport.kr/settings  REST API 정보를 확인하러 가기</a></br>
+ 						2. <a href="https://admin.iamport.kr/settings" target="_blank">https://admin.iamport.kr/settings</a> 의 "PG연동 설정"에서 <br>각 결제 대행업체에서 발급 받은 PG연동 정보를 설정합니다. </br> </font></br>
+  					', $this->_folder ),
+						'type'        => 'caption',
+						'default'     => '',
 					)
+
+
+
+
+
 				);
 				break;
 
@@ -583,8 +615,8 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						<span class="wskl-notice">해당페이지 설정후 반드시 추가해야할 "우커머스 결제설정" 내용입니다.</span>   <a href="./admin.php?page=wc-settings&tab=checkout" target="_blank">결제설정 바로가기</a><br/>
 						1. "해당 페이지를 설정하면 우커머스->설정->결제 설정"의 하위메뉴에 지정한 결제 방법이 추가됩니다. <br/>
 						   &nbsp;&nbsp;&nbsp;각각의 하위메뉴로 들어가서 활성화에 체크하여 주십시요.  <br/>
-						2. "우커머스->설정->결제옵션->지불게이트웨이"에서 고객의 결제페이지에 보일 결제 방법의 순서를 결정하여 주십시요.<br/>
-						3. "우커머스->설정->결제설정"의 하위메뉴에 들어가서 고객의 결제페이지에 보일 결제방식에 대한 안내문을 수정하여 주십시요.<br/>
+						2. "우커머스->설정->결제옵션->지불게이트웨이"에서 고객의 결제페이지에 보일 "결제 방법의 순서"를 결정하여 주십시요.<br/>
+						3. "우커머스->설정->결제설정"의 각 결제 방식을 선택하면 고객의 결제페이지에 보일 결제방식에 대한 안내문 변경이 가능합니다.<br/>
 					', $this->_folder ),
 				'type'        => 'caption',
 				'default'     => '',
