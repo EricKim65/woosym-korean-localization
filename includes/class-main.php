@@ -25,12 +25,38 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wskl' ), '2.1' );
 		}
 
+		/**
+		 * Woosym_Korean_Localization constructor.
+		 *
+		 * @param string $file
+		 * @param string $version
+		 */
 		public function __construct( $file = '', $version = '1.0.0' ) {
 
 			parent::__construct( $file, $version );
 
 			// 모듈 삽입.
 			$this->includes();
+
+			if( $this->is_request( 'frontend' ) ) {
+
+				// 관련상품 표시 갯수
+				$related_products_count = (int) get_option( wskl_get_option_name( 'related_products_count' ) );
+				if ( $related_products_count > 0 ) {
+
+					$priority = (int)get_option( wskl_get_option_name( 'related_products_priority' ) );
+					$callback = function( $args ) {
+
+						$args['posts_per_page'] = (int) get_option( wskl_get_option_name( 'related_products_count' ) );
+						$args['columns']        = (int) get_option( wskl_get_option_name( 'related_products_columns' ) );
+
+						return $args;
+					};
+
+					add_filter( 'woocommerce_output_related_products_args', $callback, $priority, 1 );
+				}
+			}
+
 
 			if ( get_option( $this->_prefix . 'enable_sym_checkout' ) == 'on' ) {
 				add_action( 'woocommerce_init', array( $this, 'woosym_daum_kaddress' ), 1 );
@@ -269,10 +295,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 				if ( isset( $args['required'] ) && $args['required'] ) {
 					$args['class'][] = 'validate-required';
-					$required        = sprintf(
-						'<abbr class="required" title="%s">*</abbr>',
-						esc_attr__( 'required', 'woocommerce' )
-					);
+					$required        = sprintf( '<abbr class="required" title="%s">*</abbr>', esc_attr__( 'required', 'woocommerce' ) );
 				} else {
 					$required = '';
 				}
@@ -286,26 +309,11 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				$escaped_key   = esc_attr( $key );
 				$escaped_label = esc_attr( $args['label'] );
 
-				$field = sprintf(
-					'<p class="form-row %s">',
-					esc_attr( implode( ' ', $args['class'] ) )
-				);
+				$field = sprintf( '<p class="form-row %s">', esc_attr( implode( ' ', $args['class'] ) ) );
 
-				$field .= sprintf(
-					'<label for="%s" class="%s">%s%s</label>',
-					$escaped_key,
-					esc_attr( implode( ' ', $args['label_class'] ) ),
-					$escaped_label,
-					$required
-				);
+				$field .= sprintf( '<label for="%s" class="%s">%s%s</label>', $escaped_key, esc_attr( implode( ' ', $args['label_class'] ) ), $escaped_label, $required );
 
-				$field .= sprintf(
-					'<input type="button" name="%s" id="%s" value="%s" /></p>%s',
-					$escaped_key,
-					$escaped_key,
-					$escaped_label,
-					$div_clear
-				);
+				$field .= sprintf( '<input type="button" name="%s" id="%s" value="%s" /></p>%s', $escaped_key, $escaped_key, $escaped_label, $div_clear );
 
 			}
 
@@ -350,6 +358,16 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 				require_once( WSKL_PATH . '/includes/lib/mat-logs/class-product-logs.php' );
 				\wskl\lib\logs\Product_Logs::initialize();
+			}
+
+			/** 모듈 소셜 로그인 */
+			if ( wskl_is_option_enabled( 'enable_social_login' ) ) {
+				require_once( WSKL_PATH . '/includes/lib/class-social-login.php' );
+			}
+
+			/** 바로 구매 */
+			if ( wskl_is_option_enabled( 'enable_direct_purchase' ) ) {
+				require_once( WSKL_PATH . '/includes/lib/class-direct-purchase.php' );
 			}
 
 			/** 모듈 배송추적 (frontend/admin 둘 다 요구) */

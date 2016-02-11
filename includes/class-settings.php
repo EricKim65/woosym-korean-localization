@@ -670,6 +670,22 @@ class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'default'     => '4',
 					'placeholder' => __( '4', 'wskl' ),
 				),
+				array(
+					'id'          => 'related_products_columns',
+					'label'       => __( '관련상품표시 칸 수', 'wskl' ),
+					'description' => __( '관련상품 칸 수를 결정합니다.', 'wskl' ),
+					'type'        => 'shorttext',
+					'default'     => '4',
+					'placeholder' => __( '4', 'wskl' ),
+				),
+				array(
+					'id'          => 'related_products_priority',
+					'label'       => __( '관련상품 필터 우선순위' ),
+					'description' => __( '테마나 타 플러그인에서 관련상품 값을 덮어쓸 수 있습니다. 만약 원하는 결과가 나오지 않으면 이 숫자를 늘려서 우선 순위를 낮춰 보세요', 'wskl' ),
+					'type'        => 'shorttext',
+					'default'     => '99',
+					'placeholder' => __( '99', 'wskl' ),
+				),
 				//array(
 				//	'id'          => 'vat',
 				//	'label'       => __( '세금계산서 정보 입력 설정', 'wskl' ),

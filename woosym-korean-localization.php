@@ -125,47 +125,16 @@ function wskl_startup_plugin() {
 	$plugin = plugin_basename( __FILE__ );
 	add_filter( "plugin_action_links_$plugin", 'wskl_plugin_add_settings_link', 99 );
 
-	// 관련상품 표시 갯수
-	if ( get_option( wskl_get_option_name( 'related_products_count' ) ) != '' ) {
-		add_filter( 'woocommerce_output_related_products_args', 'sym_related_products_args' );
-		function sym_related_products_args( $args ) {
-
-			$args['posts_per_page'] = get_option( wskl_get_option_name( 'related_products_count' ) ); // 4 related products
-			$args['columns']        = 1; // arranged in 2 columns
-			return $args;
-		}
-	}
-
-	/**
-	 * 배송자 이메일 전화번호 보여지 않기
-	 */
-	if ( ! wskl_is_option_enabled( 'disable_show_delivery_phone' ) ) {
-		add_filter( 'woocommerce_admin_shipping_fields', 'woo_add_shipping_fields' );
-		// woocommerce order meta box
-		// adding shipping email, phone data
-		function woo_add_shipping_fields( $fields ) {
-
-			return array_merge( $fields, array(
-				'email' => array(
-					'label' => __( 'Email', 'woocommerce' ),
-				),
-				'phone' => array(
-					'label' => __( 'Phone', 'woocommerce' ),
-				),
-			) );
-		}
-	}
-
-	/**
-	 * 모듈 소셜 로그인
-	 */
-	if ( wskl_is_option_enabled( 'enable_social_login' ) ) {
-		require_once( WSKL_PATH . '/includes/lib/class-social-login.php' );
-	}
-
-	if ( wskl_is_option_enabled( 'enable_direct_purchase' ) ) {
-		require_once( WSKL_PATH . '/includes/lib/class-direct-purchase.php' );
-	}
+//	// 관련상품 표시 갯수 has moved to class-main.php construct()
+//	if ( get_option( wskl_get_option_name( 'related_products_count' ) ) != '' ) {
+//		add_filter( 'woocommerce_output_related_products_args', 'sym_related_products_args' );
+//		function sym_related_products_args( $args ) {
+//
+//			$args['posts_per_page'] = get_option( wskl_get_option_name( 'related_products_count' ) ); // 4 related products
+//			$args['columns']        = 1; // arranged in 2 columns
+//			return $args;
+//		}
+//	}
 
 	/** 많은 기능들이 이 곳으로 옮겨졌고, 앞으로 위 코드들도 이 쪽으로 옮겨질 예정. */
 	require_once( WSKL_PATH . '/includes/class-main.php' );
