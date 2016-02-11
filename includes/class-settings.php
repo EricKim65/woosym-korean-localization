@@ -7,13 +7,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
 
 
-class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
+final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
+
+	private static $_instance = null;
 
 	public $setting_menu_hook = '';
 
 	public function __construct( $prefix = '', $file = '', $version = '1.0.0' ) {
 
 		parent::__construct( $prefix, $file, $version );
+	}
+
+	public function __clone() {
+
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wskl' ), '2.1' );
+	}
+
+	public function __wakeup() {
+
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wskl' ), '2.1' );
+	}
+
+	public static function instance( $prefix, $file, $version ) {
+
+		if ( is_null( self::$_instance ) ) {
+			self::$_instance = new static( $prefix, $file, $version );
+		}
+
+		return self::$_instance;
 	}
 
 	public function add_menu_item() {  // Add settings page to admin menu
