@@ -92,8 +92,6 @@ function wskl_startup_plugin() {
 		return;
 	}
 
-	$woocommerce_ver21_less = version_compare( WOOCOMMERCE_VERSION, '2.1', '<' ) ? true : false;
-
 	if ( is_admin() ) {
 		add_action(
 			'admin_enqueue_scripts',
