@@ -671,13 +671,14 @@ class Inicis_Pay_Callback extends WC_Payment_Gateway {
     }
 
     if ( $inipay->GetResult( 'ResultCode' ) == "00" ) {
-      $order->add_order_note( sprintf( __( '결제가 성공적으로 처리됨. 결제방법: %s. 올더게이트 TID: %s. 발생시각: %s.', $this->_folder ), $this->method, '111', date( 'YmdHis' ) ) );
+      $order->add_order_note( sprintf( __( '결제가 성공적으로 처리됨.<br/>결제방법: %s<br/>이니시스 TID: %s. 발생시각: %s.', 'wskl' ), $this->method, '111', date( 'Y-m-d H-i-s' ) ) );
       // Complete payment, reduce stock levels & remove cart
       $order->payment_complete();
       $order->reduce_order_stock();
       $woocommerce->cart->empty_cart();
     } else {  // 결제실패에 따른 상점처리부분
-      $order->update_status( 'failed', sprintf( __( '결제처리 안됨.  에러메시지 : %s. 발생시각: %s.', $this->_folder ), $res_msg, date( 'YmdHis' ) ) );
+      $res_msg = iconv( 'euc-kr', 'utf-8', $inipay->GetResult('ResultMsg') );
+      $order->update_status( 'failed', sprintf( __( '결제처리 안됨.<br/>-에러메시지 : %s<br/>-발생시각: %s.', 'wskl' ), $res_msg, date( 'Y-m-d H-i-s' ) ) );
       //$cart_url = $woocommerce->cart->get_cart_url();
       // wp_redirect($cart_url);
     }
