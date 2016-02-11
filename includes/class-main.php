@@ -4,7 +4,9 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 	final class Woosym_Korean_Localization extends Sym_Mvc_Main {
 
-		protected static $_instance = null;
+		private static $_instance = null;
+
+		private $settings = null;
 
 		public static function instance( $prefix, $file, $version ) {
 
@@ -36,7 +38,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			parent::__construct( $file, $version );
 
 			// 모듈 삽입.
-			$this->includes();
+			$this->init_modules();
 
 			if( $this->is_request( 'frontend' ) ) {
 
@@ -91,6 +93,10 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			), 10, 4 );
 			add_filter( 'woocommerce_form_field_button', array( $this, 'wskl_customize_checkout_button_type' ), 10, 4 );
 		} // End __construct ()
+
+		public function get_settings() {
+			return $this->settings;
+		}
 
 		function order_received_title( $title, $id ) {
 
@@ -320,61 +326,67 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			return $field;
 		}
 
-		public function includes() {
+		public function init_modules() {
 
 			if ( $this->is_request( 'admin' ) ) {
 
-				include_once( WSKL_PATH . '/includes/class-settings.php' );
-				$wskl_setting = new Woosym_Korean_Localization_Settings( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
+				// include_once( WSKL_PATH . '/includes/class-settings.php' );
+				wskl_load_module( '/includes/class-settings.php' );
+				// $this->settings = new Woosym_Korean_Localization_Settings( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
+				$this->settings = Woosym_Korean_Localization_Settings::instance( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
 
 				/** authorization */
-				require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
-				$auth = new \wskl\lib\auth\Auth( $wskl_setting );
+				// require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
+				wskl_load_module( '/includes/lib/auth/class-auth.php' );
+				$auth = new wskl\lib\auth\Auth( $this->settings );
 
 				/** post export */
-				if ( wskl_is_option_enabled( 'enable_post_export' ) ) {
-
-					require_once( WSKL_PATH . '/includes/lib/mat-logs/class-post-export.php' );
-					\wskl\lib\posts\Post_Export::initialize();
-				}
+				wskl_load_module( '/includes/lib/mat-logs/class-post-export.php', 'enable_post_export' );
 			}
 
 			if ( $this->is_request( 'frontend' ) ) {
 
 				/** IP blocking */
-				if ( wskl_is_option_enabled( 'enable_countryip_block' ) ) {
-					require_once( WSKL_PATH . '/includes/class-wskl-ip-block.php' );
-				}
+//				if ( wskl_is_option_enabled( 'enable_countryip_block' ) ) {
+//					require_once( WSKL_PATH . '/includes/class-wskl-ip-block.php' );
+//				}
+				wskl_load_module( '/includes/class-wskl-ip-block.php', 'enable_countryip_block' );
 
 				// verification
-				require_once( WSKL_PATH . '/includes/lib/auth/class-verification.php' );
+//				require_once( WSKL_PATH . '/includes/lib/auth/class-verification.php' );
+//				$verification = new \wskl\lib\auth\Verification();
+				wskl_load_module( '/includes/lib/auth/class-verification.php' );
 				$verification = new \wskl\lib\auth\Verification();
 
 				// sales log
-				if ( wskl_is_option_enabled( 'enable_sales_log' ) ) {
-					require_once( WSKL_PATH . '/includes/lib/mat-logs/class-sales.php' );
-					$sales = new \wskl\lib\sales\Sales();
-				}
+//				if ( wskl_is_option_enabled( 'enable_sales_log' ) ) {
+//					require_once( WSKL_PATH . '/includes/lib/mat-logs/class-sales.php' );
+//				}
+				wskl_load_module( '/includes/lib/mat-logs/class-sales.php' );
 
-				require_once( WSKL_PATH . '/includes/lib/mat-logs/class-product-logs.php' );
-				\wskl\lib\logs\Product_Logs::initialize();
+//				require_once( WSKL_PATH . '/includes/lib/mat-logs/class-product-logs.php' );
+				wskl_load_module( '/includes/lib/mat-logs/class-product-logs.php' );
 			}
 
 			/** 모듈 소셜 로그인 */
-			if ( wskl_is_option_enabled( 'enable_social_login' ) ) {
-				require_once( WSKL_PATH . '/includes/lib/class-social-login.php' );
-			}
+//			if ( wskl_is_option_enabled( 'enable_social_login' ) ) {
+//				require_once( WSKL_PATH . '/includes/lib/class-social-login.php' );
+//			}
+			wskl_load_module( '/includes/lib/class-social-login.php', 'enable_social_login' );
 
 			/** 바로 구매 */
-			if ( wskl_is_option_enabled( 'enable_direct_purchase' ) ) {
-				require_once( WSKL_PATH . '/includes/lib/class-direct-purchase.php' );
-			}
+//			if ( wskl_is_option_enabled( 'enable_direct_purchase' ) ) {
+//				require_once( WSKL_PATH . '/includes/lib/class-direct-purchase.php' );
+//			}
+			wskl_load_module( '/includes/lib/class-direct-purchase.php', 'enable_direct_purchase' );
 
 			/** 모듈 배송추적 (frontend/admin 둘 다 요구) */
-			require_once( WSKL_PATH . '/includes/class-wskl-shipping-tracking.php' );
+//			require_once( WSKL_PATH . '/includes/class-wskl-shipping-tracking.php' );
+			wskl_load_module( '/includes/class-wskl-shipping-tracking.php' );
 
 			/** 결제 (frontend/admin 둘 다 요구 ) */
-			require_once( WSKL_PATH . '/includes/class-wskl-pay-gates.php' );
+//			require_once( WSKL_PATH . '/includes/class-wskl-pay-gates.php' );
+			wskl_load_module( '/includes/class-wskl-pay-gates.php' );
 		}
 
 		/**
