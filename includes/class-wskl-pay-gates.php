@@ -33,7 +33,7 @@ class WSKL_Pay_Gates {
 					 *
 					 * @see \WC_API::handle_api_requests()
 					 */
-					add_action( 'woocommerce_api_request', array( __CLASS__, 'wskl_add_api_request' ) );
+					add_action( 'woocommerce_api_request', array( __CLASS__, 'add_api_request' ) );
 
 				} else {
 					add_action( 'admin_notices', array( __CLASS__, 'output_pay_gate_error' ) );
@@ -47,20 +47,22 @@ class WSKL_Pay_Gates {
 	 */
 	private static function export_globals() {
 
+		global $woocommerce_ver21_less;
 		global $pay_gate_agency;
 		global $sym_checkout_titles;
 		global $sym_checkout_desc;
 		global $sym_pg_agency;
 
-		$pay_gate_agency     = get_option( wskl_get_option_name( 'pg_agency' ) );
-		$sym_checkout_titles = array(
+		$woocommerce_ver21_less = version_compare( WOOCOMMERCE_VERSION, '2.1', '<' ) ? true : false;
+		$pay_gate_agency        = get_option( wskl_get_option_name( 'pg_agency' ) );
+		$sym_checkout_titles    = array(
 			'credit'  => __( '신용카드', 'wskl' ),
 			'remit'   => __( '실시간 계좌이체', 'wskl' ),
 			'virtual' => __( '가상계좌 이체', 'wskl' ),
 			'mobile'  => __( '모바일소액결제', 'wskl' ),
 		);
-		$sym_checkout_desc   = '로 결제합니다.';
-		$sym_pg_agency       = get_option( wskl_get_option_name( 'pg_agency' ) );
+		$sym_checkout_desc      = '로 결제합니다.';
+		$sym_pg_agency          = get_option( wskl_get_option_name( 'pg_agency' ) );
 	}
 
 	public static function add_api_request( $api_request ) {
