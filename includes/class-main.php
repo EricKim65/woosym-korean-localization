@@ -362,7 +362,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 //				if ( wskl_is_option_enabled( 'enable_sales_log' ) ) {
 //					require_once( WSKL_PATH . '/includes/lib/mat-logs/class-sales.php' );
 //				}
-				wskl_load_module( '/includes/lib/mat-logs/class-sales.php' );
+				wskl_load_module( '/includes/lib/mat-logs/class-sales.php', 'enable_sales_log' );
 
 //				require_once( WSKL_PATH . '/includes/lib/mat-logs/class-product-logs.php' );
 				wskl_load_module( '/includes/lib/mat-logs/class-product-logs.php' );
