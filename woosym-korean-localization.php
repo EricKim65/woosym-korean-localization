@@ -4,7 +4,7 @@
  * Version:           3.2.3-r2
  * Plugin URI:        https://www.dabory.com/
  * Description:       우커머스를 카페24 같이 편리하게 만들어주는 한국 쇼핑몰 환경 표준 플러그인.
- * Author:            (주)심포니소프트 - Dabory
+ * Author:            (주)심포니소프트 - 다보리
  * Author URI:        https://www.dabory.com/
  * Requires at least: 4.1
  * Tested up to:      4.0004
@@ -125,16 +125,6 @@ function wskl_startup_plugin() {
 	$plugin = plugin_basename( __FILE__ );
 	add_filter( "plugin_action_links_$plugin", 'wskl_plugin_add_settings_link', 99 );
 
-//	// 관련상품 표시 갯수 has moved to class-main.php construct()
-//	if ( get_option( wskl_get_option_name( 'related_products_count' ) ) != '' ) {
-//		add_filter( 'woocommerce_output_related_products_args', 'sym_related_products_args' );
-//		function sym_related_products_args( $args ) {
-//
-//			$args['posts_per_page'] = get_option( wskl_get_option_name( 'related_products_count' ) ); // 4 related products
-//			$args['columns']        = 1; // arranged in 2 columns
-//			return $args;
-//		}
-//	}
 
 	/** 많은 기능들이 이 곳으로 옮겨졌고, 앞으로 위 코드들도 이 쪽으로 옮겨질 예정. */
 	require_once( WSKL_PATH . '/includes/class-main.php' );
