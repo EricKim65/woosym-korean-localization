@@ -58,5 +58,6 @@ includes/lib/cassandra-php/class-api-handler.php.bak*
 .travis.yml
 phpunit.xml.dist
 phpunit.xml
-bin
+bin/
+!includes/libhomekcp/bin
 tests
