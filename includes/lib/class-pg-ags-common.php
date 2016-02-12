@@ -316,7 +316,7 @@ class WC_Ags_Common extends WC_Payment_Gateway {
     if ( $this->enable_https != 'on' ) {
       wp_enqueue_script( 'ags_wallet', 'http://www.allthegate.com/plugin/AGSWallet_utf8.js' );  //맨앞에 넣음
     } else {
-      wp_enqueue_script( 'ags_wallet', 'https://www.allthegate.com/plugin/AGSWallet_ssl.js' );  //맨앞에 넣음
+      wp_enqueue_script( 'ags_wallet', 'https://www.allthegate.com/plugin/AGSWallet_utf8_ssl.js' );  //맨앞에 넣음
     }
     wp_enqueue_script( 'ags_pay', $this->assets_url . 'js/agspay.js' );  //맨앞에 넣음
 
