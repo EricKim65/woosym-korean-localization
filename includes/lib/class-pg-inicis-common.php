@@ -538,6 +538,7 @@ class Inicis_Pay_Callback extends WC_Payment_Gateway {
     $inipay->SetField( "joinexpire", $joinexpire );    // 제휴카드유효기간
     $inipay->SetField( "id_customer", $id_customer );    //user_id
 
+    $inipay->SetField( "log", "false" ); // 로깅은 생략합니다.
 
     /****************
      * 4. 지불 요청 *
