@@ -380,13 +380,13 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 //			}
 			wskl_load_module( '/includes/lib/class-direct-purchase.php', 'enable_direct_purchase' );
 
-			/** 모듈 배송추적 (frontend/admin 둘 다 요구) */
+			/** 모듈 배송추적*/
 //			require_once( WSKL_PATH . '/includes/class-wskl-shipping-tracking.php' );
-			wskl_load_module( '/includes/class-wskl-shipping-tracking.php' );
+			wskl_load_module( '/includes/class-wskl-shipping-tracking.php', 'enable_ship_track' );
 
 			/** 결제 (frontend/admin 둘 다 요구 ) */
 //			require_once( WSKL_PATH . '/includes/class-wskl-pay-gates.php' );
-			wskl_load_module( '/includes/class-wskl-pay-gates.php' );
+			wskl_load_module( '/includes/class-wskl-pay-gates.php', 'enable_sym_pg' );
 		}
 
 		/**

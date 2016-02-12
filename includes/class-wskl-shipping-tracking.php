@@ -1,7 +1,6 @@
 <?php
 
 require_once( WSKL_PATH . '/includes/lib/shipping-tracking/class-wskl-agent-helper.php' );
-require_once( WSKL_PATH . '/includes/lib/shipping-tracking/class-wskl-shipping-agents.php' );
 
 
 define( 'SDURL', WP_PLUGIN_URL . "/" . dirname( plugin_basename( __FILE__ ) ) );
