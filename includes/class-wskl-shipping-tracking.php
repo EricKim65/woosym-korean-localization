@@ -18,20 +18,14 @@ if ( ! class_exists( 'WSKL_Shipping_Tracking' ) ) :
       /** 사용자가 보는 주문 페이지에 배송 상태 정보 보여 주기 */
       add_action( 'woocommerce_order_items_table', array( __CLASS__, 'track_page_shipping_details' ) );
 
-      add_action( 'woocommerce_process_shop_order_meta', array(
-          __CLASS__,
+      add_action(
           'woocommerce_process_shop_order_meta',
-      ), 10 );
+          array( __CLASS__, 'woocommerce_process_shop_order_meta', )
+      );
 
       add_action( 'manage_edit-shop_order_columns', array( __CLASS__, 'add_shipping_column' ) );
 
       add_action( 'manage_shop_order_posts_custom_column', array( __CLASS__, 'add_shipping_column_details' ), 10, 2 );
-
-      //add_action( 'woocommerce_email_before_order_table', array( __CLASS__, 'email_shipping_details' ) );
-
-      //add_action( 'admin_menu', array( __CLASS__, 'ship_select_menu'));
-
-      //add_action( 'admin_init', array( __CLASS__, 'ship_register_settings'));
 
       add_shortcode( 'wskl_shipping_tracking', array( __CLASS__, 'shortcode_shipping_tracking' ) );
 
@@ -154,17 +148,21 @@ if ( ! class_exists( 'WSKL_Shipping_Tracking' ) ) :
 
     function shortcode_shipping_tracking( $args ) {
 
-      $context = array(
-          'agents' => array(
-              'cj-daehan'   => array( '690044118373', '691054781954' ),   // CJ 대한통운 (CJ GLS)
-              'logen'       => array( '98941423184' ),
-              'hanjin'      => array( '407868999370' ),
-              'post-office' => array( '6899090674745' ),
-              'hyeondae'    => array( '224791520494' ),   // 현대택배
-              'kg-logis'    => array( '148826701553' ),   // KG로지스
-              'kgb'         => array( '2514499400' ),
-          ),
-      );
+      $sample_file = WSKL_PATH . '/tests/shipping-tracking/sample.json';
+      if( !file_exists( $sample_file ) ) {
+        return 'sample file not found!';
+      }
+
+      /**
+       * @var array $context 파일 형식 예
+       *                     {
+       *                      "agents": {
+       *                        "slug1": ["track01", "track02"],
+       *                        "slug2": ["track01"]
+       *                      }
+       *                     }
+       */
+      $context = json_decode( file_get_contents( $sample_file ), true );
 
       ob_start();
       wc_get_template( 'shipping-tracking-template.php', $context, '', WSKL_PATH . '/includes/lib/shipping-tracking/' );
