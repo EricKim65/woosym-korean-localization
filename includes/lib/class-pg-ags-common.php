@@ -764,7 +764,7 @@ class Ags_Pay_Callback extends WC_Payment_Gateway {
           $return_url = $this->get_return_url( $order );
         }
 
-        $order->add_order_note( sprintf( __( '결제가 성공적으로 처리됨. 결제방법: %s. 올더게이트 TID: %s. 발생시각: %s.', $this->_folder ), $this->method, '111', date( 'YmdHis' ) ) );
+        $order->add_order_note( sprintf( __( '결제가 성공적으로 처리됨.<br/>결제방법: %s<br/>올더게이트 TID: %s<br/>발생시각: %s', 'wskl' ), $this->method, '111', date( 'Y-m-d H:i:s' ) ) );
 
         // Complete payment, reduce stock levels & remove cart
         $order->payment_complete();

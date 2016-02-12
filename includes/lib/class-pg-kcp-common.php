@@ -848,7 +848,7 @@ class Kcp_Pay_Callback extends WC_Payment_Gateway {
           $return_url = $this->get_return_url( $order );
         }
 
-        $order->add_order_note( sprintf( __( '결제가 성공적으로 처리됨. 결제방법: %s. 올더게이트 TID: %s. 발생시각: %s.', $this->_folder ), $this->method, '111', date( 'YmdHis' ) ) );
+        $order->add_order_note( sprintf( __( '결제가 성공적으로 처리됨.<br/>결제방법: %s<br/>올더게이트 TID: %s<br/>발생시각: %s', 'wskl' ), $this->method, '111', date( 'Y-m-d H:i:s' ) ) );
 
         // Complete payment, reduce stock levels & remove cart
         $order->payment_complete();
@@ -978,7 +978,7 @@ class Kcp_Pay_Callback extends WC_Payment_Gateway {
         // 결제실패에 따른 상점처리부분
         //echo ("결제가 실패처리되었습니다. [" . $agspay->GetResult("rSuccYn")."]". $agspay->GetResult("rResMsg").". " );
 
-        $order->update_status( 'failed', sprintf( __( '결제처리 안됨.  에러메시지 : %s. 발생시각: %s.', $this->_folder ), $res_msg, date( 'YmdHis' ) ) );
+        $order->update_status( 'failed', sprintf( __( '결제처리 안됨.  에러메시지 : %s. 발생시각: %s.', 'wskl' ), $res_msg, date( 'YmdHis' ) ) );
         $cart_url = $woocommerce->cart->get_cart_url();
         wp_redirect( $cart_url );
         exit;

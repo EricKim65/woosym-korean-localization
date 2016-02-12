@@ -671,7 +671,7 @@ class Inicis_Pay_Callback extends WC_Payment_Gateway {
     }
 
     if ( $inipay->GetResult( 'ResultCode' ) == "00" ) {
-      $order->add_order_note( sprintf( __( '결제가 성공적으로 처리됨.<br/>결제방법: %s<br/>이니시스 TID: %s. 발생시각: %s.', 'wskl' ), $this->method, '111', date( 'Y-m-d H-i-s' ) ) );
+      $order->add_order_note( sprintf( __( '결제가 성공적으로 처리됨.<br/>결제방법: %s<br/>이니시스 TID: %s. 발생시각: %s.', 'wskl' ), $this->method, '111', date( 'Y-m-d H:i:s' ) ) );
       // Complete payment, reduce stock levels & remove cart
       $order->payment_complete();
       $order->reduce_order_stock();
