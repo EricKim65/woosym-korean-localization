@@ -396,7 +396,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					array(
 						'id'          => 'payapp_linkval',
 						'label'       => __( '연동 Value', 'wskl' ),
-						'description' => __( '페이앱 연동 VAKUE를 입력해주십시요(중요)', 'wskl' ),
+						'description' => __( '페이앱 연동 VALUE를 입력해주십시요(중요)', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
@@ -408,7 +408,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						<span class="wskl-notice">판매자 등록 과정은 매우 중요한 사항이므로  정확히 숙지하고 실행해주셔야 합니다. </span></br>
 						1. 다보리와 계약시 메일로 전달된 판매자 아이디를 입력합니다.</br>
                         &nbsp;&nbsp;PayApp 판매자로 로그인 한 후 확인한 연동 KEY 와 연동 VALUE를 입력하고 저장합니다.</br><a href="https://seller.payapp.kr/c/apiconnect_info.html" target="_blank">https://seller.payapp.kr/c/apiconnect_info.html  연동정보 확인하러 가기</a></br>
- 						<font size="" color="blue">페이앱에서는 테스트 모드가 제공되지 않습니다. 대신 결제 실패의 경우가 발생하지 않습니다.<br>불편하시겠지만 결제 테스트 후 판매자 관리자로 로그인하여 해당 결제를 취소하여 주십시요.</font></br>
+ 						<span class="wskl-info">페이앱에서는 테스트 모드가 제공되지 않습니다. 대신 결제 실패의 경우가 발생하지 않습니다.<br>불편하시겠지만 결제 테스트 후 판매자 관리자로 로그인하여 해당 결제를 취소하여 주십시요.</span></br>
   					', $this->_folder ),
 						'type'        => 'caption',
 						'default'     => '',
@@ -455,7 +455,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
                         &nbsp;&nbsp;&nbsp;&nbsp;예)/public_html/wp-content/plugins/wskl/includes/lib/homekcp/bin/pp_cli</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;(1) ssh로 로그인 후, 해당폴더에서 "chmod 755 pp_cli" 실행 또는</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;(2) FTP 로 접속하여 해당 화일에 오른쪽 마우스를 클릭 - "화일 권한" 확인 후 755 로 저장</br>
- 						<font size="" color="blue">테스트시에는기본 설치된 테스트용 KCP TEST  상점이 사용되므로 참고하세요</span></br>
+ 						<span class="wskl-info">테스트시에는기본 설치된 테스트용 KCP TEST  상점이 사용되므로 참고하세요</span></br>
   					', $this->_folder ),
 						'type'        => 'caption',
 						'default'     => '',
@@ -900,8 +900,8 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 		);
 
 		$settings['market_auto'] = array(
-			'title'       => __( '마케팅자동화기능(D)', 'wskl' ),
-			'description' => __( '독립 웹사이트에서 마케팅 자동화 서버로 관련 데이타가 연동됩니다.', 'wskl' ),
+			'title'       => __( '마케팅자동화기능(D) - 베타', 'wskl' ),
+			'description' => __( '독립 웹사이트에서 마케팅 자동화 서버로 관련 데이타가 연동됩니다. 베타테스팅 중입니다.', 'wskl' ),
 			'fields'      => array(
 				array(
 					'id'          => 'enable_sales_log',
