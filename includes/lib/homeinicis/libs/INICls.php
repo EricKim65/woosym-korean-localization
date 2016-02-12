@@ -3,12 +3,12 @@
 /**
  * Copyright (C) 2007 INICIS Inc.
  *
- * ÇØ´ç ¶óÀÌºê·¯¸®´Â Àý´ë ¼öÁ¤µÇ¾î¼­´Â ¾ÈµË´Ï´Ù.
- * ÀÓÀÇ·Î ¼öÁ¤µÈ ÄÚµå¿¡ ´ëÇÑ Ã¥ÀÓÀº ÀüÀûÀ¸·Î ¼öÁ¤ÀÚ¿¡°Ô ÀÖÀ½À» ¾Ë·Áµå¸³´Ï´Ù.
+ * ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Ìºê·¯ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾î¼­ï¿½ï¿½ ï¿½ÈµË´Ï´ï¿½.
+ * ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµå¿¡ ï¿½ï¿½ï¿½ï¿½ Ã¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë·ï¿½ï¿½å¸³ï¿½Ï´ï¿½.
  *
  */
 require_once ( "INIDFN.php" );
-require_once ( "INIXml.php" );
+require_once( "InicisXml.php" );
 
 /* ----------------------------------------------------- */
 /* Global Variables                                    */
@@ -16,57 +16,57 @@ require_once ( "INIXml.php" );
 extract($_POST);
 extract($_GET);
 switch ($paymethod) {
-    case(Card):    // ½Å¿ëÄ«µå
+    case(Card):    // ï¿½Å¿ï¿½Ä«ï¿½ï¿½
         $pgid = "CARD";
         break;
-    case(Account):   // ÀºÇà °èÁÂ ÀÌÃ¼
+    case(Account):   // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼
         $pgid = "ACCT";
         break;
-    case(DirectBank): // ½Ç½Ã°£ °èÁÂ ÀÌÃ¼
+    case(DirectBank): // ï¿½Ç½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼
         $pgid = "DBNK";
         break;
     case(OCBPoint):  // OCB
         $pgid = "OCBP";
         break;
-    case(VCard):    // ISP °áÁ¦
+    case(VCard):    // ISP ï¿½ï¿½ï¿½ï¿½
         $pgid = "ISP_";
         break;
-    case(HPP):     // ÈÞ´ëÆù °áÁ¦
+    case(HPP):     // ï¿½Þ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         $pgid = "HPP_";
         break;
-    case(ArsBill):   // 700 ÀüÈ­°áÁ¦
+    case(ArsBill):   // 700 ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½
         $pgid = "ARSB";
         break;
-    case(PhoneBill):  // PhoneBill °áÁ¦(¹Þ´Â ÀüÈ­)
+    case(PhoneBill):  // PhoneBill ï¿½ï¿½ï¿½ï¿½(ï¿½Þ´ï¿½ ï¿½ï¿½È­)
         $pgid = "PHNB";
         break;
-    case(Ars1588Bill):// 1588 ÀüÈ­°áÁ¦
+    case(Ars1588Bill):// 1588 ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½
         $pgid = "1588";
         break;
-    case(VBank):    // °¡»ó°èÁÂ ÀÌÃ¼
+    case(VBank):    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼
         $pgid = "VBNK";
         break;
-    case(Culture):   // ¹®È­»óÇ°±Ç °áÁ¦
+    case(Culture):   // ï¿½ï¿½È­ï¿½ï¿½Ç°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         $pgid = "CULT";
         break;
-    case(CMS):     // CMS °áÁ¦
+    case(CMS):     // CMS ï¿½ï¿½ï¿½ï¿½
         $pgid = "CMS_";
         break;
-    case(AUTH):    // ½Å¿ëÄ«µå À¯È¿¼º °Ë»ç
+    case(AUTH):    // ï¿½Å¿ï¿½Ä«ï¿½ï¿½ ï¿½ï¿½È¿ï¿½ï¿½ ï¿½Ë»ï¿½
         $pgid = "AUTH";
         break;
-    case(INIcard):   // ³×Æ¼¸Ó´Ï °áÁ¦
+    case(INIcard):   // ï¿½ï¿½Æ¼ï¿½Ó´ï¿½ ï¿½ï¿½ï¿½ï¿½
         $pgid = "INIC";
         break;
-    case(MDX):     // ¸óµ¦½ºÄ«µå
+    case(MDX):     // ï¿½óµ¦½ï¿½Ä«ï¿½ï¿½
         $pgid = "MDX_";
         break;
-    default:         // »ó±â ÁöºÒ¼ö´Ü ¿Ü Ãß°¡µÇ´Â ÁöºÒ¼ö´ÜÀÇ °æ¿ì ±âº»À¸·Î paymethod°¡ 4ÀÚ¸®·Î ³Ñ¾î¿Â´Ù.
+    default:         // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò¼ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½Ò¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½âº»ï¿½ï¿½ï¿½ï¿½ paymethodï¿½ï¿½ 4ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½Â´ï¿½.
         $pgid = $paymethod;
 }
 
 if ($quotainterest == "1") {
-    $interest = "(¹«ÀÌÀÚÇÒºÎ)";
+    $interest = "(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òºï¿½)";
 }
 
 /* ----------------------------------------------------- */
@@ -188,7 +188,7 @@ class INIData {
     var $m_PG1IP;
     var $m_PG2IP;
     //----------------------------
-    //IFD ¿äÃ»ÇÊµå
+    //IFD ï¿½ï¿½Ã»ï¿½Êµï¿½
     //----------------------------
     var $m_sCmd;
     var $m_sCrypto;
@@ -205,7 +205,7 @@ class INIData {
     var $m_sEncrypted;
     var $m_sSessionKey;
     //----------------------------
-    //IFD ÀÀ´äÇì´õ ÇÊµå
+    //IFD ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Êµï¿½
     //----------------------------
     var $m_FlgCrypto;
     var $m_FlgSign;
@@ -215,7 +215,7 @@ class INIData {
     var $m_Xml = array();
     var $m_REQUEST = array();
     var $m_REQUEST2 = array(); //User Defined Entity
-    var $m_RESULT = array();  //Encrypted ÇÊµå hash table
+    var $m_RESULT = array();  //Encrypted ï¿½Êµï¿½ hash table
     var $m_RESULT2 = array(); //PG Added Entity
 
     function INIData($request, $request2) {
@@ -238,7 +238,7 @@ class INIData {
             $this->m_sCmd = CMS_REQ_OPEN_SUB;
             $this->m_sCrypto = FLAG_CRYPTO_3DES;
         }
-        //°¡»ó°èÁÂ ºÎºÐÈ¯ºÒ Ãß°¡
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½È¯ï¿½ï¿½ ï¿½ß°ï¿½
         else if (( $this->m_Type == TYPE_REPAY) || ( $this->m_Type == TYPE_VACCTREPAY)) {
             $this->m_sCmd = CMD_REQ_PRTC;
             $this->m_sCrypto = FLAG_CRYPTO_3DES;
@@ -265,7 +265,7 @@ class INIData {
                 $this->m_sCmd = CMD_REQ_DNY_CNF;
                 $this->m_sCrypto = FLAG_CRYPTO_3DES;
             }
-        } else if ($this->m_Type == TYPE_REFUND) { //°¡»ó°èÁÂÈ¯ºÒ(09.08.05)
+        } else if ($this->m_Type == TYPE_REFUND) { //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¯ï¿½ï¿½(09.08.05)
             $this->m_sCmd = CMD_REQ_RFD;
             $this->m_sCrypto = FLAG_CRYPTO_3DES;
         } else {
@@ -286,7 +286,7 @@ class INIData {
 
     function CheckField() {
         //---------------------------------
-        //°øÅë
+        //ï¿½ï¿½ï¿½ï¿½
         //---------------------------------
         if (trim($this->m_REQUEST["inipayhome"]) == "") {
             $this->m_ErrCode = NULL_DIR_ERR;
@@ -309,7 +309,7 @@ class INIData {
             return false;
         }
         //---------------------------------
-        //typeº°·Î
+        //typeï¿½ï¿½ï¿½ï¿½
         //---------------------------------
         if ($this->m_Type == TYPE_SECUREPAY) {
             /*
@@ -378,7 +378,7 @@ class INIData {
                 return false;
             }
         }
-        //°¡»ó°èÁÂ ºÎºÐÈ¯ºÒµµ ºÎºÐÈ¯ºÒ ·ÎÁ÷¿¡ Ãß°¡
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½È¯ï¿½Òµï¿½ ï¿½Îºï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
         else if (( $this->m_Type == TYPE_REPAY ) || ( $this->m_Type == TYPE_VACCTREPAY )) {
             if (trim($this->m_REQUEST["oldtid"]) == "") {
                 $this->m_ErrCode = NULL_TID_ERR;
@@ -396,21 +396,21 @@ class INIData {
                 return false;
             }
 
-            //°¡»ó°èÁÂ ºÎºÐÈ¯ºÒ ·ÎÁ÷¿¡¼­´Â °èÁ¶¹øÈ£,ÀºÇàÄÚµå,°èÁÂÁÖ¸íÀÌ ÇÊ¼ö 
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£,ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ ï¿½Ê¼ï¿½ 
             if ($this->m_Type == TYPE_VACCTREPAY) {
                 if (trim($this->m_REQUEST["refundacctnum"]) == "") {
                     $this->m_ErrCode = NULL_FIELD_REFUNDACCTNUM;
-                    $this->m_ErrMsg = "È¯ºÒ°èÁÂ¹øÈ£";
+                    $this->m_ErrMsg = "È¯ï¿½Ò°ï¿½ï¿½Â¹ï¿½È£";
                     return false;
                 }
                 if (trim($this->m_REQUEST["refundbankcode"]) == "") {
                     $this->m_ErrCode = NULL_FIELD_REFUNDBANKCODE;
-                    $this->m_ErrMsg = "È¯ºÒÀºÇàÄÚµå";
+                    $this->m_ErrMsg = "È¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½";
                     return false;
                 }
                 if (trim($this->m_REQUEST["refundacctname"]) == "") {
                     $this->m_ErrCode = NULL_FIELD_REFUNDACCTNAME;
-                    $this->m_ErrMsg = "È¯ºÒ°èÁÂÁÖ¼º¸í";
+                    $this->m_ErrMsg = "È¯ï¿½Ò°ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½";
                     return false;
                 }
             }
@@ -433,17 +433,17 @@ class INIData {
             }
             if (trim($this->m_REQUEST["racctnum"]) == "") {
                 $this->m_ErrCode = NULL_FIELD_REFUNDACCTNUM;
-                $this->m_ErrMsg = "È¯ºÒ°èÁÂ¹øÈ£";
+                $this->m_ErrMsg = "È¯ï¿½Ò°ï¿½ï¿½Â¹ï¿½È£";
                 return false;
             }
             if (trim($this->m_REQUEST["rbankcode"]) == "") {
                 $this->m_ErrCode = NULL_FIELD_REFUNDBANKCODE;
-                $this->m_ErrMsg = "È¯ºÒÀºÇàÄÚµå";
+                $this->m_ErrMsg = "È¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½";
                 return false;
             }
             if (trim($this->m_REQUEST["racctname"]) == "") {
                 $this->m_ErrCode = NULL_FIELD_REFUNDACCTNAME;
-                $this->m_ErrMsg = "È¯ºÒ°èÁÂÁÖ¼º¸í";
+                $this->m_ErrMsg = "È¯ï¿½Ò°ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½";
                 return false;
             }
         }
@@ -460,10 +460,10 @@ class INIData {
         list($usec, $sec) = explode(" ", microtime());
         $datestr = date("YmdHis", $sec) . substr($usec, 2, 3); //YYYYMMDDHHMMSSSSS
 
-        $datestr_con = substr($datestr, 0, 14) . substr($datestr, 15, 2); //YYYYMMDDHHMMSSxSS Áß°£ÀÇ x°ªÀº ¹ö¸²(milli secondÀÇ Ã¹¹øÂ° ÀÚ¸®¼ö)
+        $datestr_con = substr($datestr, 0, 14) . substr($datestr, 15, 2); //YYYYMMDDHHMMSSxSS ï¿½ß°ï¿½ï¿½ï¿½ xï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(milli secondï¿½ï¿½ Ã¹ï¿½ï¿½Â° ï¿½Ú¸ï¿½ï¿½ï¿½)
 
-        mt_srand(getmypid() * mt_rand(1, 999));  //mt_rand ÇÏ±âÀü¿¡ srand ·Î seed Àû¿ë , seed key = pid * mt_rand(1,999)
-        //pgid + mid + 16ÀÚ¸® ³¯Â¥¹× ½Ã°£ + random_key 4ÀÚ¸® (seedÀû¿ë)
+        mt_srand(getmypid() * mt_rand(1, 999));  //mt_rand ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ srand ï¿½ï¿½ seed ï¿½ï¿½ï¿½ï¿½ , seed key = pid * mt_rand(1,999)
+        //pgid + mid + 16ï¿½Ú¸ï¿½ ï¿½ï¿½Â¥ï¿½ï¿½ ï¿½Ã°ï¿½ + random_key 4ï¿½Ú¸ï¿½ (seedï¿½ï¿½ï¿½ï¿½)
         $this->m_sTID = $this->m_REQUEST["pgid"] . $this->m_REQUEST["mid"] . $datestr_con . mt_rand(1000, 9999);
         if (strlen($this->m_sTID) != TID_LEN) {
             return false;
@@ -486,7 +486,7 @@ class INIData {
         $iv = $this->GenRand(MAX_IV_LEN, true);
 
         //make XML
-        $xml = new XML();
+        $xml = new Inicis_XML();
         if ($this->m_Type == TYPE_FORMPAY) {
             
         } else if ($this->m_Type == TYPE_RECEIPT) {
@@ -524,16 +524,16 @@ class INIData {
             $CD = $xml->add_node($CI, TX_PRTC_REMAINS, $this->m_REQUEST["confirm_price"]);
             $CD = $xml->add_node($CI, TX_PRTC_QUOTA, $this->m_REQUEST["cardquota"]);
             $CD = $xml->add_node($CI, TX_PRTC_INTEREST, $this->m_REQUEST["quotainterest"]);
-            //I°èÁÂÀÌÃ¼ ±¹¹ÎÀºÇà ºÎºÐÃë¼Ò½Ã °èÁÂ¹øÈ£ °èÁÂÁÖ¼º¸íÀ» ¹ÞÀ½ 2011-10-06
+            //Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ï¿½Ò½ï¿½ ï¿½ï¿½ï¿½Â¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 2011-10-06
             $CD = $xml->add_node($CI, TX_PRTC_NOACCT, $this->m_REQUEST["no_acct"]);
             $CD = $xml->add_node($CI, TX_PRTC_NMACCT, $this->m_REQUEST["nm_acct"], array("urlencode" => "1"));
-            //°ú¼¼,ºñ°ú¼¼ Ãß°¡ 2014-07-23 by jung.ks
+            //ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ 2014-07-23 by jung.ks
             //$CD = $xml->add_node($CI,               TX_PRTC_TAX,		$this->m_REQUEST["tax"]		);
             //$CD = $xml->add_node($CI,               TX_PRTC_TAXFREE,		$this->m_REQUEST["taxfree"]		);
 
             $this->AddUserDefinedEntity(PARTCANCELINFO, "", $xml, $CI);
         }
-        //°¡»ó°èÁÂ ºÎºÐÈ¯ºÒ
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½È¯ï¿½ï¿½
         else if ($this->m_Type == TYPE_VACCTREPAY) {
             //PartCancelInfo(ROOT)
             $CI = $xml->add_node("", PARTCANCELINFO);
@@ -680,20 +680,20 @@ class INIData {
     }
 
     function MakeBody() {
-        $xml = new XML();
+        $xml = new Inicis_XML();
 
-        //ROOT(INIpay) ROOT¸¦ ROOTINFO·Î ¼öÁ¤ 2011-05-23
+        //ROOT(INIpay) ROOTï¿½ï¿½ ROOTINFOï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 2011-05-23
         $root = $xml->add_node("", ROOTINFO);
 
         if ($this->m_Type == TYPE_SECUREPAY || $this->m_Type == TYPE_RECEIPT) {
             //GoodsInfo
-            //Àå¹Ù±¸´Ï ±â´É Ãß°¡(2010.04.13)
-            //==goodscnt°¡ ¾øÀ» °æ¿ì(Àå¹Ù±¸´Ï ±â´ÉÀÌ ¾Æ´Ò°æ¿ì) ±âº» °ª 1·Î ¼³Á¤
+            //ï¿½ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ß°ï¿½(2010.04.13)
+            //==goodscntï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½(ï¿½ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ò°ï¿½ï¿½) ï¿½âº» ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             $tGoodCnt = ($this->m_REQUEST["goodscnt"] != null && (int) $this->m_REQUEST["goodscnt"] > 0 ) ? $this->m_REQUEST["goodscnt"] : 1;
 
             $GI = $xml->add_node($root, GOODSINFO);
-            //Àå¹Ù±¸´Ï ±â´É Ãß°¡(2010.04.13) 
-            //==TX_GOOSCNT´Â  $tGoodCnt·Î ºÎÅÍ ÀÔ·Â
+            //ï¿½ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ß°ï¿½(2010.04.13) 
+            //==TX_GOOSCNTï¿½ï¿½  $tGoodCntï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½
             //$GP = $xml->add_node($GI,		TX_GOOSCNT, 		"1"															);
             $GP = $xml->add_node($GI, TX_GOOSCNT, $tGoodCnt);
             $GP = $xml->add_node($GI, TX_MOID, $this->m_REQUEST["oid"], array("urlencode" => "1"));
@@ -702,8 +702,8 @@ class INIData {
             $GP = $xml->add_node($GI, TX_TAXFREE, $this->m_REQUEST["taxfree"]);
             $this->AddUserDefinedEntity(GOODSINFO, "", $xml, $GI);
 
-            //Àå¹Ù±¸´Ï ±â´É Ãß°¡(2010.04.13) [START]
-            //==Àå¹Ù±¸´Ï XML Àü¹® Ãß°¡
+            //ï¿½ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ß°ï¿½(2010.04.13) [START]
+            //==ï¿½ï¿½Ù±ï¿½ï¿½ï¿½ XML ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
             $iGoodCnt = 1;
             while ($iGoodCnt <= $tGoodCnt) {
                 if ($this->m_REQUEST["smid_" . $iGoodCnt] != "" && strlen($this->m_REQUEST["smid_" . $iGoodCnt]) > 0) {
@@ -728,7 +728,7 @@ class INIData {
                 }
                 $iGoodCnt++;
             }
-            //Àå¹Ù±¸´Ï ±â´É Ãß°¡(2010.04.13) [END]
+            //ï¿½ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ß°ï¿½(2010.04.13) [END]
 
             $this->AddUserDefinedEntity(GOODSINFO, GOODS, $xml, $GS);
             //BuyerInfo
@@ -765,7 +765,7 @@ class INIData {
             $CD = $xml->add_node($CI, TX_SESSIONKEY, $this->m_sSessionKey);
             $CD = $xml->add_node($CI, TX_ENCRYPTED, $this->m_sEncrypted);
         }
-        //°¡»ó°èÁÂ ºÎºÐÈ¯ºÒÃß°¡
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½È¯ï¿½ï¿½ï¿½ß°ï¿½
         else if (( $this->m_Type == TYPE_REPAY ) || ( $this->m_Type == TYPE_VACCTREPAY )) {
             //PartCancelInfo
             $CI = $xml->add_node($root, PARTCANCELINFO);
@@ -804,8 +804,8 @@ class INIData {
             $CD = $xml->add_node($CI, TX_ENCRYPTED, $this->m_sEncrypted);
         } else if ($this->m_Type == TYPE_OPENSUB) {
             //GoodsInfo
-            //Àå¹Ù±¸´Ï ±â´É Ãß°¡(2010.04.13)
-            //==goodscnt°¡ ¾øÀ» °æ¿ì(Àå¹Ù±¸´Ï ±â´ÉÀÌ ¾Æ´Ò°æ¿ì) ±âº» °ª 1·Î ¼³Á¤
+            //ï¿½ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ß°ï¿½(2010.04.13)
+            //==goodscntï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½(ï¿½ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ò°ï¿½ï¿½) ï¿½âº» ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             $tSubCnt = ($this->m_REQUEST["subcnt"] != null && (int) $this->m_REQUEST["subcnt"] > 0 ) ? $this->m_REQUEST["subcnt"] : 1;
 
             $OI = $xml->add_node($root, OPENSUBINFO);
@@ -829,7 +829,7 @@ class INIData {
 
                 $iSubCnt++;
             }
-            //Àå¹Ù±¸´Ï ±â´É Ãß°¡(2010.04.13) [END]
+            //ï¿½ï¿½Ù±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ß°ï¿½(2010.04.13) [END]
             $this->AddUserDefinedEntity(OPENSUBINFO, "", $xml, $OI);
         }
         //ReservedInfo
@@ -891,7 +891,7 @@ class INIData {
     }
 
     function ParseBody($body, &$encrypted, &$sessionkey) {
-        $xml = new XML();
+        $xml = new Inicis_XML();
         if (($rtv = $xml->load_xml("", $body)) != OK)
             return $rtv;
 
@@ -901,8 +901,8 @@ class INIData {
         $this->m_RESULT[NM_MOID] = $this->GetXMLData(MOID);
 
         //PAYMENTINFO
-        //±âÅ¸ÁöºÒ¼ö´ÜÀÌ paymethod¸¦ ÁÖÁö ¾Ê¾Æ ÀÓ½Ã·Î ¿äÃ» Paymethod·Î ´ëÃ¼
-        //PG¿¡¼­ ÁÖ´Â PayMethod¿Í ¿äÃ»Paymethod´Â °°´Ù!
+        //ï¿½ï¿½Å¸ï¿½ï¿½ï¿½Ò¼ï¿½ï¿½ï¿½ï¿½ï¿½ paymethodï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾ï¿½ ï¿½Ó½Ã·ï¿½ ï¿½ï¿½Ã» Paymethodï¿½ï¿½ ï¿½ï¿½Ã¼
+        //PGï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ PayMethodï¿½ï¿½ ï¿½ï¿½Ã»Paymethodï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!
         $this->m_RESULT[NM_PAYMETHOD] = $this->m_sPayMethod;
 
         $ResultCode = $this->GetXMLData("ResultCode");
@@ -921,15 +921,15 @@ class INIData {
     }
 
     function ParseDecrypt($decrypted) {
-        $xml = new XML();
+        $xml = new Inicis_XML();
         if (($rtv = $xml->load_xml("", $decrypted)) != OK)
             return $rtv;
 
         $this->m_Xml = array_merge($this->m_Xml, $xml->xml_node);
 
         if ($this->m_Type == TYPE_SECUREPAY || $this->m_Type == TYPE_RECEIPT) {
-            //½ÂÀÎ³¯Â¥(ApplDate), ½ÂÀÎ½Ã°£(ApplTime), ½ÂÀÎ¹øÈ£(ApplNum)´Â °øÅë!!(OCB, Çö±Ý¿µ¼öÁõ Á¦¿Ü)
-            //ISP, CARD´Â CARD·Î assign. °í°´/»óÁ¡Àº ISP°¡ ¹ºÁö, CARD°¡ ¹ºÁö ¾Ë°Ô ¹¹¾ß!!!-_-
+            //ï¿½ï¿½ï¿½Î³ï¿½Â¥(ApplDate), ï¿½ï¿½ï¿½Î½Ã°ï¿½(ApplTime), ï¿½ï¿½ï¿½Î¹ï¿½È£(ApplNum)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!!(OCB, ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+            //ISP, CARDï¿½ï¿½ CARDï¿½ï¿½ assign. ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ISPï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, CARDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ë°ï¿½ ï¿½ï¿½ï¿½ï¿½!!!-_-
             if ($this->m_sPayMethod == NM_TX_CARD) {
                 $this->m_RESULT[APPLDATE] = $this->GetXMLData(CARD_APPLDATE);
                 $this->m_RESULT[APPLTIME] = $this->GetXMLData(CARD_APPLTIME);
@@ -994,7 +994,7 @@ class INIData {
                 $this->m_RESULT[APPLTIME] = $this->GetXMLData(GAMG_APPLTIME);
                 $this->m_RESULT[APPLNUM] = $this->GetXMLData(GAMG_APPLNUM);
                 $this->m_RESULT[GAMG_CNT] = $this->GetXMLData(GAMG_CNT);
-                //°ÔÀÓ¹®È­»óÇ°±ÇÀº Multi°áÁ¦ °¡´É
+                //ï¿½ï¿½ï¿½Ó¹ï¿½È­ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ Multiï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 MakePathGAMG($this->m_RESULT[GAMG_CNT]);
                 for ($i = 1; $i <= $this->m_RESULT[GAMG_CNT]; $i++) {
                     $this->m_RESULT[constant("GAMG_NUM$i")] = $this->GetXMLData(constant("GAMG_NUM$i"));
@@ -1061,7 +1061,7 @@ class INIData {
         $this->m_PG2IP = $pg2ip;
     }
 
-    // Xpath·Î ¾È°¡Á®¿Â´Ù. ÇÑ´ÞÀ» ÇêÁö¶ö Çß´Ù!!
+    // Xpathï¿½ï¿½ ï¿½È°ï¿½ï¿½ï¿½ï¿½Â´ï¿½. ï¿½Ñ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß´ï¿½!!
     // added by ddaemiri, 2007.09.03
     function GetXMLData($node) {
         $content = $this->m_Xml[$node . "[1]"]["text"];
@@ -1074,7 +1074,7 @@ class INIData {
 
 /* ----------------------------------------------------- */
 /* Crypto Class			                                   */
-/* PHP4.2 & OpenSSL ÇÊ¿ä)      	                	     */
+/* PHP4.2 & OpenSSL ï¿½Ê¿ï¿½)      	                	     */
 /* ----------------------------------------------------- */
 
 class INICrypto {

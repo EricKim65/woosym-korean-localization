@@ -30,11 +30,11 @@
 //
 
 /**
-* Class for accessing XML data through the XPath language.
+* Class for accessing Inicis_XML data through the XPath language.
 *
-* This class offers methods for accessing the nodes of a XML document using 
+* This class offers methods for accessing the nodes of a Inicis_XML document using
 * the XPath language. You can add or remove nodes, set or modify their 
-* content and their attributes. No additional PHP extensions like DOM XML 
+* content and their attributes. No additional PHP extensions like DOM Inicis_XML
 * or something similar are required to use these features.
 *
 * @link      http://www.phpxml.org/ Latest release of this class
@@ -52,7 +52,20 @@
  *
  */
 
-class XML
+
+/**
+ * 원래의 파일 이름은 INIXml.php, 클래스 이름은 XML 이었으나, 이 이름이 타 플러그인(예 wangguard plugin)과 충돌할 우려가 매우 높고
+ * 실제 다보리 사이트에서 이 에러로 결제가 되지 않는 문제 발생.
+ * 그리하여 이 클래스 이름을 Inicis_XML 로 변경함.
+ *
+ * The original name of this file and the class name were 'INIXml.php', and 'XML', respectively.
+ * However this name was too common, so that PHP fatal error - duplicated class declaration - was occurred.
+ * (If the error happens, then a user's payment process cannot be done!)
+ * Therefore, this class name is changed to 'Inicis_XML'.
+ *
+ * Class Inicis_XML
+ */
+class Inicis_XML
 {
     /**
     * List of all document nodes.
@@ -189,7 +202,7 @@ class XML
     */
 		//modify by ddaemiri, 2007.05.28
 		//load_file -> load_xml�� ���� �� string ���� ��� �Է¹��� �� ����.
-    function XML ( $file = "" )
+    function Inicis_XML ( $file = "" )
     {
         // Check whether a file was given.
         if ( !empty($file) )
