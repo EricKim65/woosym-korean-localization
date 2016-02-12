@@ -193,6 +193,7 @@ class WC_Inicis_Common extends WC_Payment_Gateway {
     //$inipay->SetField("price", "1000");                // 가격
     $inipay->SetField( "nointerest", "no" );             //무이자여부(no:일반, yes:무이자)
     $inipay->SetField( "quotabase", "선택:일시불:2개월:3개월:6개월" ); //할부기간
+    $inipay->SetField( "log", "false" );
 
     /* * ******************************
 	 * 4. 암호화 대상/값을 암호화함 *
