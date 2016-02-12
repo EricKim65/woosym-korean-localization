@@ -61,3 +61,5 @@ class Post_Export {
 		}
 	}
 }
+
+Post_Export::initialize();

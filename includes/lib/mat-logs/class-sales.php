@@ -50,3 +50,5 @@ class Sales {
 		}
 	}
 }
+
+$sales = new Sales();

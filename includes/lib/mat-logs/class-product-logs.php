@@ -99,3 +99,5 @@ class Product_Logs {
 		}
 	}
 }
+
+Product_Logs::initialize();
