@@ -588,7 +588,7 @@ class Ags_Pay_Callback extends WC_Payment_Gateway {
     //$agspay->SetValue("AgsPayHome","C:/htdocs/agspay");			//올더게이트 결제설치 디렉토리 (상점에 맞게 수정)
     $agspay->SetValue( "AgsPayHome", dirname( __FILE__ ) . '/homeags' );      //올더게이트 결제설치 디렉토리 (상점에 맞게 수정)
     $agspay->SetValue( "StoreId", trim( $_POST["StoreId"] ) );    //상점아이디
-    $agspay->SetValue( "log", "true" );              //true : 로그기록, false : 로그기록안함.
+    $agspay->SetValue( "log", "false" );              //true : 로그기록, false : 로그기록안함.
     $agspay->SetValue( "logLevel", "INFO" );            //로그레벨 : DEBUG, INFO, WARN, ERROR, FATAL (해당 레벨이상의 로그만 기록됨)
     $agspay->SetValue( "UseNetCancel", "true" );          //true : 망취소 사용. false: 망취소 미사용
     $agspay->SetValue( "Type", "Pay" );              //고정값(수정불가)
