@@ -145,8 +145,8 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				$daum_zip_api_url = 'http://dmaps.daum.net/map_js_init/postcode.v2.js';
 			}
 
-			wp_enqueue_script( 'daum_maps', $daum_zip_api_url, null, null, false );  //맨앞에 넣음
-			wp_enqueue_script( 'daum_zipcode', $this->assets_url . 'js/daum-zipcode.js', null, null, true );  //맨뒤에 넣음
+			wp_enqueue_script( 'daum_maps', $daum_zip_api_url, null, WSKL_VERSION, false );  //맨앞에 넣음
+			wp_enqueue_script( 'daum_zipcode', $this->assets_url . 'js/daum-zipcode.js', array( 'daum_maps', ), WSKL_VERSION, true );  //맨뒤에 넣음
 		}
 
 		public function woosym_daum_kaddress() {
