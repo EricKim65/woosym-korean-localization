@@ -128,6 +128,4 @@ function wskl_startup_plugin() {
 
 	/** 많은 기능들이 이 곳으로 옮겨졌고, 앞으로 위 코드들도 이 쪽으로 옮겨질 예정. */
 	require_once( WSKL_PATH . '/includes/class-main.php' );
-
-	error_log( 'error log test' );
 }
