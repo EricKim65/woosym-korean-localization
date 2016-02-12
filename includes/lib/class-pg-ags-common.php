@@ -839,8 +839,9 @@ class Ags_Pay_Callback extends WC_Payment_Gateway {
     } else {
       // 결제실패에 따른 상점처리부분
       //echo ("결제가 실패처리되었습니다. [" . $agspay->GetResult("rSuccYn")."]". $agspay->GetResult("rResMsg").". " );
+      $res_msg = $agspay->GetResult('rResMsg');
 
-      $order->update_status( 'failed', sprintf( __( '결제처리 안됨.  에러메시지 : %s. 발생시각: %s.', $this->_folder ), $res_msg, date( 'YmdHis' ) ) );
+      $order->update_status( 'failed', sprintf( __( '결제가 실패했습니다.<br/>에러메시지 : %s.<br/>발생시각: %s.', 'wskl' ), $res_msg, date( 'Y-m-d H:i:s' ) ) );
       $cart_url = $woocommerce->cart->get_cart_url();
       wp_redirect( $cart_url );
       exit;
