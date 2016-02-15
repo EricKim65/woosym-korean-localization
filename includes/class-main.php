@@ -407,6 +407,8 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				case 'frontend' :
 					return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
 			}
+
+			throw new LogicException( 'is_request() does not support type: ' . $type );
 		}
 	}
 
