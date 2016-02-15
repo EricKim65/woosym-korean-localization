@@ -1,0 +1,17 @@
+img.auth-provider-icon {
+    display: inline;
+    margin: 5px;
+    padding: .53em;
+    border: 1px solid #e8e4e3;
+    background: #fff;
+    height: auto !important;
+}
+
+div.auth-provider-wrapper {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+div.auth-provider-wrapper h3 {
+    margin: 10px;
+}
