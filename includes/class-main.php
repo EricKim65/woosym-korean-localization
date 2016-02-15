@@ -369,9 +369,6 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			}
 
 			/** 모듈 소셜 로그인 */
-//			if ( wskl_is_option_enabled( 'enable_social_login' ) ) {
-//				require_once( WSKL_PATH . '/includes/lib/class-social-login.php' );
-//			}
 			wskl_load_module( '/includes/lib/class-social-login.php', 'enable_social_login' );
 
 			/** 바로 구매 */

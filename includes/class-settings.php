@@ -42,17 +42,10 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 		add_menu_page( '다보리', '다보리', 'manage_options', $this->_token . '_checkout_settings', '', 'dashicons-cart', 56 );
 
-		$this->setting_menu_hook = add_submenu_page(
-			$this->_token . '_checkout_settings',
-			'설정',
-			'설정',
-			'manage_options',
-			$this->_token . '_checkout_settings',
-			array(
+		$this->setting_menu_hook = add_submenu_page( $this->_token . '_checkout_settings', '설정', '설정', 'manage_options', $this->_token . '_checkout_settings', array(
 				$this,
 				'settings_page',
-			)
-		);
+			) );
 	}
 
 	public function init_settings() { // Initialize settings
@@ -117,7 +110,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'id'          => 'dummy_10',
 					'label'       => __( '디버그 방법', 'wskl' ),
 					'description' => __( "
-						<span class=\"wskl-notice\">wp-config.php를 아래와 같이 수정하십시요.<br/></span>
+						<span class=\"wskl-notice\">wp-config.php를 아래와 같이 수정하십시오.<br/></span>
 						//define('WP_DEBUG', false); <br/>
 						define('WP_DEBUG',         true);  // Turn debugging ON <br/>
 						define('WP_DEBUG_DISPLAY', true); // Turn forced display OFF <br/>
@@ -138,33 +131,13 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 		if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'authentication' ) {
 
-			$payment_description = sprintf(
-				'%s <a href="#" id="payment_license_activation">%s</a><br/><span id="payment_license_status">%s</span>',
-				__( '지불기능 키를 입력후 기능을 활성화하십시요.', 'wskl' ),
-				__( '지불기능 인증', 'wskl' ),
-				\wskl\lib\auth\Auth::get_license_duration_string( 'payment' )
-			);
+			$payment_description = sprintf( '%s <a href="#" id="payment_license_activation">%s</a><br/><span id="payment_license_status">%s</span>', __( '지불기능 키를 입력후 기능을 활성화하십시오.', 'wskl' ), __( '지불기능 인증', 'wskl' ), \wskl\lib\auth\Auth::get_license_duration_string( 'payment' ) );
 
-			$essential_description = sprintf(
-				'%s <a href="#" id="essential_license_activation">%s</a><br/><span id="essential_license_status">%s</span>',
-				__( '핵심기능 키를 입력후 기능을 활성화하십시요.', 'wskl' ),
-				__( '핵심기능 인증', 'wskl' ),
-				\wskl\lib\auth\Auth::get_license_duration_string( 'essential' )
-			);
+			$essential_description = sprintf( '%s <a href="#" id="essential_license_activation">%s</a><br/><span id="essential_license_status">%s</span>', __( '핵심기능 키를 입력후 기능을 활성화하십시오.', 'wskl' ), __( '핵심기능 인증', 'wskl' ), \wskl\lib\auth\Auth::get_license_duration_string( 'essential' ) );
 
-			$extension_description = sprintf(
-				'%s <a href="#" id="extension_license_activation">%s</a><br/><span id="extension_license_status">%s</span>',
-				__( '확장기능 키를 입력후 기능을 활성화하십시요.', 'wskl' ),
-				__( '확장기능 인증', 'wskl' ),
-				\wskl\lib\auth\Auth::get_license_duration_string( 'extension' )
-			);
+			$extension_description = sprintf( '%s <a href="#" id="extension_license_activation">%s</a><br/><span id="extension_license_status">%s</span>', __( '확장기능 키를 입력후 기능을 활성화하십시오.', 'wskl' ), __( '확장기능 인증', 'wskl' ), \wskl\lib\auth\Auth::get_license_duration_string( 'extension' ) );
 
-			$marketing_automation_description = sprintf(
-				'%s <a href="#" id="marketing_automation_license_activation">%s</a><br/><span id="marketing_automation_license_status">%s</span>',
-				__( '마케팅자동화 키를 입력후 기능을 활성화하십시요.', 'wskl' ),
-				__( '마케팅자동화 인증', 'wskl' ),
-				\wskl\lib\auth\Auth::get_license_duration_string( 'marketing' )
-			);
+			$marketing_automation_description = sprintf( '%s <a href="#" id="marketing_automation_license_activation">%s</a><br/><span id="marketing_automation_license_status">%s</span>', __( '마케팅자동화 키를 입력후 기능을 활성화하십시오.', 'wskl' ), __( '마케팅자동화 인증', 'wskl' ), \wskl\lib\auth\Auth::get_license_duration_string( 'marketing' ) );
 		}
 
 		$settings['authentication'] = array(
@@ -255,7 +228,6 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 		);
 
 
-
 		switch ( get_option( $this->_prefix . 'pg_agency' ) ) {
 			case 'kcp':
 			case 'inicis':
@@ -268,18 +240,16 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'description' => __( '결제 테스트 모드로 설정되어 실제적인 결제는 되지 않습니다.', 'wskl' ),
 						'type'        => 'checkbox',
 						'default'     => '',
-					),
-					array(
+					), array(
 						'id'          => 'enable_showinputs',
 						'label'       => __( '필드보임 설정', 'wskl' ),
 						'description' => __( '테스트용으로 사용되므로 일반적인경우 비활성화 해주세요.', 'wskl' ),
 						'type'        => 'checkbox',
 						'default'     => '',
-					),
-					array(
+					), array(
 						'id'          => 'checkout_methods',
 						'label'       => __( '결제방식 지정', 'wskl' ),
-						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시요.', 'wskl' ),
+						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시오.', 'wskl' ),
 						'type'        => 'checkbox_multi',
 						'options'     => array(
 							'credit'  => '신용카드',
@@ -288,8 +258,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 							'mobile'  => '모바일소액결제',
 						),
 						'default'     => array( 'credit', '신용카드' ),
-					),
-					array(
+					), array(
 						'id'          => 'enable_https',
 						'label'       => __( 'HTTPS 사용', 'wskl' ),
 						'description' => __( '결제페이지 스크립트을 HTTPS(보안모드)방식으로 호출합니다.<br/>
@@ -297,15 +266,13 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 													.', $this->_folder ),
 						'type'        => 'checkbox',
 						'default'     => '',
-					),
-					array(
+					), array(
 						'id'          => 'enable_escrow',
 						'label'       => __( '에스크로 설정', 'wskl' ),
 						'description' => __( '에스크로 방식으로 결제를 진행합니다.', 'wskl' ),
 						'type'        => 'checkbox',
 						'default'     => '',
-					),
-					array(
+					), array(
 						'id'          => 'escrow_delivery',
 						'label'       => __( '에스크로 예상 배송일', 'wskl' ),
 						'description' => __( '에스크로 설정시 배송소요기간(일). (에스크로아닌 경우 해당사항 없슴)', 'wskl' ),
@@ -323,7 +290,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					array(
 						'id'          => 'checkout_methods',
 						'label'       => __( '결제방식 지정', 'wskl' ),
-						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시요.', 'wskl' ),
+						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시오.', 'wskl' ),
 						'type'        => 'checkbox_multi',
 						'options'     => array(
 							'credit'  => '신용카드',
@@ -343,14 +310,14 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					array(
 						'id'          => 'checkout_methods',
 						'label'       => __( '결제방식 지정', 'wskl' ),
-						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시요.', 'wskl' ),
+						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시오.', 'wskl' ),
 						'type'        => 'checkbox_multi',
 						'options'     => array(
-							'credit'  => '신용카드',
-							'remit'   => '계좌이체',
-							'virtual' => '가상계좌',
-							'mobile'  => '모바일소액결제',
-							'kakaopay'  => '카카오페이',
+							'credit'   => '신용카드',
+							'remit'    => '계좌이체',
+							'virtual'  => '가상계좌',
+							'mobile'   => '모바일소액결제',
+							'kakaopay' => '카카오페이',
 						),
 						'default'     => array( 'credit', '신용카드' ),
 					),
@@ -367,7 +334,6 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					)
 
 
-
 				);
 				break;
 		}
@@ -376,39 +342,35 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 		switch ( get_option( $this->_prefix . 'pg_agency' ) ) {
 
 			case 'payapp':
-				array_push( $settings['checkout-paymentgate']['fields'],
-					array(
+				array_push( $settings['checkout-paymentgate']['fields'], array(
 						'id'          => 'payapp_userid',
 						'label'       => __( '판매자 아이디', 'wskl' ),
-						'description' => __( '페이앱 판매자 아이디를 입력해주십시요', 'wskl' ),
+						'description' => __( '페이앱 판매자 아이디를 입력해주십시오', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'payapp_linkkey',
 						'label'       => __( '연동 Key', 'wskl' ),
-						'description' => __( '페이앱 연동 KEY를 입력해주십시요(중요)', 'wskl' ),
+						'description' => __( '페이앱 연동 KEY를 입력해주십시오(중요)', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'payapp_linkval',
 						'label'       => __( '연동 Value', 'wskl' ),
-						'description' => __( '페이앱 연동 VALUE를 입력해주십시요(중요)', 'wskl' ),
+						'description' => __( '페이앱 연동 VALUE를 입력해주십시오(중요)', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'dummy_34',
 						'label'       => __( '판매자 등록', 'wskl' ),
 						'description' => __( '
 						<span class="wskl-notice">판매자 등록 과정은 매우 중요한 사항이므로  정확히 숙지하고 실행해주셔야 합니다. </span></br>
 						1. 다보리와 계약시 메일로 전달된 판매자 아이디를 입력합니다.</br>
                         &nbsp;&nbsp;PayApp 판매자로 로그인 한 후 확인한 연동 KEY 와 연동 VALUE를 입력하고 저장합니다.</br><a href="https://seller.payapp.kr/c/apiconnect_info.html" target="_blank">https://seller.payapp.kr/c/apiconnect_info.html  연동정보 확인하러 가기</a></br>
- 						<span class="wskl-info">페이앱에서는 테스트 모드가 제공되지 않습니다. 대신 결제 실패의 경우가 발생하지 않습니다.<br>불편하시겠지만 결제 테스트 후 판매자 관리자로 로그인하여 해당 결제를 취소하여 주십시요.</span></br>
+ 						<span class="wskl-info">페이앱에서는 테스트 모드가 제공되지 않습니다. 대신 결제 실패의 경우가 발생하지 않습니다.<br>불편하시겠지만 결제 테스트 후 판매자 관리자로 로그인하여 해당 결제를 취소하여 주십시오.</span></br>
   					', $this->_folder ),
 						'type'        => 'caption',
 						'default'     => '',
@@ -419,32 +381,28 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 
 			case 'kcp':
-				array_push( $settings['checkout-paymentgate']['fields'],
-					array(
+				array_push( $settings['checkout-paymentgate']['fields'], array(
 						'id'          => 'kcp_sitename',
 						'label'       => __( '사이트이름', 'wskl' ),
-						'description' => __( '자체적으로 정한 사이트 이름을 입력해주십시요. (반드시 영문자로 설정하여 주시기 바랍니다.)', 'wskl' ),
+						'description' => __( '자체적으로 정한 사이트 이름을 입력해주십시오. (반드시 영문자로 설정하여 주시기 바랍니다.)', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
 						'placeholder' => __( '예) 다보리 쇼핑몰', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'kcp_sitecd',
 						'label'       => __( 'Site Code', 'wskl' ),
-						'description' => __( 'KCP 에서 발급된 Site Code 를 정확히 입력해주십시요.(중요)', 'wskl' ),
+						'description' => __( 'KCP 에서 발급된 Site Code 를 정확히 입력해주십시오.(중요)', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
 						'placeholder' => __( '예) T0000', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'kcp_sitekey',
 						'label'       => __( 'Site Key', 'wskl' ),
-						'description' => __( 'KCP 에서 발급된 Site Key를 정확히 입력해주십시요.(중요)', 'wskl' ),
+						'description' => __( 'KCP 에서 발급된 Site Key를 정확히 입력해주십시오.(중요)', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
 						'placeholder' => __( '예) 3grptw1.zW0GSo4PQdaGvsF__', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'dummy_11',
 						'label'       => __( '상점등록', 'wskl' ),
 						'description' => __( '
@@ -465,32 +423,28 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				break;
 
 			case 'inicis':
-				array_push( $settings['checkout-paymentgate']['fields'],
-					array(
+				array_push( $settings['checkout-paymentgate']['fields'], array(
 						'id'          => 'inicis_admin',
 						'label'       => __( '키패스워드', 'wskl' ),
 						'description' => __( '키패스워드입력 - 상점관리자 패스워드와 무관합니다.(중요)', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '예) 1111', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'inicis_mid',
 						'label'       => __( '상점 아이디', 'wskl' ),
-						'description' => __( '이니시스에서 발급된 상점아이디를 대소문자 구분하여 입력해주십시요.(중요)', 'wskl' ),
+						'description' => __( '이니시스에서 발급된 상점아이디를 대소문자 구분하여 입력해주십시오.(중요)', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '예) INIpayTest', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'inicis_url',
 						'label'       => __( '상점 URL', 'wskl' ),
-						'description' => __( '상점의 홈페이지 주소를 입력해주십시요.( http://포함 )', 'wskl' ),
+						'description' => __( '상점의 홈페이지 주소를 입력해주십시오.( http://포함 )', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
 						'placeholder' => __( '예) http://www.your_domain.co.kr', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'dummy_11',
 						'label'       => __( '상점등록', 'wskl' ),
 						'description' => __( '
@@ -505,109 +459,95 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
   					', $this->_folder ),
 						'type'        => 'caption',
 						'default'     => '',
-					)
-				);
+					) );
 				break;
 
 			case 'lgu+':
 
 			case 'ags':
-				array_push( $settings['checkout-paymentgate']['fields'],
-					array(
+				array_push( $settings['checkout-paymentgate']['fields'], array(
 						'id'          => 'ags_storenm',
 						'label'       => __( '상점명', 'wskl' ),
-						'description' => __( '올더게이트 상점명을 입력해주십시요', 'wskl' ),
+						'description' => __( '올더게이트 상점명을 입력해주십시오', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '예) 올더게이트', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'ags_storeid',
 						'label'       => __( '상점 ID', 'wskl' ),
-						'description' => __( '올더게이트에서 발급된 상점ID를 정확히 입력해주십시요.(중요)', 'wskl' ),
+						'description' => __( '올더게이트에서 발급된 상점ID를 정확히 입력해주십시오.(중요)', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '예) aegis', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'ags_mallurl',
 						'label'       => __( '상점 URL', 'wskl' ),
-						'description' => __( '상점의 홈페이지 주소를 입력해주십시요.( http://포함 )', 'wskl' ),
+						'description' => __( '상점의 홈페이지 주소를 입력해주십시오.( http://포함 )', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
 						'placeholder' => __( '예) http://www.allthegate.com', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'ags_hp_id',
 						'label'       => __( 'CPID(모바일결제)', 'wskl' ),
 						'description' => __( '올더게이트에서 발급받으신 CPID로 변경', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'ags_hp_pwd',
 						'label'       => __( 'CP비밀번호(모바일결제)', 'wskl' ),
 						'description' => __( '올더게이트에서 발급받으신 비밀번호로 변경', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'ags_hp_subid',
 						'label'       => __( 'SUB_ID(모바일결제)', 'wskl' ),
 						'description' => __( '올더게이트에서 발급받으신 상점만 입력', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'ags_prodcode',
 						'label'       => __( '상품코드(모바일결제)', 'wskl' ),
 						'description' => __( '올더게이트에서 발급받으신 상품코드로 변경', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'ags_unittype',
 						'label'       => __( '상품종류(모바일결제)', 'wskl' ),
 						'description' => __( '올더게이트에서 발급받으신 상품종류로 변경: 디지털컨텐츠=1, 실물(상품)=2', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
-					)
-				);
+					) );
 				break;
 
 
 			case 'iamport':
-				array_push( $settings['checkout-paymentgate']['fields'],
-					array(
+				array_push( $settings['checkout-paymentgate']['fields'], array(
 						'id'          => 'iamport_user_code',
 						'label'       => __( '가맹점 식별코드', 'wskl' ),
-						'description' => __( '아임포트의 가맹점 식별코드를 입력하여 주십시요.', 'wskl' ),
+						'description' => __( '아임포트의 가맹점 식별코드를 입력하여 주십시오.', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => '',
 						'label'       => __( 'REST API 키', 'wskl' ),
-						'description' => __( '아임포트의 REST API 키를 입력하여 주십시요.', 'wskl' ),
+						'description' => __( '아임포트의 REST API 키를 입력하여 주십시오.', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'iamport_api_secret',
 						'label'       => __( 'REST API secret', 'wskl' ),
-						'description' => __( '아임포트의 REST API secret 입력하여 주십시요.', 'wskl' ),
+						'description' => __( '아임포트의 REST API secret 입력하여 주십시오.', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
 						'placeholder' => __( '', 'wskl' ),
-					),
-					array(
+					), array(
 						'id'          => 'dummy_31',
 						'label'       => __( '가맹점 등록', 'wskl' ),
 						'description' => __( '
@@ -618,32 +558,24 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
   					', $this->_folder ),
 						'type'        => 'caption',
 						'default'     => '',
-					)
-
-
-
-
-
-				);
+					) );
 				break;
 
 		}
 
-		array_push( $settings['checkout-paymentgate']['fields'],
-			array(
+		array_push( $settings['checkout-paymentgate']['fields'], array(
 				'id'          => 'dummy_1',
 				'label'       => __( '추가설정내용', 'wskl' ),
 				'description' => __( '
 						<span class="wskl-notice">해당페이지 설정후 반드시 추가해야할 "우커머스 결제설정" 내용입니다.</span>   <a href="./admin.php?page=wc-settings&tab=checkout" target="_blank">결제설정 바로가기</a><br/>
 						1. "해당 페이지를 설정하면 우커머스->설정->결제 설정"의 하위메뉴에 지정한 결제 방법이 추가됩니다. <br/>
-						   &nbsp;&nbsp;&nbsp;각각의 하위메뉴로 들어가서 활성화에 체크하여 주십시요.  <br/>
-						2. "우커머스->설정->결제옵션->지불게이트웨이"에서 고객의 결제페이지에 보일 "결제 방법의 순서"를 결정하여 주십시요.<br/>
+						   &nbsp;&nbsp;&nbsp;각각의 하위메뉴로 들어가서 활성화에 체크하여 주십시오.  <br/>
+						2. "우커머스->설정->결제옵션->지불게이트웨이"에서 고객의 결제페이지에 보일 "결제 방법의 순서"를 결정하여 주십시오.<br/>
 						3. "우커머스->설정->결제설정"의 각 결제 방식을 선택하면 고객의 결제페이지에 보일 결제방식에 대한 안내문 변경이 가능합니다.<br/>
 					', $this->_folder ),
 				'type'        => 'caption',
 				'default'     => '',
-			)
-		);
+			) );
 
 		$settings['checkout-shipping'] = array(
 			'title'       => __( '핵심기능(B)', 'wskl' ),
@@ -666,7 +598,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				array(
 					'id'          => 'korean_won',
 					'label'       => __( '한국 원화 표시 설정', 'wskl' ),
-					'description' => __( '우커머스->설정->일반->통화에서 대한민국(원)표시가 나오도록 합니다.<br/>국내용 우커머스 쇼핑몰은 반드시 <a href="http://www.symphonysoft.co.kr/cs/activity/">우커머스-설정-일반</a> 에서 통화->대한민국(KRW), 통화 기호 위치->오른쪽으로 세팅하여 주십시요 !</br> <span class="wskl-notice">그렇지 않으면 고객의 결제  진행이 되지 않습니다. </span>', 'wskl' ),
+					'description' => __( '우커머스->설정->일반->통화에서 대한민국(원)표시가 나오도록 합니다.<br/>국내용 우커머스 쇼핑몰은 반드시 <a href="http://www.symphonysoft.co.kr/cs/activity/">우커머스-설정-일반</a> 에서 통화->대한민국(KRW), 통화 기호 위치->오른쪽으로 세팅하여 주십시오 !</br> <span class="wskl-notice">그렇지 않으면 고객의 결제  진행이 되지 않습니다. </span>', 'wskl' ),
 					'type'        => 'checkbox',
 					'default'     => '',
 				),
@@ -737,7 +669,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				array(
 					'id'          => 'shipping_companies',
 					'label'       => __( '배송회사 지정', 'wskl' ),
-					'description' => __( '사용중인 배송회사를 지정해 주십시요.', 'wskl' ),
+					'description' => __( '사용중인 배송회사를 지정해 주십시오.', 'wskl' ),
 					'type'        => 'checkbox_multi',
 					'options'     => $agents,  // 하드코드된 것을 없앰.
 					'data'        => get_option( 'shipping_companies' ),
@@ -775,103 +707,91 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 		);
 
 
-		if ( get_option( $this->_prefix . 'fb_login' ) == 'on' ) {
-			array_push( $settings['social-login']['fields'],
-				array(
+		if ( get_option( WSKL_PREFIX . 'fb_login' ) == 'on' ) {
+			array_push( $settings['social-login']['fields'], array(
 					'id'          => 'fb_app_id',
 					'label'       => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[페이스북] App ID', 'wskl' ),
-					'description' => __( '페이스북의 App ID 를 입력하십시요', 'wskl' ),
+					'description' => __( '페이스북의 App ID 를 입력하십시오', 'wskl' ),
 					'type'        => 'longtext',
 					'default'     => '',
 					'placeholder' => __( '', 'wskl' ),
-				),
-				array(
+				), array(
 					'id'          => 'fb_app_secret',
 					'label'       => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[페이스북] App Secret', 'wskl' ),
-					'description' => __( '페이스북의 App Secret을 입력하십시요', 'wskl' ),
+					'description' => __( '페이스북의 App Secret을 입력하십시오', 'wskl' ),
 					'type'        => 'longtext',
 					'default'     => '',
 					'placeholder' => __( '', 'wskl' ),
-				),
-				array(
-					'id'          => 'fb_login_link_title',
-					'label'       => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[페이스북]링크 타이틀', 'wskl' ),
-					'description' => __( '로그인 링크에 보여질 텍스트 또는 style, button tag, img tag 를 입력하십시요', 'wskl' ),
+				), array(
+					'id'          => 'fb_login_link_text',
+					'label'       => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[페이스북]링크 텍스트', 'wskl' ),
+					'description' => __( '로그인 링크에 보여질 텍스트 또는 이미지 태그를 입력하십시오. 기본 아이콘을 사용하려면 \'[icon]\'으로 입력하세요.', 'wskl' ),
 					'type'        => 'textarea',
-					'default'     => '페이스북 로그인',
+					'default'     => '[icon]',
 					'placeholder' => __( '', 'wskl' ),
-				),
-				array(
+				), array(
 					'id'          => 'dummy_13',
 					'label'       => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[페이스북] 키발급', 'wskl' ),
 					'description' => __( '
-						<span class="wskl-notice">반드시 https://developers.facebook.com 에서 키발급을 먼저 받으십시요.</span>   <a href="https://developers.facebook.com" target="_blank" >키발급 바로가기</a><br/>
-						1. My App 메뉴에서 Add a New App 을 클릭한 후 Website 를 선택하십시요. <br/>
-						2. 해당웹사이트의 이름을 입력하시고 Create New Facebook ID 하십시요. <br/>
-						3. 반드시 Site URL에 http://를 포함한 고객의 웹사이트 주소를 입력하십시요. <br/>
+						<span class="wskl-notice">반드시 https://developers.facebook.com 에서 키발급을 먼저 받으십시오.</span>   <a href="https://developers.facebook.com" target="_blank" >키발급 바로가기</a><br/>
+						1. My App 메뉴에서 Add a New App 을 클릭한 후 Website 를 선택하십시오. <br/>
+						2. 해당웹사이트의 이름을 입력하시고 Create New Facebook ID 하십시오. <br/>
+						3. 반드시 Site URL에 http://를 포함한 고객의 웹사이트 주소를 입력하십시오. <br/>
 						4. App ID 생성이 완료되면 반드시 해당 App의 Settings 로 가셔서 App Domains와 Website에서 <br/>고객의
 						    웹사이트 주소가 일치하는 지 확인하세요. <span class="wskl-notice">웹사이트 주소가 바뀔때 반드시 여기와 일치시켜야 합니다.</span><br/>
-						5. App ID와 App Secret 을 확인하신 후 다보리 플러그인의 해당 키값을 입력하고 저장하여 주십시요.<br/>
+						5. App ID와 App Secret 을 확인하신 후 다보리 플러그인의 해당 키값을 입력하고 저장하여 주십시오.<br/>
 					', $this->_folder ),
 					'type'        => 'caption',
 					'default'     => '',
-				)
-			);
+				) );
 		}
 
-		array_push( $settings['social-login']['fields'],
-			array(
+		array_push( $settings['social-login']['fields'], array(
 				'id'          => 'naver_login',
 				'label'       => __( '네이버 계정으로 로그인 활성화 ', 'wskl' ),
 				'description' => __( '활성화이후  발급키 입력창이 나타납니다. ', 'wskl' ),
 				'type'        => 'checkbox',
 				'default'     => '',
-			)
-		);
+			) );
 
 
 		if ( get_option( $this->_prefix . 'naver_login' ) == 'on' ) {
-			array_push( $settings['social-login']['fields'],
-				array(
+			array_push( $settings['social-login']['fields'], array(
 					'id'          => 'naver_client_id',
 					'label'       => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[네이버] Client ID', 'wskl' ),
-					'description' => __( '네이버의 Client ID를 입력하십시요', 'wskl' ),
+					'description' => __( '네이버의 Client ID를 입력하십시오', 'wskl' ),
 					'type'        => 'longtext',
 					'default'     => '',
 					'placeholder' => __( '', 'wskl' ),
-				),
-				array(
+				), array(
 					'id'          => 'naver_client_secret',
 					'label'       => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[네이버] Client Secret', 'wskl' ),
-					'description' => __( '네이버의 Client Secret 을 입력하십시요', 'wskl' ),
+					'description' => __( '네이버의 Client Secret 을 입력하십시오', 'wskl' ),
 					'type'        => 'longtext',
 					'default'     => '',
 					'placeholder' => __( '', 'wskl' ),
-				),
-				array(
-					'id'          => 'naver_login_link_title',
-					'label'       => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[네이버] 링크 타이틀', 'wskl' ),
-					'description' => __( '로그인 링크에 보여질 텍스트 또는 style, button tag, img tag 를 입력하십시요', 'wskl' ),
+				), array(
+					'id'          => 'naver_login_link_text',
+					'label'       => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[네이버] 링크 텍스트', 'wskl' ),
+					'description' => __( '로그인 링크에 보여질 텍스트 또는 이미지 태그를 입력하십시오. 기본 아이콘을 사용하려면 \'[icon]\'으로 입력하세요.', 'wskl' ),
 					'type'        => 'textarea',
-					'default'     => '네이버 로그인',
+					'default'     => '[icon]',
 					'placeholder' => __( '', 'wskl' ),
-				),
-				array(
+				), array(
 					'id'          => 'dummy_14',
 					'label'       => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[네이버] 키발급', 'wskl' ),
 					'description' => __( '
-						<span class="wskl-notice">반드시  http://developer.naver.com/wiki/pages/NaverLogin 에서 키발급을 먼저 받으십시요.</span>   <a href=" http://developer.naver.com/wiki/pages/NaverLogin" target="_blank" >키발급 바로가기</a><br/>
-						1. [키발급 관리]를 선택한 후 네이버 로그인을 선택하십시요.. <br/>
-						2. 새 애플리케이션을 등록하고 서비스 환경은 [www-Web]으로 선택하십시요.. <br/>
-						3. PC웹과 모바일 웹에서 고객의  웹사이트 주소를 입력하시고 콜백도 동일하게 입력하십시요. <br/>
+						<span class="wskl-notice">반드시  http://developer.naver.com/wiki/pages/NaverLogin 에서 키발급을 먼저 받으십시오.</span>   <a href=" http://developer.naver.com/wiki/pages/NaverLogin" target="_blank" >키발급 바로가기</a><br/>
+						1. [키발급 관리]를 선택한 후 네이버 로그인을 선택하십시오.. <br/>
+						2. 새 애플리케이션을 등록하고 서비스 환경은 [www-Web]으로 선택하십시오.. <br/>
+						3. PC웹과 모바일 웹에서 고객의  웹사이트 주소를 입력하시고 콜백도 동일하게 입력하십시오. <br/>
                         4. Client ID 생성이 완료되면 어플리케이션 메뉴의 [일반]메뉴로 고객의  PC웹과 모바일 웹사이트 주소가 일치하는 지 확인하세요. <br/>
 						<span class="wskl-notice">웹사이트 주소가 바뀔때 반드시 여기와 일치시켜야 합니다.</span><br/>
-						5. Client ID와 Client Secret 을 확인하신 후 다보리 플러그인의 해당 키값을 입력하고 저장하여 주십시요.<br/>
+						5. Client ID와 Client Secret 을 확인하신 후 다보리 플러그인의 해당 키값을 입력하고 저장하여 주십시오.<br/>
 					', $this->_folder ),
 					'type'        => 'caption',
 					'default'     => '',
-				)
-			);
+				) );
 		}
 
 		$settings['b_security'] = array(
@@ -882,7 +802,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'id'          => 'enable_countryip_block',
 					'label'       => __( '국가별 IP 차단', 'wskl' ),
 					'description' => __( '국가별 IP를 차단하여 해킹을 미연에 방지합니다.</br>
-						활성화시 반드시 아래의 "화이트리스트 국가코드"를 넣어 주십시요', 'wskl' ),
+						활성화시 반드시 아래의 "화이트리스트 국가코드"를 넣어 주십시오', 'wskl' ),
 					'type'        => 'checkbox',
 					'default'     => '',
 				),
