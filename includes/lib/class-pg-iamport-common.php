@@ -422,7 +422,7 @@ function init_wc_gateway_wskl_iamport() {
         $instance  = new static();
         $pay_gates = $instance->get_option( 'pay_gates' );
 
-        $available_methods = array( $instance );
+        $available_methods = array( /* $instance */ );
 
         foreach ( $pay_gates as $slug => $is_used ) {
           if ( $is_used == 'yes' ) {
@@ -434,7 +434,7 @@ function init_wc_gateway_wskl_iamport() {
           }
         }
 
-        unset( $instance );
+        // unset( $instance );
 
         return $available_methods;
       }

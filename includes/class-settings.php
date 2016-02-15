@@ -40,12 +40,17 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 	public function add_menu_item() {  // Add settings page to admin menu
 
-		add_menu_page( '다보리', '다보리', 'manage_options', $this->_token . '_checkout_settings', '', 'dashicons-cart', 56 );
+		$this->setting_menu_hook = add_menu_page(
+			__( '다보리', 'wskl' ),
+			__( '다보리', 'wskl' ),
+			'manage_options',
+			WSKL_MENU_SLUG,
+			array( $this, 'settings_page', ),
+			'dashicons-cart',
+			56
+		);
 
-		$this->setting_menu_hook = add_submenu_page( $this->_token . '_checkout_settings', '설정', '설정', 'manage_options', $this->_token . '_checkout_settings', array(
-				$this,
-				'settings_page',
-			) );
+		remove_submenu_page( WSKL_MENU_SLUG, WSKL_MENU_SLUG );
 	}
 
 	public function init_settings() { // Initialize settings
@@ -195,7 +200,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 		);
 
 
-		$settings['checkout-paymentgate'] = array(
+		$settings['checkout-payment-gate'] = array(
 			'title'       => __( '지불기능(A)', 'wskl' ),
 			'description' => __( '국내의 모든 지불 대행 회사의 결제 플러그인을 지원합니다.<br/>
 						<span class="wskl-notice">현재 지원되지 않는 플러그인은 무료로 개발해드립니다.</span><br/>
@@ -232,7 +237,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 			case 'kcp':
 			case 'inicis':
 			case 'allthegate':
-				array_push( $settings['checkout-paymentgate']['fields'],
+				array_push( $settings['checkout-payment-gate']['fields'],
 
 					array(
 						'id'          => 'enable_testmode',
@@ -285,7 +290,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				break;
 
 			case 'payapp':
-				array_push( $settings['checkout-paymentgate']['fields'],
+				array_push( $settings['checkout-payment-gate']['fields'],
 
 					array(
 						'id'          => 'checkout_methods',
@@ -305,7 +310,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				break;
 
 			case 'iamport':
-				array_push( $settings['checkout-paymentgate']['fields'],
+				array_push( $settings['checkout-payment-gate']['fields'],
 
 					array(
 						'id'          => 'checkout_methods',
@@ -342,22 +347,22 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 		switch ( get_option( $this->_prefix . 'pg_agency' ) ) {
 
 			case 'payapp':
-				array_push( $settings['checkout-paymentgate']['fields'], array(
-						'id'          => 'payapp_userid',
+				array_push( $settings['checkout-payment-gate']['fields'], array(
+						'id'          => 'payapp_user_id',
 						'label'       => __( '판매자 아이디', 'wskl' ),
 						'description' => __( '페이앱 판매자 아이디를 입력해주십시오', 'wskl' ),
 						'type'        => 'text',
 						'default'     => '',
 						'placeholder' => '',
 					), array(
-						'id'          => 'payapp_linkkey',
+						'id'          => 'payapp_link_key',
 						'label'       => __( '연동 Key', 'wskl' ),
 						'description' => __( '페이앱 연동 KEY를 입력해주십시오(중요)', 'wskl' ),
 						'type'        => 'longtext',
 						'default'     => '',
 						'placeholder' => '',
 					), array(
-						'id'          => 'payapp_linkval',
+						'id'          => 'payapp_link_val',
 						'label'       => __( '연동 Value', 'wskl' ),
 						'description' => __( '페이앱 연동 VALUE를 입력해주십시오(중요)', 'wskl' ),
 						'type'        => 'longtext',
@@ -381,7 +386,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 
 			case 'kcp':
-				array_push( $settings['checkout-paymentgate']['fields'], array(
+				array_push( $settings['checkout-payment-gate']['fields'], array(
 						'id'          => 'kcp_sitename',
 						'label'       => __( '사이트이름', 'wskl' ),
 						'description' => __( '자체적으로 정한 사이트 이름을 입력해주십시오. (반드시 영문자로 설정하여 주시기 바랍니다.)', 'wskl' ),
@@ -423,7 +428,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				break;
 
 			case 'inicis':
-				array_push( $settings['checkout-paymentgate']['fields'], array(
+				array_push( $settings['checkout-payment-gate']['fields'], array(
 						'id'          => 'inicis_admin',
 						'label'       => __( '키패스워드', 'wskl' ),
 						'description' => __( '키패스워드입력 - 상점관리자 패스워드와 무관합니다.(중요)', 'wskl' ),
@@ -465,7 +470,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 			case 'lgu+':
 
 			case 'ags':
-				array_push( $settings['checkout-paymentgate']['fields'], array(
+				array_push( $settings['checkout-payment-gate']['fields'], array(
 						'id'          => 'ags_storenm',
 						'label'       => __( '상점명', 'wskl' ),
 						'description' => __( '올더게이트 상점명을 입력해주십시오', 'wskl' ),
@@ -526,7 +531,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 
 			case 'iamport':
-				array_push( $settings['checkout-paymentgate']['fields'], array(
+				array_push( $settings['checkout-payment-gate']['fields'], array(
 						'id'          => 'iamport_user_code',
 						'label'       => __( '가맹점 식별코드', 'wskl' ),
 						'description' => __( '아임포트의 가맹점 식별코드를 입력하여 주십시오.', 'wskl' ),
@@ -563,7 +568,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 		}
 
-		array_push( $settings['checkout-paymentgate']['fields'], array(
+		array_push( $settings['checkout-payment-gate']['fields'], array(
 				'id'          => 'dummy_1',
 				'label'       => __( '추가설정내용', 'wskl' ),
 				'description' => __( '

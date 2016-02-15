@@ -4,10 +4,17 @@ jQuery(function ($) {
 
     var checkout_form = jQuery('form[name="checkout"]');
 
-    checkout_form.on('submit', function(){
+    checkout_form.on('submit', function () {
 
         var gatewayName = checkout_form.find('input[name="payment_method"]:checked').val();
-        if(gatewayName=='payapp') {
+        var prefix = 'payapp_';
+        var checkout_method = '';
+
+        if (gatewayName.indexOf(prefix) == 0) {
+            checkout_method = gatewayName.substring(prefix.length);
+        }
+
+        if (checkout_method) {
             payAppWin = window.open(
                 payapp_checkout.loadingPopupUrl,
                 '_blank'
@@ -16,7 +23,14 @@ jQuery(function ($) {
         }
     });
 
-    checkout_form.on('checkout_place_order_payapp ', function () {
+    var payapp_checkout_types = [
+        'checkout_place_order_payapp_credit',
+        'checkout_place_order_payapp_remit',
+        'checkout_place_order_payapp_virtual',
+        'checkout_place_order_payapp_mobile'
+    ];
+
+    checkout_form.on(payapp_checkout_types.join(' '), function () {
 
         var $form = $(this);
         var form_data = $form.data();
@@ -45,22 +59,21 @@ jQuery(function ($) {
                     if (response.result === 'success') {
 
                         function processWhenPayAppWinReady() {
-                            if(payAppWin) {
-
+                            if (payAppWin) {
                                 payAppWin.focus();
                                 payAppWin.window.location = response.payApp.payurl;
-
                                 //noinspection JSUnresolvedVariable
-                                if ( -1 === response.redirect.indexOf( 'https://' ) || -1 === response.redirect.indexOf( 'http://' ) ) {
+                                if (-1 === response.redirect.indexOf('https://') || -1 === response.redirect.indexOf('http://')) {
                                     window.location = response.redirect;
                                 } else {
-                                    window.location = decodeURI( response.redirect );
+                                    window.location = decodeURI(response.redirect);
                                 }
 
                             } else {
                                 setTimeout(processWhenPayAppWinReady, 500);
                             }
                         }
+
                         processWhenPayAppWinReady();
 
                     } else {

@@ -50,9 +50,9 @@ class PayApp_Main {
 	 */
 	public static function callback_woocommerce_payment_gateways( array $methods ) {
 
-		$methods[] = 'WC_Gateway_PayApp';
+		$payapp_methods = WC_Gateway_Payapp::get_gateway_methods();
 
-		return $methods;
+		return array_merge( $methods, $payapp_methods );
 	}
 
 	/**
@@ -83,7 +83,7 @@ class PayApp_Main {
 				array(
 					'success'  => false,
 					'message'  => 'An invalid order key received.',
-					'redirect' => wc()->cart->get_checkout_url(),
+					'redirect' => wc_get_checkout_url(),
 				)
 			);
 			die();

@@ -22,6 +22,8 @@ define( 'WSKL_MAIN_FILE', __FILE__ );
 define( 'WSKL_PREFIX', 'wskl_' );
 define( 'WSKL_VERSION', '3.2.3-r2-branch' );
 
+define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings');
+
 require_once( WSKL_PATH . '/includes/lib/wskl-plugin.php' );
 require_once( WSKL_PATH . '/includes/lib/wskl-functions.php' );
 
