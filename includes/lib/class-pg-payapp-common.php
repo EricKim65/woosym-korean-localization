@@ -235,28 +235,9 @@ function init_wc_gateway_payapp() {
 				}
 
 				// from wskl's pay slugs to payapp's pay type
-				switch( $this->checkout_method ) {
-					case 'credit':
-						$pay_type = 'card';
-						break;
-
-					case 'remit':
-						$pay_type = 'rbank';
-						break;
-
-					case 'virtual':
-						$pay_type = 'vbank';
-						break;
-
-					case 'mobile':
-						$pay_type = 'phone';
-						break;
-
-					default:
-						$pay_type = 'card';
-						break;
-				}
-
+				$idx              = array_search( $this->checkout_method, array_keys( WSKL_Pay_Gates::get_checkout_methods() ) );
+				$payapp_pay_types = array( 'card', 'rbank', 'vbank', 'phone' );
+				$pay_type         = $payapp_pay_types[ $idx ];
 
 				$args = array(
 					'sslverify' => false,
