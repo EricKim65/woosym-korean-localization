@@ -309,32 +309,17 @@ function init_wc_gateway_payapp() {
 			 */
 			public function callback_payapp_feedback() {
 
-				$from_post = function ( $key_name, $sanitize = '', $default = '' ) {
-
-					$v = $default;
-
-					if ( isset( $_POST[ $key_name ] ) ) {
-						$v = $_POST[ $key_name ];
-					}
-
-					if ( is_callable( $sanitize ) ) {
-						$v = $sanitize( $v );
-					}
-
-					return $v;
-				};
-
-				$payapp_uid = $from_post( 'userid' );
-				$link_key   = $from_post( 'linkkey' );
-				$link_val   = $from_post( 'linkval' );
-				$order_id   = $from_post( 'var1', 'absint' );
-				$order_key  = $from_post( 'var2', 'sanitize_text_field' );
-				$cst_url    = $from_post( 'csturl', 'sanitize_text_field' );     // 전표 주소
-				$pay_memo   = $from_post( 'pay_memo', 'sanitize_text_field' );   // 구매자가 기록한 메모
-				$mul_no     = $from_post( 'mul_no', 'sanitize_text_field' );     // 결제요청번호
-				$pay_state  = $from_post( 'pay_state', 'absint' );               // 결제요청상태 (1: 요청, 4: 결제완료, 8, 16, 32: 요청취소, 9, 64: 승인취소)
-				$pay_type   = $from_post( 'pay_type', 'absint' );                // 결제수단 (1: 신용카드, 2: 휴대전화)
-				$pay_date   = $from_post( 'pay_date', 'sanitize_text_field' );
+				$payapp_uid = wskl_POST( 'userid' );
+				$link_key   = wskl_POST( 'linkkey' );
+				$link_val   = wskl_POST( 'linkval' );
+				$order_id   = wskl_POST( 'var1', 'absint' );
+				$order_key  = wskl_POST( 'var2', 'sanitize_text_field' );
+				$cst_url    = wskl_POST( 'csturl', 'sanitize_text_field' );     // 전표 주소
+				$pay_memo   = wskl_POST( 'pay_memo', 'sanitize_text_field' );   // 구매자가 기록한 메모
+				$mul_no     = wskl_POST( 'mul_no', 'sanitize_text_field' );     // 결제요청번호
+				$pay_state  = wskl_POST( 'pay_state', 'absint' );               // 결제요청상태 (1: 요청, 4: 결제완료, 8, 16, 32: 요청취소, 9, 64: 승인취소)
+				$pay_type   = wskl_POST( 'pay_type', 'absint' );                // 결제수단 (1: 신용카드, 2: 휴대전화)
+				$pay_date   = wskl_POST( 'pay_date', 'sanitize_text_field' );
 
 				// check payapp_uid
 				if ( $payapp_uid != $this->get_option( 'payapp_user_id' ) ) {
@@ -364,7 +349,7 @@ function init_wc_gateway_payapp() {
 
 					switch ( $pay_type ) {
 						case 1:
-							$card_name  = $from_post( 'card_name', 'sanitize_text_field' );  // 신용카드시 카드 이름
+							$card_name  = wskl_POST( 'card_name', 'sanitize_text_field' );  // 신용카드시 카드 이름
 							$order_note = sprintf( __( '결제가 성공적으로 처리됨.<ul><li>결제방법: 신용카드</li><li>카드 이름: %s</li><li>페이앱 결제요청번호: %s</li><li>승인시각: %s</li><li>구매자의 결제창 메시지: %s</li></ul>', 'wskl' ), $card_name, $mul_no, $pay_date, $pay_memo );
 							break;
 
