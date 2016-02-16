@@ -95,9 +95,14 @@ function wskl_REQUEST( $key_name, $sanitize = '', $default = '' ) {
 }
 
 
+function wskl_setting_tab_url( $tab_name ) {
+
+	return add_query_arg( array( 'page' => WSKL_MENU_SLUG, 'tab' => $tab_name, ), admin_url( 'admin.php' ) );
+}
+
 function wskl_plugin_url( $path ) {
 
-	if( $path[0] == '/' ) {
+	if ( $path[0] == '/' ) {
 		$path = substr( $path, 1 );
 	}
 
@@ -109,7 +114,7 @@ function wskl_plugin_url( $path ) {
  * shortcut of enqueuing scripts
  *
  * @param string $handle
- * @param string $asset_path 스크립트 경로. 상대 경로일 경우, 항상 우리 플러그인의 루트 디렉토리를 기준으로 계산한다.
+ * @param string $asset_path  스크립트 경로. 상대 경로일 경우, 항상 우리 플러그인의 루트 디렉토리를 기준으로 계산한다.
  * @param array  $depends
  * @param string $ver
  * @param bool   $in_footer
@@ -118,13 +123,13 @@ function wskl_plugin_url( $path ) {
  */
 function wskl_enqueue_script( $handle, $asset_path, $depends = array(), $ver = WSKL_VERSION, $in_footer = false, $object_name = '', $i10n = array() ) {
 
-	if( !preg_match( '/^https?:\/\//', $asset_path ) ) {
+	if ( ! preg_match( '/^https?:\/\//', $asset_path ) ) {
 		$asset_path = wskl_plugin_url( $asset_path );
 	}
 
 	wp_register_script( $handle, $asset_path, $depends, $ver, $in_footer );
 
-	if( !empty( $object_name ) && !empty( $i10n ) ) {
+	if ( ! empty( $object_name ) && ! empty( $i10n ) ) {
 		wp_localize_script( $handle, $object_name, $i10n );
 	}
 

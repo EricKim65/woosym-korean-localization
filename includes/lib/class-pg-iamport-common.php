@@ -6,6 +6,8 @@ function init_wc_gateway_wskl_iamport() {
 
     class WC_Gateway_WSKL_Iamport extends WC_Payment_Gateway {
 
+      public $checkout_method = '';
+
       public function __construct() {
 
         $this->id         = 'wskl_iamport';
@@ -15,26 +17,17 @@ function init_wc_gateway_wskl_iamport() {
         $this->init_form_fields();
         $this->init_settings();
 
-        $this->title       = $this->get_option( 'title' );
-        $this->description = $this->get_option( 'description' );
+        $this->method_title = __( '다보리 아임포트', 'wskl' );
 
-        $this->method_title       = __( '(다보리) 아임포트', 'wskl' );
-        $this->method_description = __( '(다보리) 아임포트', 'wskl' );
+        $link                     = wskl_html_anchor( __( '다보리 &gt; 지불기능', 'wskl' ), array( 'href' => wskl_setting_tab_url( 'checkout-payment-gate' ) ), true );
+        $this->method_description = $link . ' ' . __( '메뉴에서 설정하세요', 'wskl' );
 
-        add_action(
-            'woocommerce_update_options_payment_gateways_' . $this->id,
-            array( $this, 'process_admin_options', )
-        );
+        //        add_action(
+        //            'woocommerce_update_options_payment_gateways_' . $this->id,
+        //            array( $this, 'process_admin_options', )
+        //        );
 
-        add_action(
-            'woocommerce_api_' . strtolower( __CLASS__ ),
-            array( $this, 'check_payment_response' )
-        );
-
-        add_filter(
-            'woocommerce_available_payment_gateways',
-            array( $this, 'callback_woocommerce_available_payment_gateways' )
-        );
+        add_action( 'woocommerce_api_' . strtolower( __CLASS__ ), array( $this, 'check_payment_response' ) );
 
         /**
          * 체크아웃 페이지의 자바스크립트 로드 - 아임포트 플러그인의 스크립트를 검사하므로 약간 순위를 낮춤.
@@ -44,27 +37,16 @@ function init_wc_gateway_wskl_iamport() {
 
       public function callback_wp_enqueue_scripts() {
 
-        // 스크립트 핸들 'import_script' (아임포트 우커머스 플러그인이 쓰는 핸들)
+        // 스크립트 핸들 'iamport_script' (아임포트 우커머스 플러그인이 쓰는 핸들)
         if ( ! wp_script_is( 'iamport_script' ) ) {
           wp_enqueue_script( 'wskl_iamport-payment-js', plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/iamport.payment-1.1.0.js' );
         }
-
         wp_enqueue_script( 'wskl_iamport-checkout-js', plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/iamport-checkout.js' );
-
-      }
-
-      public function callback_woocommerce_available_payment_gateways( array $gateways ) {
-
-        if( isset( $gateways['wskl_iamport'] ) ) {
-          unset( $gateways['wskl_iamport'] );
-        }
-
-        return $gateways;
       }
 
       public function init_form_fields() {
 
-        $description_text = __( '<a href="https://admin.iamport.kr" target="_blank">아임포트 홈페이지</a>에서 회원가입 후, <a href="https://admin.iamport.kr/settings" target="_blank">"시스템설정 > 내정보"</a>에서 확인하실 수 있습니다.', 'wskl' );
+        //        $description_text = __( '<a href="https://admin.iamport.kr" target="_blank">아임포트 홈페이지</a>에서 회원가입 후, <a href="https://admin.iamport.kr/settings" target="_blank">"시스템설정 > 내정보"</a>에서 확인하실 수 있습니다.', 'wskl' );
 
         /**
          * @see woocommerce/includes/admin/settings/class-wc-settings-checkout.php
@@ -75,60 +57,85 @@ function init_wc_gateway_wskl_iamport() {
          */
         $this->form_fields = array(
 
-            'enabled'     => array(
-                'title'   => __( 'Enable/Disable', 'woocommerce' ),
-                'type'    => 'checkbox',
-                'label'   => __( '아임포트 결제 모듈 활성화', 'wskl' ),
-                'default' => 'yes',
-            ),
-            'title'       => array(
-                'title'       => __( 'Title', 'woocommerce' ),
-                'type'        => 'text',
-                'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
-                'default'     => __( '%METHOD% 결제 (다보리 아임포트)', 'wskl' ),
-                'desc_tip'    => true,
-            ),
-            'description' => array(
-                'title'       => __( 'Description', 'woocommerce' ),
-                'type'        => 'textarea',
-                'description' => __( 'Payment method description that the customer will see on your checkout.', 'woocommerce' ),
-                'default'     => __( '%METHOD% 결제 (다보리 아임포트)', 'wskl' ),
-                'desc_tip'    => true,
-            ),
-            'user_code'   => array(
-                'title'       => __( '가맹점 식별코드', 'wskl' ),
-                'type'        => 'text',
-                'description' => $description_text,
-                'label'       => __( '가맹점 식별코드', 'wskl' ),
-                'default'     => '',
-            ),
-            'rest_key'    => array(
-                'title'       => __( 'REST API 키', 'wskl' ),
-                'type'        => 'text',
-                'description' => $description_text,
-                'label'       => __( 'REST API 키', 'wskl' ),
-                'default'     => '',
-            ),
-            'rest_secret' => array(
-                'title'       => __( 'REST API Secret', 'wskl' ),
-                'type'        => 'text',
-                'description' => $description_text,
-                'label'       => __( 'REST API Secret', 'wskl' ),
-                'default'     => '',
-            ),
-            'pay_gates'   => array(
-                'title'       => __( '결제방식 선택', 'wskl' ),
-                'type'        => 'multicheckbox',
-                'description' => __( '원하는 결제 방식을 선택해 주세요.', 'wskl' ),
-                'options'     => array(
-                    'card'  => __( '신용카드', 'wskl' ),
-                    'trans' => __( '실시간 계좌이체', 'wskl' ),
-                    'vbank' => __( '가상계좌', 'wskl' ),
-                    'phone' => __( '휴대폰 소액결제', 'wskl' ),
-                    'kakao' => __( '카카오페이', 'wskl' ),
-                ),
-            ),
+          //            'enabled'     => array(
+          //                'title'   => __( 'Enable/Disable', 'woocommerce' ),
+          //                'type'    => 'checkbox',
+          //                'label'   => __( '아임포트 결제 모듈 활성화', 'wskl' ),
+          //                'default' => 'yes',
+          //            ),
+          //            'title'       => array(
+          //                'title'       => __( 'Title', 'woocommerce' ),
+          //                'type'        => 'text',
+          //                'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
+          //                'default'     => __( '%METHOD% 결제 (다보리 아임포트)', 'wskl' ),
+          //                'desc_tip'    => true,
+          //            ),
+          //            'description' => array(
+          //                'title'       => __( 'Description', 'woocommerce' ),
+          //                'type'        => 'textarea',
+          //                'description' => __( 'Payment method description that the customer will see on your checkout.', 'woocommerce' ),
+          //                'default'     => __( '%METHOD% 결제 (다보리 아임포트)', 'wskl' ),
+          //                'desc_tip'    => true,
+          //            ),
+          //            'user_code'   => array(
+          //                'title'       => __( '가맹점 식별코드', 'wskl' ),
+          //                'type'        => 'text',
+          //                'description' => $description_text,
+          //                'label'       => __( '가맹점 식별코드', 'wskl' ),
+          //                'default'     => '',
+          //            ),
+          //            'rest_key'    => array(
+          //                'title'       => __( 'REST API 키', 'wskl' ),
+          //                'type'        => 'text',
+          //                'description' => $description_text,
+          //                'label'       => __( 'REST API 키', 'wskl' ),
+          //                'default'     => '',
+          //            ),
+          //            'rest_secret' => array(
+          //                'title'       => __( 'REST API Secret', 'wskl' ),
+          //                'type'        => 'text',
+          //                'description' => $description_text,
+          //                'label'       => __( 'REST API Secret', 'wskl' ),
+          //                'default'     => '',
+          //            ),
+          //            'pay_gates'   => array(
+          //                'title'       => __( '결제방식 선택', 'wskl' ),
+          //                'type'        => 'multicheckbox',
+          //                'description' => __( '원하는 결제 방식을 선택해 주세요.', 'wskl' ),
+          //                'options'     => array(
+          //                    'card'  => __( '신용카드', 'wskl' ),
+          //                    'trans' => __( '실시간 계좌이체', 'wskl' ),
+          //                    'vbank' => __( '가상계좌', 'wskl' ),
+          //                    'phone' => __( '휴대폰 소액결제', 'wskl' ),
+          //                    'kakao' => __( '카카오페이', 'wskl' ),
+          //                ),
+          //            ),
         );
+      }
+
+      public function init_settings() {
+
+        parent::init_settings();
+
+        $options_to_import = array(
+            'iamport_user_code',
+            'iamport_rest_key',
+            'iamport_rest_secret',
+            'checkout_methods',
+        );
+
+        foreach ( $options_to_import as $key ) {
+          $this->settings[ $key ] = get_option( wskl_get_option_name( $key ) );
+        }
+
+        $enable_sym_pg = wskl_is_option_enabled( 'enable_sym_pg' );
+        $pg_agency     = WSKL_PREFIX . get_option( wskl_get_option_name( 'pg_agency' ) );
+
+        if ( $enable_sym_pg && $pg_agency == $this->id ) {
+          $this->settings['enabled'] = 'yes';
+        } else {
+          $this->settings['enabled'] = 'no';
+        }
       }
 
       public function process_payment( $order_id ) {
@@ -160,8 +167,8 @@ function init_wc_gateway_wskl_iamport() {
           require_once( WSKL_PATH . '/includes/lib/iamport/iamport.php' );
 
           $imp_uid     = $_REQUEST['imp_uid'];
-          $rest_key    = $this->get_option( 'rest_key' );
-          $rest_secret = $this->get_option( 'rest_secret' );
+          $rest_key    = $this->get_option( 'iamport_rest_key' );
+          $rest_secret = $this->get_option( 'iamport_rest_secret' );
 
           $iamport = new Iamport( $rest_key, $rest_secret );
           $result  = $iamport->findByImpUID( $imp_uid );
@@ -348,16 +355,26 @@ function init_wc_gateway_wskl_iamport() {
 
         $order_name = $this->get_order_name( $order );
 
-        $redirect_url = add_query_arg(
-            array(
-                'order_id' => $order_id,
-                'wc-api'   => strtolower( __CLASS__ ),
-            ),
-            $order->get_checkout_payment_url()
-        );
+        $redirect_url = add_query_arg( array(
+            'order_id' => $order_id,
+            'wc-api'   => strtolower( __CLASS__ ),
+        ), $order->get_checkout_payment_url() );
+
+        // from wskl's pay slugs to payapp's pay type
+        if ( $this->checkout_method == 'kakao_pay' ) {
+
+          $pay_method = 'card';
+          $pg         = 'kakao';
+
+        } else {
+
+          $idx              = array_search( $this->checkout_method, array_keys( WSKL_Pay_Gates::get_checkout_methods( 'iamport' ) ) );
+          $payapp_pay_types = array( 'card', 'trans', 'vbank', 'phone' );
+          $pay_method       = $payapp_pay_types[ $idx ];
+        }
 
         $response = array(
-            'user_code'      => $this->get_option( 'user_code' ),
+            'user_code'      => $this->get_option( 'iamport_user_code' ),
             'name'           => $order_name,
             'merchant_uid'   => $order->order_key,
             'amount'         => $order->order_total, //amount
@@ -368,77 +385,52 @@ function init_wc_gateway_wskl_iamport() {
             'buyer_postcode' => $order->shipping_postcode,
             'vbank_due'      => date( 'Ymd', strtotime( "+1 day" ) ),
             'm_redirect_url' => $redirect_url,
+            'pay_method'     => $pay_method,
         );
+
+        if ( isset( $pg ) ) {
+          $response['pg'] = $pg;
+        }
 
         return $response;
       }
 
       private function variate( $slug ) {
 
-        $this->id = 'wskl_import_' . $slug;
+        $guided_methods  = WSKL_Pay_Gates::get_checkout_methods( 'iamport' );
+        $checkout_method = $guided_methods[ $slug ];
 
-        $this->title              = $this->substitute_magic_texts( $this->title, $slug );
-        $this->description        = $this->substitute_magic_texts( $this->description, $slug );
-        $this->method_title       = $this->substitute_magic_texts( $this->method_title, $slug );
-        $this->method_description = $this->substitute_magic_texts( $this->method_description, $slug );
-      }
+        $this->id              = 'wskl_iamport_' . $slug;
+        $this->checkout_method = $slug;
+        $this->title           = $this->method_title . " - {$checkout_method}";
+        $this->description     = $checkout_method . WSKL_Pay_Gates::get_checkout_method_postfix();
 
-      private function substitute_magic_texts( $text, $slug ) {
-
-        $substitute = '';
-
-        switch ( $slug ) {
-
-          case 'card':
-            $substitute = __( '신용카드', 'wskl' );
-            break;
-
-          case 'trans':
-            $substitute = __( '실시간 계좌이체', 'wskl' );
-            break;
-
-          case 'vbank':
-            $substitute = __( '가상계좌', 'wskl' );
-            break;
-
-          case 'phone':
-            $substitute = __( '휴대폰 소액결제', 'wskl' );
-            break;
-
-          case 'kakao':
-            $substitute = __( '카카오페이', 'wskl' );
-            break;
-
-
-        }
-
-        $text = preg_replace( '/%METHOD%/', $substitute, $text );
-
-        return $text;
+        $this->enabled = $this->settings['enabled'];
       }
 
       public static function get_gateway_methods() {
 
-        $instance  = new static();
-        $pay_gates = $instance->get_option( 'pay_gates' );
+        $checkout_methods  = get_option( wskl_get_option_name( 'checkout_methods' ) );
+        $available_methods = array();
 
-        $available_methods = array( /* $instance */ );
+        if ( is_array( $checkout_methods ) && ! empty( $checkout_methods ) ) {
 
-        foreach ( $pay_gates as $slug => $is_used ) {
-          if ( $is_used == 'yes' ) {
+          $instance = new static();
+
+          foreach ( $checkout_methods as $slug ) {
 
             // clone. constructor will not be called again.
             $method = clone $instance;
             $method->variate( $slug );
-            $available_methods[] = $method;;
+            $available_methods[] = $method;
           }
-        }
 
-        // unset( $instance );
+          unset( $instance );
+        }
 
         return $available_methods;
       }
+    }    // class WC_Gateway_WSKL_Iamport ...
 
-    }  // class WC_Gateway_WSKL_Iamport ...
-  } // if ( class_exists( 'WC_Payment_Gateway' ...
-} // function init_wc_gateway_wskl_iamport()
+  }      // if ( class_exists( 'WC_Payment_Gateway' ...
+}        // function init_wc_gateway_wskl_iamport()

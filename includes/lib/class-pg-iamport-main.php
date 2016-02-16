@@ -21,6 +21,11 @@ class WSKL_Iamport_Main {
 		 * @uses init_wc_gateway_iamport 파일 class-pg-iamport-common.php 에 정의.
 		 */
 		add_action( 'plugins_loaded', 'init_wc_gateway_wskl_iamport' );
+
+		/**
+		 *
+		 */
+		add_action( 'woocommerce_order_details_after_order_table', array( __CLASS__, 'iamport_order_detail' ) );
 	}
 
 	/**
@@ -37,6 +42,11 @@ class WSKL_Iamport_Main {
 		$wskl_iamport_methods = WC_Gateway_WSKL_Iamport::get_gateway_methods();
 
 		return array_merge( $methods, $wskl_iamport_methods );
+	}
+
+	public static function iamport_order_detail( \WC_Order $order ) {
+
+
 	}
 }
 

@@ -73,6 +73,8 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 		$debug_link = 'http://' . $_SERVER['HTTP_HOST'] . str_replace( 'wp-admin', 'wp-content', $prefix ) . '/plugins/sym-mvc-framework/includes/debug.php';
 
+		$pg_agency = get_option( wskl_get_option_name( 'pg_agency' ) );
+
 		$settings['preview'] = array(
 			'title'       => __( '일러두기', 'wskl' ),
 			'description' => __( '다보리를 만든 목적과 사용 방법 및 구매와 기술지원 방법과 업그레이드 등을 설명합니다.', 'wskl' ),
@@ -207,8 +209,8 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 			'fields'      => array(
 				array(
 					'id'          => 'enable_sym_pg',
-					'label'       => __( '다보리PG 사용 설정', 'wskl' ),
-					'description' => __( '다보리 PG 플러그인 기능을 사용여부를 설정합니다.', 'wskl' ),
+					'label'       => __( '다보리 PG 사용 설정', 'wskl' ),
+					'description' => __( '다보리 Pay Gate 기능을 사용 여부를 설정합니다.', 'wskl' ),
 					'type'        => 'checkbox',
 					'default'     => '',
 				),
@@ -217,20 +219,14 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'label'       => __( '결제대행업체', 'wskl' ),
 					'description' => __( '<span class="wskl-notice">변경시 자동으로 저장됩니다.</span> ', 'wskl' ),
 					'type'        => 'select',
-					'options'     => array(
-						'payapp'  => __( '페이앱', 'wskl' ),
-						'kcp'     => __( 'KCP', 'wskl' ),
-						'inicis'  => __( '이니시스', 'wskl' ),
-						'ags'     => __( '올더게이트', 'wskl' ),
-						'iamport' => __( '아임포트', 'wskl' ),
-					),
+					'options'     => WSKL_Pay_Gates::get_pay_gates(),
 					'default'     => 'payapp',
 				),
 			),
 		);
 
 
-		switch ( get_option( $this->_prefix . 'pg_agency' ) ) {
+		switch ( $pg_agency ) {
 			case 'kcp':
 			case 'inicis':
 			case 'allthegate':
@@ -253,12 +249,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'label'       => __( '결제방식 지정', 'wskl' ),
 						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시오.', 'wskl' ),
 						'type'        => 'checkbox_multi',
-						'options'     => array(
-							'credit'  => '신용카드',
-							'remit'   => '계좌이체',
-							'virtual' => '가상계좌',
-							'mobile'  => '모바일소액결제',
-						),
+						'options'     => WSKL_Pay_Gates::get_checkout_methods(),
 						'default'     => array( 'credit', '신용카드' ),
 					), array(
 						'id'          => 'enable_https',
@@ -282,7 +273,6 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'default'     => '',
 						'placeholder' => '',
 					)
-
 				);
 				break;
 
@@ -294,12 +284,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'label'       => __( '결제방식 지정', 'wskl' ),
 						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시오.', 'wskl' ),
 						'type'        => 'checkbox_multi',
-						'options'     => array(
-							'credit'  => '신용카드',
-							'remit'   => '계좌이체',
-							'virtual' => '가상계좌',
-							'mobile'  => '모바일소액결제',
-						),
+						'options'     => WSKL_Pay_Gates::get_checkout_methods(),
 						'default'     => array( 'credit', '신용카드' ),
 					)
 
@@ -314,13 +299,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'label'       => __( '결제방식 지정', 'wskl' ),
 						'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시오.', 'wskl' ),
 						'type'        => 'checkbox_multi',
-						'options'     => array(
-							'credit'   => '신용카드',
-							'remit'    => '계좌이체',
-							'virtual'  => '가상계좌',
-							'mobile'   => '모바일소액결제',
-							'kakaopay' => '카카오페이',
-						),
+						'options'     => WSKL_Pay_Gates::get_checkout_methods( 'iamport' ),
 						'default'     => array( 'credit', '신용카드' ),
 					),
 
@@ -334,14 +313,12 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'type'        => 'caption',
 						'default'     => '',
 					)
-
-
 				);
 				break;
 		}
 
 
-		switch ( get_option( $this->_prefix . 'pg_agency' ) ) {
+		switch ( $pg_agency ) {
 
 			case 'payapp':
 				array_push( $settings['checkout-payment-gate']['fields'], array(
@@ -420,7 +397,6 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 						'type'        => 'caption',
 						'default'     => '',
 					)
-
 				);
 				break;
 
@@ -497,7 +473,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'placeholder' => '',
 				), array(
 					'id'          => 'ags_hp_pwd',
-					'label'       => __( 'CP비밀번호(모바일결제)', 'wskl' ),
+					'label'       => __( 'CP 비밀번호(모바일결제)', 'wskl' ),
 					'description' => __( '올더게이트에서 발급받으신 비밀번호로 변경', 'wskl' ),
 					'type'        => 'text',
 					'default'     => '',
@@ -565,19 +541,22 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 		}
 
-		array_push( $settings['checkout-payment-gate']['fields'], array(
-			'id'          => 'dummy_1',
-			'label'       => __( '추가설정내용', 'wskl' ),
-			'description' => __( '
+		// 페이앱, 아임포트는 추가설정내용 없음.
+		if( !in_array( $pg_agency, array( 'payapp', 'iamport' ) ) ) {
+			array_push( $settings['checkout-payment-gate']['fields'], array(
+				'id'          => 'dummy_1',
+				'label'       => __( '추가설정내용', 'wskl' ),
+				'description' => __( '
 						<span class="wskl-notice">해당페이지 설정후 반드시 추가해야할 "우커머스 결제설정" 내용입니다.</span>   <a href="./admin.php?page=wc-settings&tab=checkout" target="_blank">결제설정 바로가기</a><br/>
 						1. "해당 페이지를 설정하면 우커머스->설정->결제 설정"의 하위메뉴에 지정한 결제 방법이 추가됩니다. <br/>
 						   &nbsp;&nbsp;&nbsp;각각의 하위메뉴로 들어가서 활성화에 체크하여 주십시오.  <br/>
 						2. "우커머스->설정->결제옵션->지불게이트웨이"에서 고객의 결제페이지에 보일 "결제 방법의 순서"를 결정하여 주십시오.<br/>
 						3. "우커머스->설정->결제설정"의 각 결제 방식을 선택하면 고객의 결제페이지에 보일 결제방식에 대한 안내문 변경이 가능합니다.<br/>
 					', 'wskl' ),
-			'type'        => 'caption',
-			'default'     => '',
-		) );
+				'type'        => 'caption',
+				'default'     => '',
+			) );
+		}
 
 		$settings['checkout-shipping'] = array(
 			'title'       => __( '핵심기능(B)', 'wskl' ),

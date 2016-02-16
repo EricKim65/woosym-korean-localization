@@ -69,14 +69,36 @@ class WSKL_Pay_Gates {
 		printf( '<div class="notice error"><p class="wskl-warning">%s: %s</p></div>', __( '다음 PG 모듈이 발견되지 않았습니다.', 'wskl' ), static::$pay_gate );
 	}
 
-	public static function get_checkout_methods() {
+	public static function get_pay_gates() {
 
 		return array(
-			'credit'  => __( '신용카드', 'wskl' ),
-			'remit'   => __( '실시간 계좌이체', 'wskl' ),
-			'virtual' => __( '가상계좌 이체', 'wskl' ),
-			'mobile'  => __( '모바일소액결제', 'wskl' ),
+			'payapp'  => __( '페이앱', 'wskl' ),
+			'kcp'     => __( 'KCP', 'wskl' ),
+			'inicis'  => __( '이니시스', 'wskl' ),
+			'ags'     => __( '올더게이트', 'wskl' ),
+			'iamport' => __( '아임포트', 'wskl' ),
 		);
+	}
+
+	public static function get_checkout_methods( $extra_agency_slug = '' ) {
+
+		static $methods;
+
+		if( !$methods ) {
+			$methods = array(
+				'credit'  => __( '신용카드', 'wskl' ),
+				'remit'   => __( '실시간 계좌이체', 'wskl' ),
+				'virtual' => __( '가상계좌 이체', 'wskl' ),
+				'mobile'  => __( '모바일소액결제', 'wskl' ),
+			);
+		}
+
+		switch( $extra_agency_slug ) {
+			case 'iamport':
+				return array_merge( $methods, array( 'kakao_pay' => __( '카카오페이', 'wskl' ) ) );
+		}
+
+		return $methods;
 	}
 
 	public static function get_checkout_method_postfix() {

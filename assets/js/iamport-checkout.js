@@ -4,11 +4,11 @@ jQuery(function ($) {
     // triggerHandler: checkout_place_order_*
 
     var iamport_checkout_types = [
-        'checkout_place_order_wskl_import_card',
-        'checkout_place_order_wskl_import_trans',
-        'checkout_place_order_wskl_import_vbank',
-        'checkout_place_order_wskl_import_phone',
-        'checkout_place_order_wskl_import_kakao'
+        'checkout_place_order_wskl_iamport_credit',
+        'checkout_place_order_wskl_iamport_remit',
+        'checkout_place_order_wskl_iamport_virtual',
+        'checkout_place_order_wskl_iamport_mobile',
+        'checkout_place_order_wskl_iamport_kakao_pay'
     ];
 
     $('form[name="checkout"]').on(iamport_checkout_types.join(' '), function () {
@@ -50,9 +50,10 @@ jQuery(function ($) {
             success: function (result) {
                 try {
                     if (result.result === 'success') {
+                        console.log(result.iamport);
                         //iamport process
                         var req_param = {
-                            pay_method: pay_method,
+                            pay_method: result.iamport.pay_method,
                             escrow: result.iamport.escrow,
                             merchant_uid: result.iamport.merchant_uid,
                             name: result.iamport.name,
@@ -67,7 +68,9 @@ jQuery(function ($) {
                             custom_data: {woocommerce: result.order_id}
                         };
 
-                        if (result.iamport.pg)    req_param.pg = result.iamport.pg;
+                        if (result.iamport.pg) {
+                            req_param.pg = result.iamport.pg;
+                        }
 
                         IMP.init(result.iamport.user_code);
                         IMP.request_pay(req_param, function (rsp) {
