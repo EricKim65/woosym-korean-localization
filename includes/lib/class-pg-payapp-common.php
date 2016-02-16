@@ -394,7 +394,8 @@ function init_wc_gateway_payapp() {
 				$this->id              = 'payapp_' . $slug;
 				$this->checkout_method = $slug;      // this is important!
 				$this->title           = $this->method_title . " - {$checkout_method}";
-				$this->description     = $checkout_method . WSKL_Pay_Gates::get_checkout_method_postfix();
+				$this->description     = $checkout_method . WSKL_Pay_Gates::get_checkout_method_postfix() . '<br>1. 페이앱 결제는 1,2번째 칸은 ActiveX 인증 방식이 아니므로 결제창에서 신용카드 번호만 입력하면 신속하게 결제됩니다.<br>
+	  2. 페이앱 결제창의 3번째 칸에서는 기존의 ActiveX 방식이 지원되므로 기존의 방식으로 결제가 가능합니다.';
 
 				$this->enabled = $this->settings['enabled'];
 			}
