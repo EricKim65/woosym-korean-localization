@@ -112,7 +112,7 @@ class Auth {
 
 				$days_left = $info->get_oir()->get_key()->get_days_left();
 
-				$text = '<span class="wskl-notice">'. sprintf(
+				$text = '<span class="wskl-info">'. sprintf(
 						'%s: %s, %s: %s, %s: %s %s',
 						__( '발급일', 'wskl' ),
 						static::to_date_string( $info->get_oir()->get_key()->get_issue_date() ),

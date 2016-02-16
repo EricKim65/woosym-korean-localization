@@ -154,10 +154,8 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'label'       => __( '사이트 주소(URL)', 'wskl' ),
 					'description' => __( '
 						' . get_option( 'siteurl' ) . '<br/>
-						<span class="wskl-notice">인증키는 사이트 주소와 제품 인증(meta) 서버 측과 동기화되어 활성화되므로 <br/>
-						' . get_option( 'siteurl' ) . '<br/>
 						<span class="wskl-notice">인증키는 사이트 주소와 다보리 메타(meta) 서버 측과 동기화되어 활성화되므로 <br/>
-						관리자모드 "설정"에서 사이트를 변경하는 경우 다시 기능 활성화를 하셔야 합니다. </span>
+						관리자모드 "설정"에서 "사이트를 변경하는 경우" 다시 기능 활성화를 하셔야 합니다. </span>
 					', 'wskl' ),
 					'type'        => 'caption',
 					'default'     => '',
