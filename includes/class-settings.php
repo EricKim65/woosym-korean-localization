@@ -208,7 +208,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				array(
 					'id'          => 'enable_sym_pg',
 					'label'       => __( '다보리 PG 사용 설정', 'wskl' ),
-					'description' => __( '다보리 Payment Gateway 기능을 사용 여부를 설정합니다.', 'wskl' ),
+					'description' => __( '다보리 PG (Payment Gateway) 기능 사용 여부를 설정합니다.', 'wskl' ),
 					'type'        => 'checkbox',
 					'default'     => '',
 				),
