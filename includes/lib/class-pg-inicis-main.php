@@ -1,7 +1,7 @@
 <?php
 //print_r (get_option( wskl_get_option_name( 'checkout_methods') ) );
 $sym_pg_title = 'Inicis';
-$sym_checkout_methods = get_option( wskl_get_option_name( 'checkout_methods' ) ) ;
+$sym_checkout_methods = (array)get_option( wskl_get_option_name( 'checkout_methods' ) ) ;
 
 foreach ( $sym_checkout_methods as $key => $value ) {
     //echo "key=". $key. ":value=". $value. "<br>";
