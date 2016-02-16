@@ -93,3 +93,40 @@ function wskl_REQUEST( $key_name, $sanitize = '', $default = '' ) {
 
 	return wskl_get_from_assoc( $_REQUEST, $key_name, $sanitize, $default );
 }
+
+
+function wskl_plugin_url( $path ) {
+
+	if( $path[0] == '/' ) {
+		$path = substr( $path, 1 );
+	}
+
+	return plugin_dir_url( WSKL_MAIN_FILE ) . $path;
+}
+
+
+/**
+ * shortcut of enqueuing scripts
+ *
+ * @param string $handle
+ * @param string $asset_path 스크립트 경로. 상대 경로일 경우, 항상 우리 플러그인의 루트 디렉토리를 기준으로 계산한다.
+ * @param array  $depends
+ * @param string $ver
+ * @param bool   $in_footer
+ * @param string $object_name 로컬라이징, 혹은 별도의 파라미터를 전달할 경우 입력한다.
+ * @param array  $i10n        $object_name 과 같은 용도로 입력한다.
+ */
+function wskl_enqueue_script( $handle, $asset_path, $depends = array(), $ver = WSKL_VERSION, $in_footer = false, $object_name = '', $i10n = array() ) {
+
+	if( !preg_match( '/^https?:\/\//', $asset_path ) ) {
+		$asset_path = wskl_plugin_url( $asset_path );
+	}
+
+	wp_register_script( $handle, $asset_path, $depends, $ver, $in_footer );
+
+	if( !empty( $object_name ) && !empty( $i10n ) ) {
+		wp_localize_script( $handle, $object_name, $i10n );
+	}
+
+	wp_enqueue_script( $handle );
+}
