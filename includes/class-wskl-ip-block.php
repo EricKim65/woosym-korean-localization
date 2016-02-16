@@ -14,7 +14,14 @@ class WSKL_IP_Block {
 
 		// result sample: array( 'country' => KR, 'state' => '' );
 		$result     = WC_Geolocation::geolocate_ip( $_SERVER['REMOTE_ADDR'] );
-		$white_list = explode( ',', preg_replace( '/\s+/', '', get_option( 'wskl_white_ipcode_list' ) ) );
+		$white_list = preg_replace( '/\s+/', '', get_option( 'wskl_white_ipcode_list' ) );
+
+		// not a valid white list. ip block will be disabled.
+		if( empty( $white_list ) ) {
+			return;
+		}
+
+		$white_list = explode( ',', $white_list );
 		$allowed    = false;
 
 		foreach ( $white_list as $country_code ) {
