@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
 require_once( WSKL_PATH . '/includes/lib/shipping-tracking/class-wskl-agent-helper.php' );
+require_once( WSKL_PATH . '/includes/class-wskl-pay-gates.php' );
 
 
 final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
