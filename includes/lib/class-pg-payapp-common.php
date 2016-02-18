@@ -301,6 +301,8 @@ function init_wc_gateway_payapp() {
 				return $args;
 			}
 
+			
+
 			/**
 			 * 페이앱이 피드백 URL 에 대응하는 콜백.
 			 * 피드백 파라미터를 확인하고 올바른 경우에는 최종적으로 주문 내역을 결제된 것으로 업데이트한다.
