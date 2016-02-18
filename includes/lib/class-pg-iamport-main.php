@@ -54,7 +54,7 @@ class WSKL_Iamport_Main {
 	 */
 	public static function iamport_order_detail( \WC_Order $order ) {
 
-		$checkout_methods = WSKL_Pay_Gates::get_checkout_methods( 'iamport' );
+		$checkout_methods = WSKL_Payment_Gates::get_checkout_methods( 'iamport' );
 
 		$pay_method  = $order->iamport_paymethod;
 		$receipt_url = $order->iamport_receipt_url;

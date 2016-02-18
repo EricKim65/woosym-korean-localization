@@ -368,7 +368,7 @@ function init_wc_gateway_wskl_iamport() {
 
         } else {
 
-          $idx              = array_search( $this->checkout_method, array_keys( WSKL_Pay_Gates::get_checkout_methods( 'iamport' ) ) );
+          $idx              = array_search( $this->checkout_method, array_keys( WSKL_Payment_Gates::get_checkout_methods( 'iamport' ) ) );
           $payapp_pay_types = array( 'card', 'trans', 'vbank', 'phone' );
           $pay_method       = $payapp_pay_types[ $idx ];
         }
@@ -397,13 +397,13 @@ function init_wc_gateway_wskl_iamport() {
 
       private function variate( $slug ) {
 
-        $guided_methods  = WSKL_Pay_Gates::get_checkout_methods( 'iamport' );
+        $guided_methods  = WSKL_Payment_Gates::get_checkout_methods( 'iamport' );
         $checkout_method = $guided_methods[ $slug ];
 
         $this->id              = 'wskl_iamport_' . $slug;
         $this->checkout_method = $slug;
         $this->title           = $this->method_title . " - {$checkout_method}";
-        $this->description     = $checkout_method . WSKL_Pay_Gates::get_checkout_method_postfix();
+        $this->description     = $checkout_method . WSKL_Payment_Gates::get_checkout_method_postfix();
 
         $this->enabled = $this->settings['enabled'];
       }

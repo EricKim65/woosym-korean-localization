@@ -50,7 +50,7 @@ class PayApp_Main {
 	 */
 	public static function callback_woocommerce_payment_gateways( array $methods ) {
 
-		$payapp_methods = WC_Gateway_Payapp::get_gateway_methods();
+		$payapp_methods = WC_Gateway_Payapp_Base::get_gateway_methods();
 
 		return array_merge( $methods, $payapp_methods );
 	}

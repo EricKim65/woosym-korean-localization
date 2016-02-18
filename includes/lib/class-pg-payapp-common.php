@@ -10,36 +10,37 @@
  */
 function init_wc_gateway_payapp() {
 
-	if ( class_exists( 'WC_Payment_Gateway' ) && ! class_exists( 'WC_Gateway_PayApp' ) ) {
+	if ( class_exists( 'WC_Payment_Gateway' ) && ! class_exists( 'WC_Gateway_PayApp_Base' ) ) {
 
 		/**
 		 * Class WC_Gateway_PayApp
 		 */
-		class WC_Gateway_PayApp extends WC_Payment_Gateway {
+		class WC_Gateway_PayApp_Base extends WC_Payment_Gateway {
 
+			/**
+			 * @var string 세부 결제방식. WSKL_Payment_Gates::get_checkout_methods() array 중 키를 기록
+			 *
+			 * @see WSKL_Payment_Gates::get_checkout_methods()
+			 */
 			public $checkout_method = '';
 
+			/**
+			 * @var string 결제 방법 설명. WSKL_Payment_Gates::get_checkout_methods() array 중 값을 기록
+			 */
+			public $checkout_method_description = '';
+
+			/**
+			 * WC_Gateway_PayApp_Base constructor.
+			 *
+			 * @see variate()
+			 */
 			public function __construct() {
 
 				$this->id         = 'payapp';
 				$this->icon       = null;
 				$this->has_fields = false;
 
-				$this->init_form_fields();
-				$this->init_settings();
-
-				$tab_href = add_query_arg( array(
-					'page' => WSKL_MENU_SLUG,
-					'tab'  => 'checkout-payment-gate',
-				), admin_url( 'admin.php ' ) );
-
-				$this->method_title       = __( '페이앱', 'wskl' );
-				$this->method_description = '<a href="' . esc_attr( $tab_href ) . '">' . __( '다보리 &gt; 지불기능', 'wskl' ) . '</a> ' . __( '메뉴에서 설정하세요', 'wskl' );
-
-				//				add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
-				//					$this,
-				//					'process_admin_options',
-				//				) );
+				// 나머지 설정읜 variate() 참고
 
 				/**
 				 * 주문 확정 버튼 클릭 다음의 페이지인 "주문 지불" 화면에서 별도의 안내를 위한 액션
@@ -63,16 +64,6 @@ function init_wc_gateway_payapp() {
 				add_action( 'woocommerce_api_wskl-payapp-feedback', array( $this, 'callback_payapp_feedback' ) );
 			}
 
-			public function set_checkout_method( $method ) {
-
-				$checkout_methods  = WSKL_Pay_Gates::get_checkout_methods();
-				$method_title      = $checkout_methods[ $method ];
-				$this->title       = $this->get_option( 'title' ) . ' ' . $method_title;
-				$this->description = $method_title . WSKL_Pay_Gates::get_checkout_method_postfix();
-
-				$this->enabled = true;
-			}
-
 			public function init_settings() {
 
 				parent::init_settings();
@@ -89,7 +80,6 @@ function init_wc_gateway_payapp() {
 				}
 
 				if ( get_option( wskl_get_option_name( 'enable_sym_pg' ) ) && get_option( wskl_get_option_name( 'pg_agency' ) ) == $this->id ) {
-
 					$this->settings['enabled'] = 'yes';
 				} else {
 					$this->settings['enabled'] = 'no';
@@ -104,11 +94,7 @@ function init_wc_gateway_payapp() {
 			public function callback_wp_enqueue_scripts() {
 
 				wp_register_script( 'wskl-payapp-checkout-js', plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/payapp-checkout.js', array( 'jquery' ) );
-
-				wp_localize_script( 'wskl-payapp-checkout-js', 'payapp_checkout', array(
-					'loadingPopupUrl' => plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/payapp-loading.php',
-				) );
-
+				wp_localize_script( 'wskl-payapp-checkout-js', 'payapp_checkout', array( 'loadingPopupUrl' => plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/payapp-loading.php', ) );
 				wp_enqueue_script( 'wskl-payapp-checkout-js' );
 			}
 
@@ -129,9 +115,9 @@ function init_wc_gateway_payapp() {
 
 				wp_localize_script( 'wskl-payapp-status-js', 'payAppStatus', array(
 					'ajaxUrl'         => add_query_arg( array(
-						'order_key' => $order_key,
-						'wc-ajax'   => 'wskl-payapp-status',
-					), home_url( '/' ) ),
+						                                    'order_key' => $order_key,
+						                                    'wc-ajax'   => 'wskl-payapp-status',
+					                                    ), home_url( '/' ) ),
 					'pollingRetryMax' => 60,
 					'failureRedirect' => wc()->cart->get_checkout_url(),
 				) );
@@ -150,23 +136,28 @@ function init_wc_gateway_payapp() {
 				echo '<img src="' . esc_url( $screenshot_url ) . '" />';
 			}
 
+			/**
+			 * 반드시 $this->checkout_method_description 대입 후에 사용!
+			 *
+			 * @used-by variate()
+			 */
 			public function init_form_fields() {
 
 				$this->form_fields = array(
-					//					'title'       => array(
-					//						'title'       => __( 'Title', 'woocommerce' ),
-					//						'type'        => 'text',
-					//						'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
-					//						'default'     => __( '페이앱', 'wskl' ),
-					//						'desc_tip'    => true,
-					//					),
-					//					'description' => array(
-					//						'title'       => __( 'Description', 'woocommerce' ),
-					//						'type'        => 'textarea',
-					//						'description' => __( 'Payment method description that the customer will see on your checkout.', 'woocommerce' ),
-					//						'default'     => __( '', 'wskl' ),
-					//						'desc_tip'    => true,
-					//					),
+					'title'       => array(
+						'title'       => __( 'Title', 'woocommerce' ),
+						'type'        => 'text',
+						'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
+						'default'     => $this->checkout_method_description,
+						'desc_tip'    => true,
+					),
+					'description' => array(
+						'title'       => __( 'Description', 'woocommerce' ),
+						'type'        => 'textarea',
+						'description' => __( 'Payment method description that the customer will see on your checkout.', 'woocommerce' ),
+						'default'     => $this->checkout_method_description . WSKL_Payment_Gates::get_checkout_method_postfix(),
+						'desc_tip'    => true,
+					),
 				);
 			}
 
@@ -235,7 +226,7 @@ function init_wc_gateway_payapp() {
 				}
 
 				// from wskl's pay slugs to payapp's pay type
-				$idx              = array_search( $this->checkout_method, array_keys( WSKL_Pay_Gates::get_checkout_methods() ) );
+				$idx              = array_search( $this->checkout_method, array_keys( WSKL_Payment_Gates::get_checkout_methods() ) );
 				$payapp_pay_types = array( 'card', 'rbank', 'vbank', 'phone' );
 				$pay_type         = $payapp_pay_types[ $idx ];
 
@@ -267,8 +258,8 @@ function init_wc_gateway_payapp() {
 
 						// 피드백 URL, feedbackurl 은 외부에서 접근이 가능해야 합니다. payapp 서버에서 호출 하는 페이지 입니다.
 						'feedbackurl' => str_replace( 'https:', // search
-							'http:',  // replace
-							add_query_arg( 'wc-api', 'wskl-payapp-feedback', home_url( '/' ) ) ),
+						                              'http:',  // replace
+						                              add_query_arg( 'wc-api', 'wskl-payapp-feedback', home_url( '/' ) ) ),
 
 						// 임의변수1. 우리 구현에서는 order ID 를 기록
 						'var1'        => $order->id,
@@ -386,18 +377,54 @@ function init_wc_gateway_payapp() {
 				return $message;
 			}
 
-			private function variate( $slug ) {
+			/**
+			 * @param $slug
+			 *
+			 * @used-by WC_Gateway_PayApp_Credit
+			 * @used-by WC_Gateway_PayApp_Remit
+			 * @used-by WC_Gateway_PayApp_Virtual
+			 * @used-by WC_Gateway_PayApp_Mobile
+			 */
+			protected function variate( $slug ) {
 
-				$methods         = WSKL_Pay_Gates::get_checkout_methods();
-				$checkout_method = $methods[ $slug ];
+				$methods = WSKL_Payment_Gates::get_checkout_methods();
 
-				$this->id              = 'payapp_' . $slug;
-				$this->checkout_method = $slug;      // this is important!
-				$this->title           = $this->method_title . " - {$checkout_method}";
-				$this->description     = $checkout_method . WSKL_Pay_Gates::get_checkout_method_postfix() . '<br>1. 페이앱 결제는 1,2번째 칸은 ActiveX 인증 방식이 아니므로 결제창에서 신용카드 번호만 입력하면 신속하게 결제됩니다.<br>
-	  2. 페이앱 결제창의 3번째 칸에서는 기존의 ActiveX 방식이 지원되므로 기존의 방식으로 결제가 가능합니다.';
+				// ID
+				$this->id = 'payapp_' . $slug;
 
-				$this->enabled = $this->settings['enabled'];
+				// checkout method and description. Defined in WC_Gateway_PayApp_Base
+				$this->checkout_method             = $slug;      // this is important!
+				$this->checkout_method_description = $methods[ $slug ];
+
+				// $this->checkout_method_description 변수를 사용하므로 뒤에 위치할 것.
+				$this->init_form_fields();
+				$this->init_settings();
+
+				// Title: 결제 화면에서 보임
+				$this->title       = $this->get_option( 'title' );
+				$this->description = $this->get_option( 'description' );
+
+				// 사용하므로 이 함수까지 호출된 것. 무조건 yes.
+				$this->enabled = 'yes';
+
+				// 다보리 설정 URL
+				$tab_href = add_query_arg( array(
+					                           'page' => WSKL_MENU_SLUG,
+					                           'tab'  => 'checkout-payment-gate',
+				                           ), admin_url( 'admin.php ' ) );
+
+				// Method title: 우커머스 > 설정 > 결제 (checkout) 탭에서 확인
+				$this->method_title = __( '페이앱', 'wskl' ) . " - {$methods[ $slug ]}";
+
+				// Method description: 우커머스 > 설정 > 결제 (checkout) 탭에서 확인
+				$this->method_description = __( '페이앱 관련 세부 설정은 ', 'wskl' );
+				$this->method_description .= wskl_html_anchor( __( '다보리 &gt; 지불기능' ), array( 'href' => $tab_href ), true );
+				$this->method_description .= __( ' 메뉴에서 설정하세요', 'wskl' );
+
+				add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
+					$this,
+					'process_admin_options',
+				) );
 			}
 
 			public static function get_gateway_methods() {
@@ -407,17 +434,56 @@ function init_wc_gateway_payapp() {
 
 				if ( is_array( $checkout_methods ) && ! empty( $checkout_methods ) ) {
 
-					$instance = new static();
-
 					foreach ( $checkout_methods as $method ) {
-
-						$cloned = clone $instance;
-						$cloned->variate( $method );
-						$available_methods[] = $cloned;
+						$available_methods[] = 'WC_Gateway_PayApp_' . ucfirst( $method );
 					}
 				}
 
 				return $available_methods;
+			}
+		}
+
+
+		class WC_Gateway_PayApp_Credit extends WC_Gateway_Payapp_Base {
+
+			function __construct() {
+
+				parent::__construct();
+
+				$this->variate( 'credit' );
+			}
+		}
+
+
+		class WC_Gateway_PayApp_Remit extends WC_Gateway_Payapp_Base {
+
+			function __construct() {
+
+				parent::__construct();
+
+				$this->variate( 'remit' );
+			}
+		}
+
+
+		class WC_Gateway_PayApp_Virtual extends WC_Gateway_Payapp_Base {
+
+			function __construct() {
+
+				parent::__construct();
+
+				$this->variate( 'virtual' );
+			}
+		}
+
+
+		class WC_Gateway_PayApp_Mobile extends WC_Gateway_Payapp_Base {
+
+			function __construct() {
+
+				parent::__construct();
+
+				$this->variate( 'mobile' );
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 <?php
 
 
-class WSKL_Pay_Gates {
+class WSKL_Payment_Gates {
 
 	private static $pay_gate;
 
@@ -108,4 +108,4 @@ class WSKL_Pay_Gates {
 }
 
 
-WSKL_Pay_Gates::init();
+WSKL_Payment_Gates::init();
