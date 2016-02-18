@@ -128,8 +128,7 @@ if ( ! class_exists( 'WSKL_Agent_Helper' ) ) :
 				'hyeondae'    => (object) array(
 					'slug'               => 'hyeondae',
 					'name'               => '현대택배',
-					'query_url_template' => 'http://wskl-client.local:8080/?wc-ajax=wskl-ship-track&agent=hyeondae&number=%s',
-					// using indirect
+					'query_url_template' => add_query_arg( array( 'wc-ajax' => 'wskl-ship-track', 'agent' => 'hyeondae', ), site_url() ) . '&number=%s', // using indirect,
 				),
 
 				// CJ대한통운 (CJ GLS)

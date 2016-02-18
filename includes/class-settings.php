@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
 require_once( WSKL_PATH . '/includes/lib/shipping-tracking/class-wskl-agent-helper.php' );
+require_once( WSKL_PATH . '/includes/class-wskl-pay-gates.php' );
 
 
 final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
@@ -208,7 +209,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				array(
 					'id'          => 'enable_sym_pg',
 					'label'       => __( '다보리 PG 사용 설정', 'wskl' ),
-					'description' => __( '다보리 Pay Gate 기능을 사용 여부를 설정합니다.', 'wskl' ),
+					'description' => __( '다보리 PG (Payment Gateway) 기능 사용 여부를 설정합니다.', 'wskl' ),
 					'type'        => 'checkbox',
 					'default'     => '',
 				),
@@ -227,7 +228,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 		switch ( $pg_agency ) {
 			case 'kcp':
 			case 'inicis':
-			case 'allthegate':
+			case 'ags':
 				array_push( $settings['checkout-payment-gate']['fields'],
 
 					array(
