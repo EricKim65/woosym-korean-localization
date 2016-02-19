@@ -346,9 +346,6 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			if ( $this->is_request( 'frontend' ) ) {
 
-				/** IP blocking */
-				wskl_load_module( '/includes/class-wskl-ip-block.php', 'enable_countryip_block' );
-
 				// verification
 				wskl_load_module( '/includes/lib/auth/class-verification.php' );
 				$verification = new \wskl\lib\auth\Verification();
@@ -358,6 +355,9 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 				wskl_load_module( '/includes/lib/mat-logs/class-product-logs.php' );
 			}
+
+			/** IP blocking */
+			wskl_load_module( '/includes/class-wskl-ip-block.php', 'enable_countryip_block' );
 
 			/** 모듈 소셜 로그인 */
 			wskl_load_module( '/includes/lib/class-social-login.php', 'enable_social_login' );

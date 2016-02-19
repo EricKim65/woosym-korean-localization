@@ -868,6 +868,11 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'default'     => 'KR,US,JP,CN',
 					'placeholder' => __( 'KR,US,JP,CN', 'wskl' ),
 				),
+				array(
+					'id'          => 'dummy_3232',
+					'label'       => __( '작동 상태', 'wskl' ),
+					'description' => ( site_url() == wskl_get_option( 'ip_block_target' ) ) ? '<span class="wskl-info">' . __( '정상 작동 중', 'wskl' ) . '</span>' : '<span class="wskl-notice">' . __( '내용이 갱신되지 않아 비활성화 되었습니다. 저장 버튼을 눌러 활성화시켜 주세요', 'wskl' ) . '</span>',
+				)
 			),
 		);
 
