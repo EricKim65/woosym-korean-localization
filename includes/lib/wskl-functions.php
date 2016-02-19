@@ -15,6 +15,28 @@ function wskl_get_option_name( $option_name ) {
 
 
 /**
+ * prefix 붙인 옵션 값 가져오는 래퍼 함수
+ *
+ * @param        $option_name
+ * @param string $default
+ * @param bool   $use_native_prefix
+ * @since 3.2.3-r2
+ *
+ * @return mixed|void
+ */
+function wskl_get_option( $option_name, $default = '', $use_native_prefix = true ) {
+
+	return $use_native_prefix ? get_option( wskl_get_option_name( $option_name ), $default ) : get_option( $option_name, $default );
+}
+
+
+function wskl_yes_or_no( $expression ) {
+
+	return $expression ? 'yes' : 'no';
+}
+
+
+/**
  * 해당 옵션을 boolean 으로 해석해 true, false 로 리턴
  *
  * @author changwoo

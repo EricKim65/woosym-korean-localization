@@ -37,8 +37,8 @@ function init_wc_gateway_payapp() {
 			public function __construct() {
 
 				$this->id         = 'payapp';
-				$this->icon       = null;
-				$this->has_fields = false;
+				$this->icon       = NULL;
+				$this->has_fields = FALSE;
 
 				// 나머지 설정읜 variate() 참고
 
@@ -48,12 +48,18 @@ function init_wc_gateway_payapp() {
 				 * @see    woocommerce/includes/shortcodes/class-wc-shortcode-checkout.php
 				 * @see    WC_Shortcode_Checkout::order_pay()
 				 */
-				add_action( 'after_woocommerce_pay', array( $this, 'callback_after_woocommerce_pay' ) );
+				add_action( 'after_woocommerce_pay', array(
+					$this,
+					'callback_after_woocommerce_pay',
+				) );
 
 				/**
 				 * 체크아웃 페이지의 자바스크립트 로드
 				 */
-				add_action( 'wp_enqueue_scripts', array( $this, 'callback_wp_enqueue_scripts' ) );
+				add_action( 'wp_enqueue_scripts', array(
+					$this,
+					'callback_wp_enqueue_scripts',
+				) );
 
 				/**
 				 * 우커머스 wc-api 콜백. 페이앱이 주는 피드백에 대응.
@@ -61,7 +67,10 @@ function init_wc_gateway_payapp() {
 				 * @see woocommerce/includes/class-wc-api.php
 				 * @see WC_API::handle_api_requests()
 				 */
-				add_action( 'woocommerce_api_wskl-payapp-feedback', array( $this, 'callback_payapp_feedback' ) );
+				add_action( 'woocommerce_api_wskl-payapp-feedback', array(
+					$this,
+					'callback_payapp_feedback',
+				) );
 			}
 
 			public function init_settings() {
@@ -79,11 +88,8 @@ function init_wc_gateway_payapp() {
 					$this->settings[ $key ] = get_option( wskl_get_option_name( $key ) );
 				}
 
-				if ( get_option( wskl_get_option_name( 'enable_sym_pg' ) ) && get_option( wskl_get_option_name( 'pg_agency' ) ) == $this->id ) {
-					$this->settings['enabled'] = 'yes';
-				} else {
-					$this->settings['enabled'] = 'no';
-				}
+				$this->settings['enabled'] = wskl_yes_or_no( wskl_is_option_enabled( 'enable_sym_pg' ) && wskl_get_option( 'pg_agency' ) == 'payapp' && in_array( $this->checkout_method,
+				                                                                                                                                                  $this->get_option( 'checkout_methods' ) ) );
 			}
 
 			/**
@@ -93,8 +99,12 @@ function init_wc_gateway_payapp() {
 			 */
 			public function callback_wp_enqueue_scripts() {
 
-				wp_register_script( 'wskl-payapp-checkout-js', plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/payapp-checkout.js', array( 'jquery' ) );
-				wp_localize_script( 'wskl-payapp-checkout-js', 'payapp_checkout', array( 'loadingPopupUrl' => plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/payapp-loading.php', ) );
+				wp_register_script( 'wskl-payapp-checkout-js',
+				                    plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/payapp-checkout.js',
+				                    array( 'jquery' ) );
+				wp_localize_script( 'wskl-payapp-checkout-js',
+				                    'payapp_checkout',
+				                    array( 'loadingPopupUrl' => plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/payapp-loading.php', ) );
 				wp_enqueue_script( 'wskl-payapp-checkout-js' );
 			}
 
@@ -111,16 +121,20 @@ function init_wc_gateway_payapp() {
 					$order_key = esc_attr( $_GET['key'] );
 				}
 
-				wp_register_script( 'wskl-payapp-status-js', plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/payapp-status.js', array( 'jquery' ), null, true );
+				wp_register_script( 'wskl-payapp-status-js',
+				                    plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/payapp-status.js',
+				                    array( 'jquery' ), NULL, TRUE );
 
-				wp_localize_script( 'wskl-payapp-status-js', 'payAppStatus', array(
-					'ajaxUrl'         => add_query_arg( array(
-						                                    'order_key' => $order_key,
-						                                    'wc-ajax'   => 'wskl-payapp-status',
-					                                    ), home_url( '/' ) ),
-					'pollingRetryMax' => 60,
-					'failureRedirect' => wc()->cart->get_checkout_url(),
-				) );
+				wp_localize_script( 'wskl-payapp-status-js', 'payAppStatus',
+				                    array(
+					                    'ajaxUrl'         => add_query_arg( array(
+						                                                        'order_key' => $order_key,
+						                                                        'wc-ajax'   => 'wskl-payapp-status',
+					                                                        ),
+					                                                        home_url( '/' ) ),
+					                    'pollingRetryMax' => 60,
+					                    'failureRedirect' => wc()->cart->get_checkout_url(),
+				                    ) );
 
 				wp_enqueue_script( 'wskl-payapp-status-js' );
 
@@ -147,16 +161,18 @@ function init_wc_gateway_payapp() {
 					'title'       => array(
 						'title'       => __( 'Title', 'woocommerce' ),
 						'type'        => 'text',
-						'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
+						'description' => __( 'This controls the title which the user sees during checkout.',
+						                     'woocommerce' ),
 						'default'     => $this->checkout_method_description,
-						'desc_tip'    => true,
+						'desc_tip'    => TRUE,
 					),
 					'description' => array(
 						'title'       => __( 'Description', 'woocommerce' ),
 						'type'        => 'textarea',
-						'description' => __( 'Payment method description that the customer will see on your checkout.', 'woocommerce' ),
+						'description' => __( 'Payment method description that the customer will see on your checkout.',
+						                     'woocommerce' ),
 						'default'     => $this->checkout_method_description . WSKL_Payment_Gates::get_checkout_method_postfix(),
-						'desc_tip'    => true,
+						'desc_tip'    => TRUE,
 					),
 				);
 			}
@@ -191,7 +207,7 @@ function init_wc_gateway_payapp() {
 					);
 				}
 
-				$url = $order->get_checkout_payment_url( true );
+				$url = $order->get_checkout_payment_url( TRUE );
 
 				return array(
 					'result'   => 'success',
@@ -221,17 +237,20 @@ function init_wc_gateway_payapp() {
 				if ( $item_count == 1 ) {
 					$goods_name = $first_item['name'];
 				} else {
-					$fmt        = _n( '외 %d개 상품', '외 %d개 상품들', $item_count - 1, 'wskl' );
-					$goods_name = $first_item['name'] . sprintf( $fmt, $item_count - 1 );
+					$fmt        = _n( '외 %d개 상품', '외 %d개 상품들', $item_count - 1,
+					                  'wskl' );
+					$goods_name = $first_item['name'] . sprintf( $fmt,
+					                                             $item_count - 1 );
 				}
 
 				// from wskl's pay slugs to payapp's pay type
-				$idx              = array_search( $this->checkout_method, array_keys( WSKL_Payment_Gates::get_checkout_methods() ) );
+				$idx              = array_search( $this->checkout_method,
+				                                  array_keys( WSKL_Payment_Gates::get_checkout_methods() ) );
 				$payapp_pay_types = array( 'card', 'rbank', 'vbank', 'phone' );
 				$pay_type         = $payapp_pay_types[ $idx ];
 
 				$args = array(
-					'sslverify' => false,
+					'sslverify' => FALSE,
 					'timeout'   => 15,
 					'body'      => array(
 
@@ -248,7 +267,8 @@ function init_wc_gateway_payapp() {
 						'price'       => $order->order_total,
 
 						// 수신자 휴대폰번호 (구매자), 필수
-						'recvphone'   => preg_replace( '/[+\-\s]/', '', $order->billing_phone ),
+						'recvphone'   => preg_replace( '/[+\-\s]/', '',
+						                               $order->billing_phone ),
 
 						// 결제요청시 메모
 						'memo'        => '',
@@ -259,7 +279,9 @@ function init_wc_gateway_payapp() {
 						// 피드백 URL, feedbackurl 은 외부에서 접근이 가능해야 합니다. payapp 서버에서 호출 하는 페이지 입니다.
 						'feedbackurl' => str_replace( 'https:', // search
 						                              'http:',  // replace
-						                              add_query_arg( 'wc-api', 'wskl-payapp-feedback', home_url( '/' ) ) ),
+						                              add_query_arg( 'wc-api',
+						                                             'wskl-payapp-feedback',
+						                                             home_url( '/' ) ) ),
 
 						// 임의변수1. 우리 구현에서는 order ID 를 기록
 						'var1'        => $order->id,
@@ -305,11 +327,16 @@ function init_wc_gateway_payapp() {
 				$link_val   = wskl_POST( 'linkval' );
 				$order_id   = wskl_POST( 'var1', 'absint' );
 				$order_key  = wskl_POST( 'var2', 'sanitize_text_field' );
-				$cst_url    = wskl_POST( 'csturl', 'sanitize_text_field' );     // 전표 주소
-				$pay_memo   = wskl_POST( 'pay_memo', 'sanitize_text_field' );   // 구매자가 기록한 메모
-				$mul_no     = wskl_POST( 'mul_no', 'sanitize_text_field' );     // 결제요청번호
-				$pay_state  = wskl_POST( 'pay_state', 'absint' );               // 결제요청상태 (1: 요청, 4: 결제완료, 8, 16, 32: 요청취소, 9, 64: 승인취소)
-				$pay_type   = wskl_POST( 'pay_type', 'absint' );                // 결제수단 (1: 신용카드, 2: 휴대전화)
+				$cst_url    = wskl_POST( 'csturl',
+				                         'sanitize_text_field' );     // 전표 주소
+				$pay_memo   = wskl_POST( 'pay_memo',
+				                         'sanitize_text_field' );   // 구매자가 기록한 메모
+				$mul_no     = wskl_POST( 'mul_no',
+				                         'sanitize_text_field' );     // 결제요청번호
+				$pay_state  = wskl_POST( 'pay_state',
+				                         'absint' );               // 결제요청상태 (1: 요청, 4: 결제완료, 8, 16, 32: 요청취소, 9, 64: 승인취소)
+				$pay_type   = wskl_POST( 'pay_type',
+				                         'absint' );                // 결제수단 (1: 신용카드, 2: 휴대전화)
 				$pay_date   = wskl_POST( 'pay_date', 'sanitize_text_field' );
 
 				// check payapp_uid
@@ -336,20 +363,29 @@ function init_wc_gateway_payapp() {
 				if ( $pay_state == 4 ) {
 
 					// 전표 기록
-					update_post_meta( $order_id, 'wskl_payapp_cst_url', $cst_url );
+					update_post_meta( $order_id, 'wskl_payapp_cst_url',
+					                  $cst_url );
 
 					switch ( $pay_type ) {
 						case 1:
-							$card_name  = wskl_POST( 'card_name', 'sanitize_text_field' );  // 신용카드시 카드 이름
-							$order_note = sprintf( __( '결제가 성공적으로 처리됨.<ul><li>결제방법: 신용카드</li><li>카드 이름: %s</li><li>페이앱 결제요청번호: %s</li><li>승인시각: %s</li><li>구매자의 결제창 메시지: %s</li></ul>', 'wskl' ), $card_name, $mul_no, $pay_date, $pay_memo );
+							$card_name  = wskl_POST( 'card_name',
+							                         'sanitize_text_field' );  // 신용카드시 카드 이름
+							$order_note = sprintf( __( '결제가 성공적으로 처리됨.<ul><li>결제방법: 신용카드</li><li>카드 이름: %s</li><li>페이앱 결제요청번호: %s</li><li>승인시각: %s</li><li>구매자의 결제창 메시지: %s</li></ul>',
+							                           'wskl' ), $card_name,
+							                       $mul_no, $pay_date,
+							                       $pay_memo );
 							break;
 
 						case 2:
-							$order_note = sprintf( __( '결제가 성공적으로 처리됨.<ul><li>결제방법: 휴대전화</li><li>페이앱 결제요청번호: %s</li><li>승인시각: %s</li><li>구매자의 결제창 메시지: %s</li></ul>', 'wskl' ), $mul_no, $pay_date, $pay_memo );
+							$order_note = sprintf( __( '결제가 성공적으로 처리됨.<ul><li>결제방법: 휴대전화</li><li>페이앱 결제요청번호: %s</li><li>승인시각: %s</li><li>구매자의 결제창 메시지: %s</li></ul>',
+							                           'wskl' ), $mul_no,
+							                       $pay_date, $pay_memo );
 							break;
 
 						default:
-							$order_note = sprintf( __( '결제가 성공적으로 처리됨.<ul><li>결제방법: 기타</li><li>페이앱 결제요청번호: %s</li><li>승인시각: %s</li><li>구매자의 결제창 메시지: %s</li></ul>', 'wskl' ), $mul_no, $pay_date, $pay_memo );
+							$order_note = sprintf( __( '결제가 성공적으로 처리됨.<ul><li>결제방법: 기타</li><li>페이앱 결제요청번호: %s</li><li>승인시각: %s</li><li>구매자의 결제창 메시지: %s</li></ul>',
+							                           'wskl' ), $mul_no,
+							                       $pay_date, $pay_memo );
 					}
 
 					$order->add_order_note( $order_note );
@@ -370,8 +406,9 @@ function init_wc_gateway_payapp() {
 			private function parse_payapp_error_message( $message ) {
 
 				// 잘못된 전화번호 값.
-				if ( strpos( $message, 'recvphone' ) !== false ) {
-					return __( '전화번호 형식이 잘못되었습니다. 000-0000-0000 형태로 입력해 주세요.', 'wskl' );
+				if ( strpos( $message, 'recvphone' ) !== FALSE ) {
+					return __( '전화번호 형식이 잘못되었습니다. 000-0000-0000 형태로 입력해 주세요.',
+					           'wskl' );
 				}
 
 				return $message;
@@ -387,7 +424,8 @@ function init_wc_gateway_payapp() {
 			 */
 			protected function variate( $slug ) {
 
-				$methods = WSKL_Payment_Gates::get_checkout_methods();
+				$methods            = WSKL_Payment_Gates::get_checkout_methods();
+				$payment_gate_names = WSKL_Payment_Gates::get_pay_gates();
 
 				// ID
 				$this->id = 'payapp_' . $slug;
@@ -404,8 +442,7 @@ function init_wc_gateway_payapp() {
 				$this->title       = $this->get_option( 'title' );
 				$this->description = $this->get_option( 'description' );
 
-				// 사용하므로 이 함수까지 호출된 것. 무조건 yes.
-				$this->enabled = 'yes';
+				$this->enabled = $this->get_option( 'enabled' );
 
 				// 다보리 설정 URL
 				$tab_href = add_query_arg( array(
@@ -414,28 +451,33 @@ function init_wc_gateway_payapp() {
 				                           ), admin_url( 'admin.php ' ) );
 
 				// Method title: 우커머스 > 설정 > 결제 (checkout) 탭에서 확인
-				$this->method_title = __( '페이앱', 'wskl' ) . " - {$methods[ $slug ]}";
+				$this->method_title = $payment_gate_names['payapp'] . " - {$methods[ $slug ]}";
 
 				// Method description: 우커머스 > 설정 > 결제 (checkout) 탭에서 확인
-				$this->method_description = __( '페이앱 관련 세부 설정은 ', 'wskl' );
-				$this->method_description .= wskl_html_anchor( __( '다보리 &gt; 지불기능' ), array( 'href' => $tab_href ), true );
+				$this->method_description = __( '세부 설정은 ', 'wskl' );
+				$this->method_description .= wskl_html_anchor( __( '다보리 &gt; 지불기능' ),
+				                                               array( 'href' => $tab_href ),
+				                                               TRUE );
 				$this->method_description .= __( ' 메뉴에서 설정하세요', 'wskl' );
 
-				add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
-					$this,
-					'process_admin_options',
-				) );
+				add_action( 'woocommerce_update_options_payment_gateways_' . $this->id,
+				            array(
+					            $this,
+					            'process_admin_options',
+				            ) );
 			}
 
 			public static function get_gateway_methods() {
 
-				$checkout_methods  = get_option( wskl_get_option_name( 'checkout_methods' ) );
+				$checkout_methods  = (array) WSKL_Payment_Gates::get_checkout_methods();
 				$available_methods = array();
 
-				if ( is_array( $checkout_methods ) && ! empty( $checkout_methods ) ) {
+				foreach ( $checkout_methods as $key => $method ) {
 
-					foreach ( $checkout_methods as $method ) {
-						$available_methods[] = 'WC_Gateway_PayApp_' . ucfirst( $method );
+					$class_name = 'WC_Gateway_PayApp_' . ucfirst( $key );
+
+					if ( class_exists( $class_name ) ) {
+						$available_methods[] = $class_name;
 					}
 				}
 

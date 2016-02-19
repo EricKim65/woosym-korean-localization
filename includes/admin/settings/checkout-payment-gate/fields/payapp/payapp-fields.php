@@ -32,38 +32,6 @@ return array(
 		'placeholder' => '',
 	),
 	array(
-		'id'          => 'payapp_checkout_description_credit',
-		'label'       => $methods['credit'] . __( ' 메시지', 'wskl' ),
-		'description' => $methods['credit'] . __( ' 메시지', 'wskl' ),
-		'type'        => 'textarea',
-		'default'     => $credit_default,
-		'placeholder' => '',
-	),
-	array(
-		'id'          => 'payapp_checkout_description_remit',
-		'label'       => $methods['remit'] . __( ' 메시지', 'wskl' ),
-		'description' => $methods['remit'] . __( ' 메시지', 'wskl' ),
-		'type'        => 'textarea',
-		'default'     => $methods['remit'] . WSKL_Payment_Gates::get_checkout_method_postfix(),
-		'placeholder' => '',
-	),
-	array(
-		'id'          => 'payapp_checkout_description_virtual',
-		'label'       => $methods['virtual'] . __( ' 메시지', 'wskl' ),
-		'description' => $methods['virtual'] . __( ' 메시지', 'wskl' ),
-		'type'        => 'textarea',
-		'default'     => $methods['virtual'] . WSKL_Payment_Gates::get_checkout_method_postfix(),
-		'placeholder' => '',
-	),
-	array(
-		'id'          => 'payapp_checkout_description_mobile',
-		'label'       => $methods['mobile'] . __( ' 메시지', 'wskl' ),
-		'description' => $methods['mobile'] . __( ' 메시지', 'wskl' ),
-		'type'        => 'textarea',
-		'default'     => $methods['mobile'] . WSKL_Payment_Gates::get_checkout_method_postfix(),
-		'placeholder' => '',
-	),
-	array(
 		'id'          => 'dummy_34',
 		'label'       => __( '판매자 등록', 'wskl' ),
 		'description' => __(
