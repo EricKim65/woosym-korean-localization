@@ -4,7 +4,20 @@ namespace wskl\lib\cassandra;
 
 require_once( 'class-models.php' );
 
-define( 'WSKL_HOST_API_URL', 'http://www.dabory.com/cassandra/api/v1' );  // do not add slashes
+define( 'WSKL_HOST_API_URL', 'https://www.dabory.com/cassandra/api/v1' );  // do not add slashes
+
+function wskl_get_host_api_url() {
+
+	if ( WP_DEBUG ) {
+
+		$url = wskl_get_option( 'develop_casper_url' );
+
+		return !empty( $url ) ? $url : WSKL_HOST_API_URL;
+	}
+
+	return WSKL_HOST_API_URL;
+}
+
 
 
 /**
@@ -112,7 +125,7 @@ class ClientAPI {
 
 		try {
 
-			$url  = WSKL_HOST_API_URL . '/auth/activate/';
+			$url  = wskl_get_host_api_url() . '/auth/activate/';
 			$body = array(
 				'key_type'     => $key_type,
 				'key_value'    => $key_value,
@@ -142,7 +155,7 @@ class ClientAPI {
 
 		$obj = NULL;
 
-		$url  = WSKL_HOST_API_URL . '/auth/verify/';
+		$url  = wskl_get_host_api_url() . '/auth/verify/';
 		$body = array(
 			'key_type'  => &$key_type,
 			'key_value' => &$key_value,
@@ -182,7 +195,7 @@ class SalesAPI {
 
 		try {
 
-			$url     = WSKL_HOST_API_URL . '/logs/sales/';
+			$url     = wskl_get_host_api_url() . '/logs/sales/';
 			$body    = json_encode( static::create_body( $key_type, $key_value, $site_url, $user_id, $order ) );
 			$headers = array( 'content-type' => 'application/json', );
 
@@ -321,7 +334,7 @@ class AddToCartAPI extends ProductLogAPI {
 
 	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
 
-		return parent::send_data( WSKL_HOST_API_URL . '/logs/add-to-carts/', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
+		return parent::send_data( wskl_get_host_api_url() . '/logs/add-to-carts/', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
 	}
 }
 
@@ -330,7 +343,7 @@ class TodaySeenAPI extends ProductLogAPI {
 
 	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
 
-		return parent::send_data( WSKL_HOST_API_URL . '/logs/today-seen/', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
+		return parent::send_data( wskl_get_host_api_url() . '/logs/today-seen/', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
 	}
 }
 
@@ -339,7 +352,7 @@ class WishListAPI extends ProductLogAPI {
 
 	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
 
-		return parent::send_data( WSKL_HOST_API_URL . '/logs/wish-lists/', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
+		return parent::send_data( wskl_get_host_api_url() . '/logs/wish-lists/', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
 	}
 }
 
@@ -352,7 +365,7 @@ class PostAPI {
 
 		try {
 
-			$url = WSKL_HOST_API_URL . '/posts/';
+			$url = wskl_get_host_api_url() . '/posts/';
 
 			$body = array_merge(
 				array(

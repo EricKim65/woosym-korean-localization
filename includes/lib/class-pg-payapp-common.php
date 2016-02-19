@@ -41,36 +41,6 @@ function init_wc_gateway_payapp() {
 				$this->has_fields = FALSE;
 
 				// 나머지 설정읜 variate() 참고
-
-				/**
-				 * 주문 확정 버튼 클릭 다음의 페이지인 "주문 지불" 화면에서 별도의 안내를 위한 액션
-				 *
-				 * @see    woocommerce/includes/shortcodes/class-wc-shortcode-checkout.php
-				 * @see    WC_Shortcode_Checkout::order_pay()
-				 */
-				add_action( 'after_woocommerce_pay', array(
-					$this,
-					'callback_after_woocommerce_pay',
-				) );
-
-				/**
-				 * 체크아웃 페이지의 자바스크립트 로드
-				 */
-				add_action( 'wp_enqueue_scripts', array(
-					$this,
-					'callback_wp_enqueue_scripts',
-				) );
-
-				/**
-				 * 우커머스 wc-api 콜백. 페이앱이 주는 피드백에 대응.
-				 *
-				 * @see woocommerce/includes/class-wc-api.php
-				 * @see WC_API::handle_api_requests()
-				 */
-				add_action( 'woocommerce_api_wskl-payapp-feedback', array(
-					$this,
-					'callback_payapp_feedback',
-				) );
 			}
 
 			public function init_settings() {
@@ -92,63 +62,6 @@ function init_wc_gateway_payapp() {
 				                                                                                                                                                  $this->get_option( 'checkout_methods' ) ) );
 			}
 
-			/**
-			 * 체크아웃 페이지의 자바스크립트 로드
-			 *
-			 * @action wp_enqueue_scripts
-			 */
-			public function callback_wp_enqueue_scripts() {
-
-				wp_register_script( 'wskl-payapp-checkout-js',
-				                    plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/payapp-checkout.js',
-				                    array( 'jquery' ) );
-				wp_localize_script( 'wskl-payapp-checkout-js',
-				                    'payapp_checkout',
-				                    array( 'loadingPopupUrl' => plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/payapp-loading.php', ) );
-				wp_enqueue_script( 'wskl-payapp-checkout-js' );
-			}
-
-			/**
-			 * 주문 지불 페이지에서 사용자를 위한 설명 유도
-			 *
-			 * @action after_woocommerce_pay
-			 */
-			public function callback_after_woocommerce_pay() {
-
-				if ( ! isset( $_GET['key'] ) ) {
-					$order_key = wc_get_order()->order_key;
-				} else {
-					$order_key = esc_attr( $_GET['key'] );
-				}
-
-				wp_register_script( 'wskl-payapp-status-js',
-				                    plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/payapp-status.js',
-				                    array( 'jquery' ), NULL, TRUE );
-
-				wp_localize_script( 'wskl-payapp-status-js', 'payAppStatus',
-				                    array(
-					                    'ajaxUrl'         => add_query_arg( array(
-						                                                        'order_key' => $order_key,
-						                                                        'wc-ajax'   => 'wskl-payapp-status',
-					                                                        ),
-					                                                        home_url( '/' ) ),
-					                    'pollingRetryMax' => 60,
-					                    'failureRedirect' => wc()->cart->get_checkout_url(),
-				                    ) );
-
-				wp_enqueue_script( 'wskl-payapp-status-js' );
-
-				// 결제 유도 안내 메시지.
-				$status_check_message = $this->get_option( 'status_check_message' );
-				if ( $status_check_message ) {
-					echo wpautop( wptexturize( $status_check_message ) );
-				}
-
-				$screenshot_url = plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/image/payapp/payapp-screenshot.png';
-
-				echo '<p>' . __( '결제창 팝업은 아래 그림처럼 생성됩니다.', 'wskl' ) . '</p>';
-				echo '<img src="' . esc_url( $screenshot_url ) . '" />';
-			}
 
 			/**
 			 * 반드시 $this->checkout_method_description 대입 후에 사용!
@@ -175,6 +88,14 @@ function init_wc_gateway_payapp() {
 						'desc_tip'    => TRUE,
 					),
 				);
+
+				if ( $this->checkout_method == 'credit' ) {
+					$this->form_fields['description']['default'] = <<<EOD
+신용카드로 결제합니다.<br>
+1.페이앱 결제는 1,2번째 칸은 ActiveX 인증 방식이 아니므로 결제창에서 신용카드 번호만 입력하면 신속하게 결제됩니다.<br>
+2. 페이앱 결제창의 3번째 칸에서는 기존의 ActiveX 방식(ISP)이 지원되므로 기존의 방식으로 결제가 가능합니다.<br>
+EOD;
+				}
 			}
 
 			public function process_payment( $order_id ) {
@@ -249,6 +170,14 @@ function init_wc_gateway_payapp() {
 				$payapp_pay_types = array( 'card', 'rbank', 'vbank', 'phone' );
 				$pay_type         = $payapp_pay_types[ $idx ];
 
+				$feedback_url = str_replace( 'https:', // search
+				                             'http:',  // replace
+				                             add_query_arg( 'wc-api',
+				                                            'wskl-payapp-feedback',
+				                                            home_url( '/' ) ) );
+
+				error_log( 'Our feedback URL for PayApp: ' . $feedback_url );
+
 				$args = array(
 					'sslverify' => FALSE,
 					'timeout'   => 15,
@@ -277,11 +206,7 @@ function init_wc_gateway_payapp() {
 						'reqaddr'     => '0',
 
 						// 피드백 URL, feedbackurl 은 외부에서 접근이 가능해야 합니다. payapp 서버에서 호출 하는 페이지 입니다.
-						'feedbackurl' => str_replace( 'https:', // search
-						                              'http:',  // replace
-						                              add_query_arg( 'wc-api',
-						                                             'wskl-payapp-feedback',
-						                                             home_url( '/' ) ) ),
+						'feedbackurl' => $feedback_url,
 
 						// 임의변수1. 우리 구현에서는 order ID 를 기록
 						'var1'        => $order->id,
@@ -314,86 +239,7 @@ function init_wc_gateway_payapp() {
 				return $args;
 			}
 
-			/**
-			 * 페이앱이 피드백 URL 에 대응하는 콜백.
-			 * 피드백 파라미터를 확인하고 올바른 경우에는 최종적으로 주문 내역을 결제된 것으로 업데이트한다.
-			 *
-			 * @action woocommerce_api_{wskl-payapp-feedback}
-			 */
-			public function callback_payapp_feedback() {
 
-				$payapp_uid = wskl_POST( 'userid' );
-				$link_key   = wskl_POST( 'linkkey' );
-				$link_val   = wskl_POST( 'linkval' );
-				$order_id   = wskl_POST( 'var1', 'absint' );
-				$order_key  = wskl_POST( 'var2', 'sanitize_text_field' );
-				$cst_url    = wskl_POST( 'csturl',
-				                         'sanitize_text_field' );     // 전표 주소
-				$pay_memo   = wskl_POST( 'pay_memo',
-				                         'sanitize_text_field' );   // 구매자가 기록한 메모
-				$mul_no     = wskl_POST( 'mul_no',
-				                         'sanitize_text_field' );     // 결제요청번호
-				$pay_state  = wskl_POST( 'pay_state',
-				                         'absint' );               // 결제요청상태 (1: 요청, 4: 결제완료, 8, 16, 32: 요청취소, 9, 64: 승인취소)
-				$pay_type   = wskl_POST( 'pay_type',
-				                         'absint' );                // 결제수단 (1: 신용카드, 2: 휴대전화)
-				$pay_date   = wskl_POST( 'pay_date', 'sanitize_text_field' );
-
-				// check payapp_uid
-				if ( $payapp_uid != $this->get_option( 'payapp_user_id' ) ) {
-					return;
-				}
-
-				// check link key and link val
-				if ( $link_key != $this->get_option( 'link_key' ) || $link_val != $this->get_option( 'link_val' ) ) {
-					return;
-				}
-
-				$order = wc_get_order( $order_id );
-				if ( ! $order ) {
-					return;
-				}
-
-				// check order key
-				if ( $order_key != $order->order_key ) {
-					return;
-				}
-
-				// 승인
-				if ( $pay_state == 4 ) {
-
-					// 전표 기록
-					update_post_meta( $order_id, 'wskl_payapp_cst_url',
-					                  $cst_url );
-
-					switch ( $pay_type ) {
-						case 1:
-							$card_name  = wskl_POST( 'card_name',
-							                         'sanitize_text_field' );  // 신용카드시 카드 이름
-							$order_note = sprintf( __( '결제가 성공적으로 처리됨.<ul><li>결제방법: 신용카드</li><li>카드 이름: %s</li><li>페이앱 결제요청번호: %s</li><li>승인시각: %s</li><li>구매자의 결제창 메시지: %s</li></ul>',
-							                           'wskl' ), $card_name,
-							                       $mul_no, $pay_date,
-							                       $pay_memo );
-							break;
-
-						case 2:
-							$order_note = sprintf( __( '결제가 성공적으로 처리됨.<ul><li>결제방법: 휴대전화</li><li>페이앱 결제요청번호: %s</li><li>승인시각: %s</li><li>구매자의 결제창 메시지: %s</li></ul>',
-							                           'wskl' ), $mul_no,
-							                       $pay_date, $pay_memo );
-							break;
-
-						default:
-							$order_note = sprintf( __( '결제가 성공적으로 처리됨.<ul><li>결제방법: 기타</li><li>페이앱 결제요청번호: %s</li><li>승인시각: %s</li><li>구매자의 결제창 메시지: %s</li></ul>',
-							                           'wskl' ), $mul_no,
-							                       $pay_date, $pay_memo );
-					}
-
-					$order->add_order_note( $order_note );
-					$order->payment_complete();
-					$order->reduce_order_stock();
-					wc_empty_cart();
-				}
-			}
 
 			/**
 			 * payapp API가 에러를 전달하는 경우 구체적인 에러 메시지를 보다 고객이 알기 편한 메시지로 변환.

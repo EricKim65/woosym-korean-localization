@@ -30,14 +30,6 @@ function init_wc_gateway_wskl_iamport() {
 				$this->has_fields = FALSE;
 
 				// 나머지 설정은 variate() 참고
-
-				/**
-				 * 체크아웃 페이지의 자바스크립트 로드 - 아임포트 플러그인의 스크립트를 검사하므로 약간 순위를 낮춤.
-				 */
-				add_action( 'wp_enqueue_scripts', array(
-					$this,
-					'callback_wp_enqueue_scripts',
-				), 20 );
 			}
 
 			public function init_settings() {
@@ -57,17 +49,6 @@ function init_wc_gateway_wskl_iamport() {
 
 				$this->settings['enabled'] = wskl_yes_or_no( wskl_is_option_enabled( 'enable_sym_pg' ) && wskl_get_option( 'pg_agency' ) == 'iamport' && in_array( $this->checkout_method,
 				                                                                                                                                                   $this->settings['checkout_methods'] ) );
-			}
-
-			public function callback_wp_enqueue_scripts() {
-
-				// 스크립트 핸들 'iamport_script' (아임포트 우커머스 플러그인이 쓰는 핸들)
-				if ( ! wp_script_is( 'iamport_script' ) ) {
-					wp_enqueue_script( 'wskl_iamport-payment-js',
-					                   plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/iamport.payment-1.1.0.js' );
-				}
-				wp_enqueue_script( 'wskl_iamport-checkout-js',
-				                   plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/iamport-checkout.js' );
 			}
 
 			public function init_form_fields() {
@@ -124,116 +105,7 @@ function init_wc_gateway_wskl_iamport() {
 				);
 			}
 
-			public function check_payment_response() {
 
-				if ( ! empty( $_REQUEST['imp_uid'] ) ) {
-
-					//결제승인 결과조회
-					require_once( WSKL_PATH . '/includes/lib/iamport/iamport.php' );
-
-					$imp_uid     = $_REQUEST['imp_uid'];
-					$rest_key    = $this->get_option( 'iamport_rest_key' );
-					$rest_secret = $this->get_option( 'iamport_rest_secret' );
-
-					$iamport = new Iamport( $rest_key, $rest_secret );
-					$result  = $iamport->findByImpUID( $imp_uid );
-
-					if ( $result->success ) {
-
-						$payment_data = $result->data;
-
-						if ( empty( $_REQUEST['order_id'] ) ) { //call by iamport notification
-							$order_id = wc_get_order_id_by_order_key( $payment_data->merchant_uid );
-						} else {
-							$order_id = $_REQUEST['order_id'];
-						}
-
-						$order = wc_get_order( $order_id );
-
-						update_post_meta( $order_id, '_iamport_provider',
-						                  $payment_data->pg_provider );
-						update_post_meta( $order_id, '_iamport_paymethod',
-						                  $payment_data->pay_method );
-						update_post_meta( $order_id, '_iamport_receipt_url',
-						                  $payment_data->receipt_url );
-
-						if ( $payment_data->status == 'paid' ) {
-
-							if ( $order->order_total == $payment_data->amount ) {
-								if ( ! $order->has_status( array(
-									                           'processing',
-									                           'completed',
-								                           ) )
-								) {
-									$order->payment_complete( $payment_data->imp_uid ); //imp_uid
-									wp_redirect( $order->get_checkout_order_received_url() );
-
-									return;
-								}
-							} else {
-								$order->add_order_note( '요청하신 결제금액이 다릅니다.' );
-								wc_add_notice( '요청하신 결제금액이 다릅니다.', 'error' );
-							}
-
-						} else if ( $payment_data->status == 'ready' ) {
-
-							if ( $payment_data->pay_method == 'vbank' ) {
-
-								$vbank_name = $payment_data->vbank_name;
-								$vbank_num  = $payment_data->vbank_num;
-								$vbank_date = $payment_data->vbank_date;
-
-								//가상계좌 입금할 계좌정보 기록
-								update_post_meta( $order_id,
-								                  '_iamport_vbank_name',
-								                  $vbank_name );
-								update_post_meta( $order_id,
-								                  '_iamport_vbank_num',
-								                  $vbank_num );
-								update_post_meta( $order_id,
-								                  '_iamport_vbank_date',
-								                  $vbank_date );
-
-								//가상계좌 입금대기 중
-								$order->update_status( 'awaiting-vbank',
-								                       __( '가상계좌 입금대기 중',
-								                           'iamport' ) );
-								wp_redirect( $order->get_checkout_order_received_url() );
-
-								return;
-
-							} else {
-
-								$order->add_order_note( '실제 결제가 이루어지지 않았습니다.' );
-								wc_add_notice( '실제 결제가 이루어지지 않았습니다.', 'error' );
-							}
-
-						} else if ( $payment_data->status == 'failed' ) {
-
-							$order->add_order_note( '결제요청 승인에 실패하였습니다.' );
-							wc_add_notice( '결제요청 승인에 실패하였습니다.', 'error' );
-						}
-
-					} else {
-
-						$payment_data = &$result->data;
-
-						if ( ! empty( $_REQUEST['order_id'] ) ) {
-
-							$order = new WC_Order( $_REQUEST['order_id'] );
-
-							$order->update_status( 'failed' );
-							$order->add_order_note( '결제승인정보를 받아오지 못했습니다. 관리자에게 문의해주세요' . $payment_data->error['message'] );
-
-							wc_add_notice( $payment_data->error['message'],
-							               'error' );
-							$redirect_url = $order->get_checkout_payment_url( TRUE );
-
-							wp_redirect( $redirect_url );
-						}
-					}
-				}
-			}
 
 			public function generate_multicheckbox_html( $key, $data ) {
 
@@ -342,7 +214,7 @@ function init_wc_gateway_wskl_iamport() {
 
 				$redirect_url = add_query_arg( array(
 					                               'order_id' => $order_id,
-					                               'wc-api'   => strtolower( __CLASS__ ),
+					                               'wc-api'   => 'wskl_iamport',
 				                               ),
 				                               $order->get_checkout_payment_url() );
 

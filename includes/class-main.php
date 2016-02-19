@@ -370,6 +370,10 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			/** 결제 (frontend/admin 둘 다 요구 ) */
 			wskl_load_module( '/includes/class-wskl-payment-gates.php', 'enable_sym_pg' );
+
+			if( WP_DEBUG ) {
+				wskl_load_module( '/includes/lib/wskl-debugging.php', 'enable_debugging' );
+			}
 		}
 
 		/**
