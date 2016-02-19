@@ -104,7 +104,7 @@ if ( ! class_exists( 'PayApp_Main' ) ) :
 					                                    'wc-ajax'   => 'wskl-payapp-status',
 				                                    ), home_url( '/' ) ),
 				'pollingRetryMax' => 60,
-				'failureRedirect' => wc_get_checkout_url(),
+				'failureRedirect' => wc()->cart->get_checkout_url() // wc_get_checkout_url() // wc_get_checkout_url() should be > 2.5.0,
 			) );
 
 			wp_enqueue_script( 'wskl-payapp-status-js' );
