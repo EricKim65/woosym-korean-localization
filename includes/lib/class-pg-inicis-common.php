@@ -35,7 +35,11 @@ class WC_Inicis_Common extends WC_Payment_Gateway {
 
     //////////////////////Don't  Change Here////////////////////////
     $this->id                 = $this->_pg_agency . '_' . $this->method;
-    $this->method_title       = __( $this->admin_title, $this->_folder );
+
+    $guided_methods     = WSKL_Payment_Gates::get_checkout_methods();
+    $payment_gate_names = WSKL_Payment_Gates::get_pay_gates();
+
+    $this->method_title       = $payment_gate_names[ 'inicis' ] . " - {$guided_methods[ $this->method ]}";
     $this->method_description = '';
 
     $this->init_form_fields();
