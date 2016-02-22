@@ -10,3 +10,11 @@
 .wskl-info {
     color: #3333E0;
 }
+
+pre.wskl-log-display {
+    height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-family: "inconsolata", monospace;
+    font-style: normal;
+}
