@@ -284,61 +284,18 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 			),
 		);
 
-
 		switch ( $pg_agency ) {
+
+			// 기존 PG Agency (Active-X 기반) 공통 설정 필드 #1
 			case 'kcp':
 			case 'inicis':
 			case 'ags':
-				array_push( $settings['checkout-payment-gate']['fields'],
-
-				            array(
-					            'id'          => 'enable_testmode',
-					            'label'       => __( '테스트 모드로 설정', 'wskl' ),
-					            'description' => __( '결제 테스트 모드로 설정되어 실제적인 결제는 되지 않습니다.',
-					                                 'wskl' ),
-					            'type'        => 'checkbox',
-					            'default'     => '',
-				            ), array(
-					            'id'          => 'enable_showinputs',
-					            'label'       => __( '필드보임 설정', 'wskl' ),
-					            'description' => __( '테스트용으로 사용되므로 일반적인경우 비활성화 해주세요.',
-					                                 'wskl' ),
-					            'type'        => 'checkbox',
-					            'default'     => '',
-				            ), array(
-					            'id'          => 'checkout_methods',
-					            'label'       => __( '결제방식 지정', 'wskl' ),
-					            'description' => __( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용하실 결제방식을 지정해 주십시오.',
-					                                 'wskl' ),
-					            'type'        => 'checkbox_multi',
-					            'options'     => WSKL_Payment_Gates::get_checkout_methods(),
-					            'default'     => array( 'credit', '신용카드' ),
-				            ), array(
-					            'id'          => 'enable_https',
-					            'label'       => __( 'HTTPS 사용', 'wskl' ),
-					            'description' => __( '결제페이지 스크립트을 HTTPS(보안모드)방식으로 호출합니다.<br/>
-													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;홈페이지 보안 인증 서비스를 받지 않는 사이트의 경우 무시하셔도 됩니다.
-													.', 'wskl' ),
-					            'type'        => 'checkbox',
-					            'default'     => '',
-				            ), array(
-					            'id'          => 'enable_escrow',
-					            'label'       => __( '에스크로 설정', 'wskl' ),
-					            'description' => __( '에스크로 방식으로 결제를 진행합니다.',
-					                                 'wskl' ),
-					            'type'        => 'checkbox',
-					            'default'     => '',
-				            ), array(
-					            'id'          => 'escrow_delivery',
-					            'label'       => __( '에스크로 예상 배송일', 'wskl' ),
-					            'description' => __( '에스크로 설정시 배송소요기간(일). (에스크로아닌 경우 해당사항 없슴)',
-					                                 'wskl' ),
-					            'type'        => 'shorttext',
-					            'default'     => '',
-					            'placeholder' => '',
-				            ) );
+				$agencies_common_fields                      = include( WSKL_PATH . '/includes/admin/settings/checkout-payment-gate/fields/classic-pg-agencies-common-fields-1.php' );
+				$settings['checkout-payment-gate']['fields'] = array_merge( $settings['checkout-payment-gate']['fields'],
+				                                                            $agencies_common_fields );
 				break;
 
+			// 페이앱 전용 필드 #1
 			case 'payapp':
 				array_push( $settings['checkout-payment-gate']['fields'],
 
@@ -355,6 +312,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				);
 				break;
 
+			// 아임포트 전용 필드 #1
 			case 'iamport':
 				array_push( $settings['checkout-payment-gate']['fields'],
 
@@ -384,6 +342,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 		switch ( $pg_agency ) {
 
+			// 페이앱 전용 필드 #2: 인증사항
 			case 'payapp':
 				$settings['checkout-payment-gate']['fields'] = array_merge( $settings['checkout-payment-gate']['fields'],
 					include( WSKL_PATH . '/includes/admin/settings/checkout-payment-gate/fields/payapp/payapp-fields.php' ) );
@@ -478,6 +437,7 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				break;
 
 			case 'lgu+':
+				break;
 
 			case 'ags':
 				array_push( $settings['checkout-payment-gate']['fields'], array(
@@ -615,6 +575,13 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'id'          => 'enable_sym_checkout',
 					'label'       => __( '한국형 주소 찾기', 'wskl' ),
 					'description' => __( '한국형 주소 찾기와 결제페이지를 활성화합니다.', 'wskl' ),
+					'type'        => 'checkbox',
+					'default'     => '',
+				),
+				array(
+					'id'          => 'enable_combined_tax',
+					'label'       => __( '복합과세 활성화', 'wskl' ),
+					'description' => __( '복합과세 설정을 합니다.', 'wskl' ),
 					'type'        => 'checkbox',
 					'default'     => '',
 				),
@@ -871,8 +838,10 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 				array(
 					'id'          => 'dummy_3232',
 					'label'       => __( '작동 상태', 'wskl' ),
-					'description' => ( site_url() == wskl_get_option( 'ip_block_target' ) ) ? '<span class="wskl-info">' . __( '정상 작동 중', 'wskl' ) . '</span>' : '<span class="wskl-notice">' . __( '내용이 갱신되지 않아 비활성화 되었습니다. 저장 버튼을 눌러 활성화시켜 주세요', 'wskl' ) . '</span>',
-				)
+					'description' => ( site_url() == wskl_get_option( 'ip_block_target' ) ) ? '<span class="wskl-info">' . __( '정상 작동 중',
+					                                                                                                           'wskl' ) . '</span>' : '<span class="wskl-notice">' . __( '내용이 갱신되지 않아 비활성화 되었습니다. 저장 버튼을 눌러 활성화시켜 주세요',
+					                                                                                                                                                                     'wskl' ) . '</span>',
+				),
 			),
 		);
 

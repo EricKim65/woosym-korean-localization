@@ -356,6 +356,9 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				wskl_load_module( '/includes/lib/mat-logs/class-product-logs.php' );
 			}
 
+			/** 복합과세 */
+			wskl_load_module( '/includes/class-wskl-combined-tax.php' );
+
 			/** IP blocking */
 			wskl_load_module( '/includes/class-wskl-ip-block.php', 'enable_countryip_block' );
 
