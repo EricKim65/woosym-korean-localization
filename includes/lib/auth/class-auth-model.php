@@ -80,7 +80,7 @@ class Auth_Model {
 
 	public function is_verified() {
 
-		return ( $this->get_oir()->get_domain()->get_url() == site_url() ) && $this->is_active() && ! $this->is_expired();
+		return $this->get_oir() && ( $this->get_oir()->get_domain()->get_url() == site_url() ) && $this->is_active() && ! $this->is_expired();
 	}
 
 	public function reset() {
