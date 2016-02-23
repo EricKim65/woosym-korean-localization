@@ -6,9 +6,10 @@ require_once( 'class-models.php' );
 
 define( 'WSKL_HOST_API_URL', 'https://www.dabory.com/cassandra/api/v1' );  // do not add slashes
 
+
 function wskl_get_host_api_url() {
 
-	if ( WP_DEBUG ) {
+	if ( WSKL_DEBUG ) {
 
 		$url = wskl_get_option( 'develop_casper_url' );
 
@@ -78,11 +79,12 @@ class Rest_Api_Helper {
 
 		if ( is_wp_error( $response ) ) {
 
+			$message = sprintf( 'Response is WP_Error object: %s', $response->get_error_message() );
+
 			if ( $throws ) {
-				throw new BadResponseException(
-					sprintf( 'Response is WP_Error object: %s', $response->get_error_message() )
-				);
+				throw new BadResponseException( $message );
 			} else {
+				error_log( $message );
 				return FALSE;
 			}
 		}
@@ -92,12 +94,12 @@ class Rest_Api_Helper {
 
 		if ( array_search( $response_code, $accepts ) === FALSE ) {
 
+			$message = sprintf( "Invalid response code '%s', message: %s", $response_code, $response_body );
+
 			if ( $throws ) {
-				throw new BadResponseException(
-					sprintf( "Invalid response code '%s', message: %s", $response_code, $response_body )
-				);
+				throw new BadResponseException( $message );
 			} else {
-				error_log( sprintf( "Invalid response code '%s', message: %s", $response_code, $response_body ) );
+				error_log( $message );
 				return FALSE;
 			}
 		}
@@ -134,7 +136,7 @@ class ClientAPI {
 				'activate'     => $activate,
 			);
 
-			$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 200, 403, 404 ) );
+			$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 200, 403, ) );
 
 			if ( $response['code'] == 200 ) {
 				$obj = OrderItemRelation::from_response( $response['body'] );
@@ -162,7 +164,7 @@ class ClientAPI {
 			'site_url'  => &$site_url,
 		);
 
-		$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 200, 403, 404, ), array(), FALSE );
+		$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 200, 403, ), array(), FALSE );
 
 		if ( is_array( $response ) ) {
 
