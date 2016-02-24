@@ -586,6 +586,13 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 					'default'     => '',
 				),
 				array(
+					'id'          => 'hide_display_cart_tax',
+					'label'       => __( '장바구니의 세금액 숨기기', 'wskl' ),
+					'description' => __( '복합과세 활성화시 장바구니에 별도로 출력되는 세금 항목을 숨깁니다', 'wskl' ),
+					'type'        => 'checkbox',
+					'default'     => '',
+				),
+				array(
 					'id'          => 'company',
 					'label'       => __( '회사명 입력 가능', 'wskl' ),
 					'description' => __( '사업자 대상 위주 판매의 경우 회사명을 입력 가능 설정을 합니다.',

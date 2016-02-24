@@ -359,6 +359,9 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			/** 복합과세 */
 			wskl_load_module( '/includes/class-wskl-combined-tax.php' );
 
+			/** 다보리 배송 (테스팅) */
+			wskl_load_module( '/includes/class-wskl-shipping-method.php', 'enable_korean_shipping' );
+
 			/** IP blocking */
 			wskl_load_module( '/includes/class-wskl-ip-block.php', 'enable_countryip_block' );
 
