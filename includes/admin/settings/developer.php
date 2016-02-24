@@ -23,7 +23,7 @@ function tail_custom( $file_path, $lines = 1, $adaptive = TRUE ) {
 
 	// Start reading
 	$output = '';
-	$chunk  = '';
+	// $chunk  = '';
 	// While we would like more
 	while ( ftell( $f ) > 0 && $lines >= 0 ) {
 		// Figure out how far back we should jump
