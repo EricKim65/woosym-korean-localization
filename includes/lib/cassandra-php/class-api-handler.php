@@ -9,9 +9,9 @@ define( 'WSKL_HOST_API_URL', 'https://www.dabory.com/cassandra/api/v1' );  // do
 
 function wskl_get_host_api_url() {
 
-	if ( WSKL_DEBUG ) {
+	if ( wskl_debug_enabled() ) {
 
-		$url = wskl_get_option( 'develop_casper_url' );
+		$url = wskl_get_option( 'develop_cassandra_url' );
 
 		return !empty( $url ) ? $url : WSKL_HOST_API_URL;
 	}

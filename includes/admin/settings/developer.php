@@ -52,19 +52,12 @@ function tail_custom( $file_path, $lines = 1, $adaptive = TRUE ) {
 
 $developer = array(
 	'title'       => __( '개발자용', 'wskl' ),
-	'description' => __( '개발자용 탭 WP_DEBUG = TRUE 면 나오는 탭', 'wskl' ),
+	'description' => __( '개발자용 탭. WSKL_DEBUG == TRUE 면 나오는 탭', 'wskl' ),
 	'fields'      => array(
-		array(
-			'id'          => 'enable_debugging',
-			'label'       => __( 'Enable DEBUGGING MODE', 'wskl' ),
-			'description' => __( '', 'wskl' ),
-			'type'        => 'checkbox',
-			'default'     => '',
-		),
 		array(
 			'id'          => 'develop_xdebug_always_on',
 			'label'       => __( 'Always Enable XDEBUG', 'wskl' ),
-			'description' => __( '', 'wskl' ),
+			'description' => __( 'XDEBUG SESSION ID를 쿠키로 전송', 'wskl' ),
 			'type'        => 'checkbox',
 			'default'     => '',
 		),
@@ -76,9 +69,17 @@ $developer = array(
 			'default'     => '',
 		),
 		array(
+			'id'          => 'develop_enable_update_session_id',
+			'label'       => __( 'ALLOW SESSION ID UPDATE', 'wskl' ),
+			'description' => __( 'XDEBUG_SESSION_ID 파라미터를 발견하면 세션 ID를 자동 변경.',
+			                     'wskl' ),
+			'type'        => 'checkbox',
+			'default'     => '',
+		),
+		array(
 			'id'          => 'develop_cassandra_url',
 			'label'       => __( 'CASSANDRA URL OVERRIDE', 'wskl' ),
-			'description' => __( '', 'wskl' ),
+			'description' => '카산드라의 URL 주소를 변경. https 환경에 문제가 있을 경우, 혹은 테스트 용도로 Override. 기본 주소: ' . WSKL_HOST_API_URL,
 			'type'        => 'text',
 			'default'     => '',
 		),
@@ -87,7 +88,7 @@ $developer = array(
 );
 
 // append only if current tab is displayed
-if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'developer' ) {
+if ( wskl_debug_enabled() && isset( $_GET['tab'] ) && $_GET['tab'] == 'developer' ) {
 
 	$developer['fields'][] = array(
 		'id'          => 'develop_log_line',
