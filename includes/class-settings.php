@@ -855,12 +855,11 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 		$settings['market_auto'] = include( WSKL_PATH . '/includes/admin/settings/marketing-automation.php' );
 
-		if ( WP_DEBUG ) {
+		if ( wskl_debug_enabled() ) {
 			$settings['developer'] = include( WSKL_PATH . '/includes/admin/settings/developer.php' );
 		}
 
-		$settings = apply_filters( $this->_token . '_settings_fields',
-		                           $settings );
+		$settings = apply_filters( 'wskl_settings_fields', $settings );
 
 		return $settings;
 	}

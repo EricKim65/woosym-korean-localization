@@ -157,3 +157,8 @@ function wskl_enqueue_script( $handle, $asset_path, $depends = array(), $ver = W
 
 	wp_enqueue_script( $handle );
 }
+
+
+function wskl_debug_enabled() {
+	return WP_DEBUG && defined( 'WSKL_DEBUG' ) && WSKL_DEBUG;
+}

@@ -21,7 +21,6 @@ define( 'WSKL_PATH', __DIR__ );
 define( 'WSKL_MAIN_FILE', __FILE__ );
 define( 'WSKL_PREFIX', 'wskl_' );
 define( 'WSKL_VERSION', '3.2.4-alpha1' );
-define( 'WSKL_DEBUG', WP_DEBUG && true );
 
 define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
 

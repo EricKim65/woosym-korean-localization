@@ -1,5 +1,10 @@
 <?php
 
+if( ! WSKL_DEBUG ) {
+	return;
+}
+
+
 if( wskl_is_option_enabled( 'develop_xdebug_always_on' ) ) {
 	add_action( 'init', 'wskl_add_xdebug_session_start' );
 }
