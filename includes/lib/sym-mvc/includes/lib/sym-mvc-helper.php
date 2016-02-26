@@ -1,18 +1,18 @@
 <?php
 
-if ( ! function_exists( 'sym__alert' ) ) :
+if ( ! function_exists( 'wskl_sym__alert' ) ) :
 
 	/* Debug & Log Helper   Last Update 2015.3.6 */
-	function sym__alert( $str ) {
+	function wskl_sym__alert( $str ) {
 
 		echo "<script>alert('" . $str . "');</script>";
 	}
 
 endif;
 
-if ( ! function_exists( 'sym__log' ) ) :
+if ( ! function_exists( 'wskl_sym__log' ) ) :
 
-function sym__log( $message, $showpage = false ) {
+	function wskl_sym__log( $message, $show_page = FALSE ) {
 
 	$log_dir  = "wp-content";
 	$time_msg = "[" . date_format( date_create(), 'Y-m-d-H-i-s' ) . "] ";
@@ -28,7 +28,7 @@ function sym__log( $message, $showpage = false ) {
 
 	//file_put_contents($log_file, $message, FILE_APPEND | LOCK_EX);
 	error_log( $time_msg . $str_msg . "\r\n", 3, $log_file );
-	if ( $showpage ) {
+		if ( $show_page ) {
 		print_r( $str_msg . "<br/>" );
 	};
 

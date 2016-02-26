@@ -3,9 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Sym_Mvc_Main' ) ) :
+if ( ! class_exists( 'WSKL_Sym_Mvc_Main' ) ) :
 
-	class Sym_Mvc_Main {
+	class WSKL_Sym_Mvc_Main {
 
 		public $_version;           // The version number.
 		public $_token;             // The token.

@@ -4,16 +4,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Sym_Custom_Data' ) ) :
+if ( ! class_exists( 'WSKL_Sym_Custom_Data' ) ) :
 
-	class Sym_Custom_Data {
+	class WSKL_Sym_Custom_Data {
 
 		private $order_id;
 		private $fields;
 
 		public static function extend( &$order ) {
 
-			$order->custom = new Sym_Custom_Data( $order->id );
+			$order->custom = new WSKL_Sym_Custom_Data( $order->id );
 		}
 
 		private function __construct( $order_id ) {

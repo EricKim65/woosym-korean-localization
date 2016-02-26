@@ -4,9 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-//if ( ! class_exists( 'Sym_Mvc_Main' ) ) :
+if ( ! class_exists( 'WSKL_Sym_Mvc_Settings' ) ) :
 
-	class Sym_Mvc_Settings {
+	class WSKL_Sym_Mvc_Settings {
 
 		private static $_instance = null;
 		public         $_prefix   = ''; //* Prefix for plugin settings.
@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			$this->script_suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 			// Load API for generic admin functions
-			$this->admin = new Sym_Mvc_Admin_API();
+			$this->admin = new WSKL_Sym_Mvc_Admin_API();
 
 			// Initialize settings
 			add_action( 'init', array( $this, 'init_settings' ), 11 );
@@ -180,4 +180,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	}
 
-//endif;
+endif;

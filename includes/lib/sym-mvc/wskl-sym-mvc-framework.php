@@ -1,19 +1,19 @@
 <?php
 
-define( 'SYM_MVC_PATH', __DIR__ );
+define( 'WSKL_SYM_MVC_PATH', __DIR__ );
 
-require_once( SYM_MVC_PATH . '/includes/lib/sym-mvc-helper.php' );
-require_once( SYM_MVC_PATH . '/includes/lib/class-sym-custom-data.php' );
-require_once( SYM_MVC_PATH . '/includes/class-sym-mvc-main.php' );
+require_once( WSKL_SYM_MVC_PATH . '/includes/lib/sym-mvc-helper.php' );
+require_once( WSKL_SYM_MVC_PATH . '/includes/lib/class-wskl-sym-custom-data.php' );
+require_once( WSKL_SYM_MVC_PATH . '/includes/class-wskl-sym-mvc-main.php' );
 
 if ( is_admin() ) {
-	include_once( SYM_MVC_PATH . '/includes/class-sym-mvc-settings.php' );
-	include_once( SYM_MVC_PATH . '/includes/lib/class-sym-mvc-admin-api.php' );
+	require_once( WSKL_SYM_MVC_PATH . '/includes/class-wskl-sym-mvc-settings.php' );
+	require_once( WSKL_SYM_MVC_PATH . '/includes/lib/class-wskl-sym-mvc-admin-api.php' );
 }
 
-if ( ! function_exists( 'sym_custom_data_activate' ) ) :
+if ( ! function_exists( 'wskl_sym_custom_data_activate' ) ) :
 
-	function sym_custom_data_activate() {
+	function wskl_sym_custom_data_activate() {
 
 		global $wpdb;
 
@@ -29,16 +29,16 @@ if ( ! function_exists( 'sym_custom_data_activate' ) ) :
 	}
 
 	// register activation hook
-	register_activation_hook( __FILE__, 'sym_custom_data_activate' );
+	register_activation_hook( __FILE__, 'wskl_sym_custom_data_activate' );
 
 endif;
 
 
-if ( ! function_exists( 'sym_custom_data_init' ) ) :
+if ( ! function_exists( 'wskl_sym_custom_data_init' ) ) :
 	/**
 	 * Make sure plugin is loaded first
 	 */
-	function sym_custom_data_init() {
+	function wskl_sym_custom_data_init() {
 
 		// init path
 		$path    = str_replace( WP_PLUGIN_DIR . '/', '', __FILE__ );
@@ -64,7 +64,7 @@ if ( ! function_exists( 'sym_custom_data_init' ) ) :
 	}
 
 	// register activation action
-	add_action( 'activated_plugin', 'sym_custom_data_init' );
+	add_action( 'activated_plugin', 'wskl_sym_custom_data_init' );
 
 endif;
 
