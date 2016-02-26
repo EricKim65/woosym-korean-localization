@@ -2,7 +2,7 @@
 
 if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
-	final class Woosym_Korean_Localization extends Sym_Mvc_Main {
+	final class Woosym_Korean_Localization extends WSKL_Sym_Mvc_Main {
 
 		private static $_instance = null;
 

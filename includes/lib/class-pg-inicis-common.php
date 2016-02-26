@@ -115,6 +115,20 @@ class WC_Inicis_Common extends WC_Payment_Gateway {
 
   }
 
+  function mobile_ok() {
+
+    $device = $_SERVER['HTTP_USER_AGENT'];
+    if ( stripos( $device, "Android" ) || stripos( $device,
+                                                   "iPhone" ) || stripos( $device,
+                                                                          "iPod" ) || stripos( $device,
+                                                                                               "iPad" )
+    ) {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
+
   function init_form_fields() {  // action에 포함되는 것이므로 include로 뺄수 없슴.
     $this->form_fields = array(
         'enabled'     => array(
@@ -137,7 +151,6 @@ class WC_Inicis_Common extends WC_Payment_Gateway {
         ),
     );
   }
-
 
   function order_pay_page( $order_id ) {
 
@@ -346,16 +359,6 @@ class WC_Inicis_Common extends WC_Payment_Gateway {
 
   }
 
-  function mobile_ok() {
-
-    $device = $_SERVER['HTTP_USER_AGENT'];
-    if ( stripos( $device, "Android" ) || stripos( $device, "iPhone" ) || stripos( $device, "iPod" ) || stripos( $device, "iPad" ) ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   function order_received_text() {
 
     /* = -------------------------------------------------------------------------- = */
@@ -385,7 +388,7 @@ class WC_Inicis_Common extends WC_Payment_Gateway {
       $order_id = $_POST['order_id'];
       $order    = new WC_Order( $order_id );
 
-      Sym_Custom_Data::extend( $order );
+      WSKL_Sym_Custom_Data::extend( $order );
       $order->custom->order_receipt_data = array(
           'inicis_tid' => $_POST['TID'],
       );
@@ -400,7 +403,7 @@ class WC_Inicis_Common extends WC_Payment_Gateway {
         if ( $_POST['PayMethod'] == "Card" || $_POST['PayMethod'] == "VCard" ) {  // 신용카드
           $html .= '주문에 감사드립니다. [신용카드] 결제시에만 <input type="button" value="신용 카드 영수증 인쇄" onclick="javascript:show_receipt(\'' . $custom_data['inicis_tid'] . '\')" > 가 발행 가능합니다.';
         } else {
-          $html .= '에러가 발생했습니다.  <input type="button" value="에러내용보기"  onclick="javascript:errhelp()" >';
+          $html .= '에러가 발생했습니다.  <input type="button" value="에러내용보기"  onclick="errhelp()" >';
         }
       }
 
@@ -690,7 +693,7 @@ class Inicis_Pay_Callback extends WC_Payment_Gateway {
     }
     ?>
 
-    <body onload="javascript:pay_info.submit();">
+    <body onload="pay_info.submit();">
     <form name="pay_info" method="post" action="<?php echo $return_url; ?>">
       <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
       <input type="hidden" name="TID" value="<?php echo $inipay->GetResult( 'TID' ); ?>">

@@ -24,10 +24,14 @@ define( 'WSKL_VERSION', '3.2.4-alpha2' );
 
 define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
 
+if ( ! defined( 'WSKL_DEBUG' ) ) {
+	define( 'WSKL_DEBUG', FALSE );
+}
+
+require_once( WSKL_PATH . '/includes/lib/sym-mvc/wskl-sym-mvc-framework.php' );
 require_once( WSKL_PATH . '/includes/lib/wskl-plugin.php' );
 require_once( WSKL_PATH . '/includes/lib/wskl-functions.php' );
 require_once( WSKL_PATH . '/includes/lib/wskl-template-functions.php' );
-
 
 add_action( 'plugins_loaded', 'wskl_plugin_monitor', 1 );
 
@@ -51,11 +55,6 @@ if ( ! function_exists( 'wskl_plugin_monitor' ) ) :
 			'sym_mvc_framework_is_active',
 		) );
 
-		/** SYM-MVC 비활성화 때 대응*/
-		wskl_add_plugin_status( 'sym-mvc-framework/sym-mvc-framework.php', 'inactive', array(
-			'WSKL_Plugins_React',
-			'sym_mvc_framework_is_inactive',
-		) );
 
 		/** 아임포트 활성화 시 대응 */
 		wskl_add_plugin_status( 'iamport-for-woocommerce/IamportPlugin.php', 'active', array(

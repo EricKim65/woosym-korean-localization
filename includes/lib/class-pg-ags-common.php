@@ -183,6 +183,20 @@ class WC_Ags_Common extends WC_Payment_Gateway {
 		}*/
 	}
 
+	function mobile_ok() {
+
+		$device = $_SERVER['HTTP_USER_AGENT'];
+		if ( stripos( $device, "Android" ) || stripos( $device,
+		                                               "iPhone" ) || stripos( $device,
+		                                                                      "iPod" ) || stripos( $device,
+		                                                                                           "iPad" )
+		) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
+	}
+
 	function init_form_fields() {  // action에 포함되는 것이므로 include로 뺄수 없슴.
 		$this->form_fields = array(
 			'enabled'     => array(
@@ -208,7 +222,6 @@ class WC_Ags_Common extends WC_Payment_Gateway {
 			),
 		);
 	}
-
 
 	function order_pay_page( $order_id ) {
 
@@ -273,61 +286,61 @@ class WC_Ags_Common extends WC_Payment_Gateway {
 		}
 
 		$pay_form_args = array(  // 공통 변수
-			'Job'        => $this->method_code,
-			//지불방법 코드
-			'StoreId'    => $this->ags_storeid,
-			//상점 아이디-20
-			'OrdNo'      => $order->id,
-			// 주문번호-40
-			'Amt'        => (int) $order->order_total,
-			//금액-12
-			'StoreNm'    => $this->ags_storenm,
-			//상점명-50
-			'ProdNm'     => sanitize_text_field( $item_name ),
-			// 상품명
-			'MallUrl'    => $this->ags_mallurl,
-			//상점 URL
-			'UserEmail'  => $order->billing_email,
-			//주문자 이메일
-			'UserId'     => get_current_user_id(),
-			//회원 아이디
-			'OrdNm'      => $order->billing_first_name . $order->billing_last_name,
-			//주문자명
-			'OrdPhone'   => $order->billing_phone,
-			//주문자 전화번호
-			'OrdAddr'    => $order->billing_address,
-			// 주문자주소
-			'RcpNm'      => $order->billing_email,
-			//수신자명
-			'RcpPhone'   => $order->billing_phone,
-			//수신자 전화번호
-			'DlvAddr'    => $order->shipping_address,
-			// 배송지 주소
-			'Remark'     => '',
-			'CardSelect' => '',
+		                         'Job'        => $this->method_code,
+		                         //지불방법 코드
+		                         'StoreId'    => $this->ags_storeid,
+		                         //상점 아이디-20
+		                         'OrdNo'      => $order->id,
+		                         // 주문번호-40
+		                         'Amt'        => (int) $order->order_total,
+		                         //금액-12
+		                         'StoreNm'    => $this->ags_storenm,
+		                         //상점명-50
+		                         'ProdNm'     => sanitize_text_field( $item_name ),
+		                         // 상품명
+		                         'MallUrl'    => $this->ags_mallurl,
+		                         //상점 URL
+		                         'UserEmail'  => $order->billing_email,
+		                         //주문자 이메일
+		                         'UserId'     => get_current_user_id(),
+		                         //회원 아이디
+		                         'OrdNm'      => $order->billing_first_name . $order->billing_last_name,
+		                         //주문자명
+		                         'OrdPhone'   => $order->billing_phone,
+		                         //주문자 전화번호
+		                         'OrdAddr'    => $order->billing_address,
+		                         // 주문자주소
+		                         'RcpNm'      => $order->billing_email,
+		                         //수신자명
+		                         'RcpPhone'   => $order->billing_phone,
+		                         //수신자 전화번호
+		                         'DlvAddr'    => $order->shipping_address,
+		                         // 배송지 주소
+		                         'Remark'     => '',
+		                         'CardSelect' => '',
 		);
 
 		if ( $this->method_code == 'onlyhp' || $this->method_code == 'hp' ) {
 			$pay_form_args = array_merge( $pay_form_args, array( //핸드폰 소액결제 변수
-				'HP_ID'       => $this->ags_hp_id,
-				//CPID(발급된ID)-10
-				'HP_PWD'      => $this->ags_hp_pwd,
-				//CP비밀번호-10
-				'HP_SUBID'    => $this->ags_hp_subid,
-				//실거래 전화후 받은 상점만
-				'ProdCode'    => $this->ags_prodcode,
-				//발급받은 상품코드
-				'HP_UNITType' => $this->ags_unittype
-				//상품종류 디지털-1 실물-2
+			                                                     'HP_ID'       => $this->ags_hp_id,
+			                                                     //CPID(발급된ID)-10
+			                                                     'HP_PWD'      => $this->ags_hp_pwd,
+			                                                     //CP비밀번호-10
+			                                                     'HP_SUBID'    => $this->ags_hp_subid,
+			                                                     //실거래 전화후 받은 상점만
+			                                                     'ProdCode'    => $this->ags_prodcode,
+			                                                     //발급받은 상품코드
+			                                                     'HP_UNITType' => $this->ags_unittype
+			                                                     //상품종류 디지털-1 실물-2
 			) );
 		}
 
 		if ( $this->method_code == 'onlyvirtual' || $this->method_code == 'virtual' ) {
 			$pay_form_args = array_merge( $pay_form_args, array( //가상계좌
-				'MallPage'       => '/?wc-api=ags_pay_callback_virtual',
-				// 입/출금 통보를 위한 필수, 페이지주소는 도메인주소를 제외한 '/'이후 주소-100
-				'VIRTUAL_DEPODT' => '',
-				//입금가능한 기한을 지정하는 기능, 발급일자로부터 최대 15일 이내로만 설정, Default 발급일자로부터 5일 이후로 설정
+			                                                     'MallPage'       => '/?wc-api=ags_pay_callback_virtual',
+			                                                     // 입/출금 통보를 위한 필수, 페이지주소는 도메인주소를 제외한 '/'이후 주소-100
+			                                                     'VIRTUAL_DEPODT' => '',
+			                                                     //입금가능한 기한을 지정하는 기능, 발급일자로부터 최대 15일 이내로만 설정, Default 발급일자로부터 5일 이후로 설정
 			) );
 		}
 
@@ -336,6 +349,8 @@ class WC_Ags_Common extends WC_Payment_Gateway {
 
 		return $pay_form_inputs;
 	}
+
+	// 이걸 빼면 안됨
 
 	function js_and_css() {
 
@@ -361,7 +376,6 @@ class WC_Ags_Common extends WC_Payment_Gateway {
 		*/
 	}
 
-	// 이걸 빼면 안됨
 	function process_payment( $order_id ) {
 
 		//global $woocommerce;
@@ -385,20 +399,6 @@ class WC_Ags_Common extends WC_Payment_Gateway {
 
 		return $return_array;
 
-	}
-
-	function mobile_ok() {
-
-		$device = $_SERVER['HTTP_USER_AGENT'];
-		if ( stripos( $device, "Android" ) || stripos( $device,
-		                                               "iPhone" ) || stripos( $device,
-		                                                                      "iPod" ) || stripos( $device,
-		                                                                                           "iPad" )
-		) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
 	}
 
 	function order_received_text() {
@@ -483,7 +483,7 @@ class WC_Ags_Common extends WC_Payment_Gateway {
 			$order_id = $rOrdNo;
 			$order    = new WC_Order( $order_id );
 
-			Sym_Custom_Data::extend( $order );
+			WSKL_Sym_Custom_Data::extend( $order );
 
 			$order->custom->order_receipt_data = array(
 				'ags_retailer_id' => $rStoreId,
@@ -502,7 +502,7 @@ class WC_Ags_Common extends WC_Payment_Gateway {
 			$ags_send_no     = $custom_data['ags_send_no'];
 			$ags_send_dt     = $custom_data['ags_send_dt'];
 
-			$html = '주문에 감사드립니다. [신용카드] 결제시에만 <input type="button" value="영수증 인쇄" onclick="javascript:show_receipt();"> 가 발행 가능합니다.';
+			$html = '주문에 감사드립니다. [신용카드] 결제시에만 <input type="button" value="영수증 인쇄" onclick="show_receipt();"> 가 발행 가능합니다.';
 
 			$html .= '
 	<script language=javascript>
@@ -874,7 +874,7 @@ class Ags_Pay_Callback extends WC_Payment_Gateway {
 				<html>
 				<head>
 				</head>
-				<body onload="javascript:frmAGS_pay_ing.submit();">
+				<body onload="frmAGS_pay_ing.submit();">
 				<form name=frmAGS_pay_ing method=post action="<?= $return_url ?>">
 
 					<!-- 각 결제 공통 사용 변수 -->

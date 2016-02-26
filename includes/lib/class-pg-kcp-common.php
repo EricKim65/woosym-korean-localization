@@ -128,6 +128,20 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
 
   }
 
+  function mobile_ok() {
+
+    $device = $_SERVER['HTTP_USER_AGENT'];
+    if ( stripos( $device, "Android" ) || stripos( $device,
+                                                   "iPhone" ) || stripos( $device,
+                                                                          "iPod" ) || stripos( $device,
+                                                                                               "iPad" )
+    ) {
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
+
   function init_form_fields() {  // action에 포함되는 것이므로 include로 뺄수 없슴.
     $this->form_fields = array(
         'enabled'     => array(
@@ -280,7 +294,6 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
     return $pay_form_inputs;
   }
 
-
   function js_and_css() {
 
     if ( $this->enable_testmode != 'on' ) {
@@ -331,16 +344,6 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
 
     return $return_array;
 
-  }
-
-  function mobile_ok() {
-
-    $device = $_SERVER['HTTP_USER_AGENT'];
-    if ( stripos( $device, "Android" ) || stripos( $device, "iPhone" ) || stripos( $device, "iPod" ) || stripos( $device, "iPad" ) ) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   function order_received_text() {
@@ -493,7 +496,7 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
       $order_id = $ordr_idxx;
       $order    = new WC_Order( $order_id );
 
-      Sym_Custom_Data::extend( $order );
+      WSKL_Sym_Custom_Data::extend( $order );
       $order->custom->order_receipt_data = array(
           'kcp_tno'         => $tno,
           'kcp_amount'      => $amount,
@@ -831,13 +834,15 @@ class Kcp_Pay_Callback extends WC_Payment_Gateway {
     /* = -------------------------------------------------------------------------- = */
 
     if ( $res_cd == "9502" ) {
-      sym__log( plugins_url( '/homekcp/bin/pp_cli', __FILE__ ) . ' 화일의 실행권한을 755로 바꾸어 주세요 !' );
-      sym__alert( plugins_url( '/homekcp/bin/pp_cli', __FILE__ ) . ' 화일의 실행권한을 755로 바꾸어 주세요 !' );
+      wskl_sym__log( plugins_url( '/homekcp/bin/pp_cli',
+                                  __FILE__ ) . ' 화일의 실행권한을 755로 바꾸어 주세요 !' );
+      wskl_sym__alert( plugins_url( '/homekcp/bin/pp_cli',
+                                    __FILE__ ) . ' 화일의 실행권한을 755로 바꾸어 주세요 !' );
       exit;
     }
 
     if ( $res_cd != "0000" ) { // S202  방화벽 에러
-      sym__alert( ' Error Code -> ' . $res_cd );
+      wskl_sym__alert( ' Error Code -> ' . $res_cd );
       exit;
     }
 

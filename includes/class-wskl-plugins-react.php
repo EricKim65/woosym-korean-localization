@@ -9,7 +9,7 @@ if ( ! class_exists( 'WSKL_Plugins_React' ) ) :
 
 		public static function init() {
 
-			static::$sym_mvc_in_ours = WSKL_PATH . '/includes/lib/sym-mvc/sym-mvc-framework.php';
+			static::$sym_mvc_in_ours = WSKL_PATH . '/includes/lib/sym-mvc/wskl-sym-mvc-framework.php';
 		}
 
 		public static function notice_iamport_present() {
@@ -31,12 +31,6 @@ if ( ! class_exists( 'WSKL_Plugins_React' ) ) :
 
 			static::$sym_mvc = $plugin_file;
 			add_action( 'admin_init', array( __CLASS__, 'deactivate_sym_mvc_framework' ) );
-		}
-
-		public static function sym_mvc_framework_is_inactive( $plugin_file, $trigger ) {
-
-			/** @noinspection PhpIncludeInspection */
-			require_once( static::$sym_mvc_in_ours );
 		}
 
 		public static function deactivate_sym_mvc_framework() {

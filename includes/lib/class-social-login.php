@@ -31,6 +31,21 @@ class WSKL_Social_Login {
     add_action( 'init', array( __CLASS__, 'process_social_login' ) );
   }
 
+  public static function output_wordpress_login_form() {
+
+    $login_options = static::get_login_options();
+
+    if ( empty( $login_options ) ) {
+      return;
+    }
+
+    echo '<div class="auth-provider-wrapper"><h3>' . __( '소셜계정으로 로그인', 'wskl' ) . '</h3>';
+    foreach ( $login_options as $opt ) {
+      echo "<a href=\"{$opt['href']}\">{$opt['link_title']}</a>";
+    }
+    echo '</div>';
+  }
+
   private static function get_login_options() {
 
     $login_options = array();
@@ -78,41 +93,6 @@ class WSKL_Social_Login {
     return $login_options;
   }
 
-  public static function output_wordpress_login_form() {
-
-    $login_options = static::get_login_options();
-
-    if ( empty( $login_options ) ) {
-      return;
-    }
-
-    echo '<div class="auth-provider-wrapper"><h3>' . __( '소셜계정으로 로그인', 'wskl' ) . '</h3>';
-    foreach ( $login_options as $opt ) {
-      echo "<a href=\"{$opt['href']}\">{$opt['link_title']}</a>";
-    }
-    echo '</div>';
-  }
-
-  public function output_my_account_login_form() {
-
-    $login_options = static::get_login_options();
-
-    if ( empty( $login_options ) ) {
-      return;
-    }
-
-    ob_start(); ?>
-
-    <p class="form-row form-row-wide">
-    <h3><?php _e( '소셜계정으로 로그인', 'wskl' ) ?></h3>
-      <?php foreach ( $login_options as $opt ) : ?>
-        <a href="<?php echo $opt['href'] ?>"><?php echo $opt['link_title'] ?></a>
-      <?php endforeach; ?>
-    </p>
-
-    <?php echo ob_get_clean();
-  }
-
   public static function service_social_login_fb() {
 
     if ( ( isset( $_GET['sym-api'] ) && $_GET['sym-api'] == 'service-social-login-fb' ) ) {
@@ -134,7 +114,7 @@ class WSKL_Social_Login {
       $client->client_secret = get_option( wskl_get_option_name( 'fb_app_secret' ) );
 
       if ( strlen( $client->client_id ) == 0 || strlen( $client->client_secret ) == 0 ) {
-        sym__alert( '페이스북 연동키값을 확인해 주세요.' );
+        wskl_sym__alert( '페이스북 연동키값을 확인해 주세요.' );
       }
       /*
 			die('Please go to Facebook Apps page https://developers.facebook.com/apps , '.
@@ -170,7 +150,7 @@ class WSKL_Social_Login {
         //$client->ResetAccessToken();
 
         if ( ! trim( $mb_id ) || ! trim( $token_value ) ) {
-          sym__alert( "정보가 제대로 넘어오지 않아 오류가 발생했습니다." );
+          wskl_sym__alert( "정보가 제대로 넘어오지 않아 오류가 발생했습니다." );
         }
 
         $token_array  = urlencode( static::encryptIt( $mb_gubun . '|' . substr( str_replace( '|', '', $mb_id ), 0, 18 ) . '|' . $mb_name . '|' . $mb_nick . '|' . $mb_email ) );
@@ -181,10 +161,18 @@ class WSKL_Social_Login {
 
       } else {
         $error = HtmlSpecialChars( $client->error );
-        sym__alert( $error );
+        wskl_sym__alert( $error );
       }
 
     }
+  }
+
+  private static function encryptIt( $q ) {
+
+    $cryptKey = 'qJB0rGtIn5UB1xG03efyCp';
+    $qEncoded = base64_encode( mcrypt_encrypt( MCRYPT_RIJNDAEL_256, md5( $cryptKey ), $q, MCRYPT_MODE_CBC, md5( md5( $cryptKey ) ) ) );
+
+    return ( $qEncoded );
   }
 
   public static function service_social_login_naver() {
@@ -208,7 +196,7 @@ class WSKL_Social_Login {
       $client->client_secret = get_option( wskl_get_option_name( 'naver_client_secret' ) );
 
       if ( strlen( $client->client_id ) == 0 || strlen( $client->client_secret ) == 0 ) {
-        sym__alert( '페이스북 연동키값을 확인해 주세요.' );
+        wskl_sym__alert( '페이스북 연동키값을 확인해 주세요.' );
       }
 
       if ( $login == 'Y' ) {
@@ -246,7 +234,7 @@ class WSKL_Social_Login {
           //$client->ResetAccessToken();
 
           if ( ! trim( $mb_id ) || ! trim( $token_value ) ) {
-            sym__alert( "정보가 제대로 넘어오지 않아 오류가 발생했습니다." );
+            wskl_sym__alert( "정보가 제대로 넘어오지 않아 오류가 발생했습니다." );
           }
 
           $token_array  = urlencode( static::encryptIt( $mb_gubun . '|' . substr( str_replace( '|', '', $mb_id ), 0, 18 ) . '|' . $mb_name . '|' . $mb_nick . '|' . $mb_email ) );
@@ -339,20 +327,32 @@ class WSKL_Social_Login {
     }
   }
 
-  private static function encryptIt( $q ) {
-
-    $cryptKey = 'qJB0rGtIn5UB1xG03efyCp';
-    $qEncoded = base64_encode( mcrypt_encrypt( MCRYPT_RIJNDAEL_256, md5( $cryptKey ), $q, MCRYPT_MODE_CBC, md5( md5( $cryptKey ) ) ) );
-
-    return ( $qEncoded );
-  }
-
   private static function decryptIt( $q ) {
 
     $cryptKey = 'qJB0rGtIn5UB1xG03efyCp';
     $qDecoded = rtrim( mcrypt_decrypt( MCRYPT_RIJNDAEL_256, md5( $cryptKey ), base64_decode( $q ), MCRYPT_MODE_CBC, md5( md5( $cryptKey ) ) ), "\0" );
 
     return ( $qDecoded );
+  }
+
+  public function output_my_account_login_form() {
+
+    $login_options = static::get_login_options();
+
+    if ( empty( $login_options ) ) {
+      return;
+    }
+
+    ob_start(); ?>
+
+    <p class="form-row form-row-wide">
+    <h3><?php _e( '소셜계정으로 로그인', 'wskl' ) ?></h3>
+      <?php foreach ( $login_options as $opt ) : ?>
+        <a href="<?php echo $opt['href'] ?>"><?php echo $opt['link_title'] ?></a>
+      <?php endforeach; ?>
+    </p>
+
+    <?php echo ob_get_clean();
   }
 }
 

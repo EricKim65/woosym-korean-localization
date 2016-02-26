@@ -4,12 +4,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once( WSKL_PATH . '/includes/lib/sym-mvc/wskl-sym-mvc-framework.php' );
 require_once( WSKL_PATH . '/includes/lib/auth/class-auth.php' );
 require_once( WSKL_PATH . '/includes/lib/shipping-tracking/class-wskl-agent-helper.php' );
 require_once( WSKL_PATH . '/includes/class-wskl-payment-gates.php' );
 
 
-final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
+final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 	private static $_instance = NULL;
 
@@ -21,18 +22,6 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 
 		add_action( 'admin_enqueue_scripts',
 		            array( $this, 'callback_admin_enqueue_scripts' ) );
-	}
-
-	public function __clone() {
-
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wskl' ),
-		                 '2.1' );
-	}
-
-	public function __wakeup() {
-
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wskl' ),
-		                 '2.1' );
 	}
 
 	/**
@@ -49,6 +38,18 @@ final class Woosym_Korean_Localization_Settings extends Sym_Mvc_Settings {
 		}
 
 		return self::$_instance;
+	}
+
+	public function __clone() {
+
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wskl' ),
+		                 '2.1' );
+	}
+
+	public function __wakeup() {
+
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wskl' ),
+		                 '2.1' );
 	}
 
 	public function add_menu_item() {  // Add settings page to admin menu

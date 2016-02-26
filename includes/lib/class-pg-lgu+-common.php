@@ -125,10 +125,19 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
 
     }
 
+    function mobile_ok() {
+        $device = $_SERVER['HTTP_USER_AGENT'];
+        if (stripos($device, "Android") || stripos($device, "iPhone") || stripos($device, "iPod") || stripos($device, "iPad")) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     function init_form_fields() {  // action에 포함되는 것이므로 include로 뺄수 없슴.
         $this->form_fields = array('enabled' => array('title' => __('활성화/비활성화', $this->_folder), 'type' => 'checkbox', 'label' => __('해당 결제방법을 활성화합니다.<br/> 활성화 후에 상단에 있는 [결제 옵션]-[지불게이트 웨이]메뉴에서 [회원 결제 페이지]의 표시 순서를 조정하십시요. ', $this->_folder), 'default' => 'yes'), 'title' => array('title' => __('제목', $this->_folder), 'type' => 'text', 'description' => __(' [회원 결제 페이지]에 보여지는 제목입니다.', $this->_folder), 'default' => __($this->frontend_title, $this->_folder),), 'description' => array('title' => __('설명', $this->_folder), 'type' => 'textarea', 'description' => __(' [회원 결제 페이지]에 보여지는 설명입니다.', $this->_folder), 'default' => __($this->frontend_desc, $this->_folder)),);
     }
-
 
     function order_pay_page($order_id) {
         $order = new WC_Order($order_id);
@@ -251,7 +260,6 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
         return $pay_form_inputs;
     }
 
-
     function js_and_css() {
 
         if ($this->enable_testmode != 'on') {
@@ -302,16 +310,6 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
         }
         return $return_array;
 
-    }
-
-    function mobile_ok() {
-        $device = $_SERVER['HTTP_USER_AGENT'];
-        if (stripos($device, "Android") || stripos($device, "iPhone") || stripos($device, "iPod") || stripos($device, "iPad")) {
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 
     function order_received_text() {
@@ -464,7 +462,7 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
         $order_id = $ordr_idxx;
         $order = new WC_Order($order_id);
 
-        Sym_Custom_Data::extend($order);
+        WSKL_Sym_Custom_Data::extend( $order);
         $order->custom->order_receipt_data =  array(
             'kcp_tno' => $tno,
             'kcp_amount' => $amount,
@@ -814,8 +812,8 @@ class Kcp_Pay_Callback extends WC_Payment_Gateway {
 
 
         if( $res_cd == "9502" ) {
-            sym__log( plugins_url( '/bin/pp_cli', __FILE__ ). ' 화일의 실행권한을 755로 바꾸어 주세요 !');
-            sym__alert( plugins_url( '/bin/pp_cli', __FILE__ ). ' 화일의 실행권한을 755로 바꾸어 주세요 !');
+            wskl_sym__log( plugins_url( '/bin/pp_cli', __FILE__ ) . ' 화일의 실행권한을 755로 바꾸어 주세요 !');
+            wskl_sym__alert( plugins_url( '/bin/pp_cli', __FILE__ ) . ' 화일의 실행권한을 755로 바꾸어 주세요 !');
             exit;
         }
 
