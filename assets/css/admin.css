@@ -12,9 +12,12 @@
 }
 
 pre.wskl-log-display {
+    background-color: #222222;
+    color: #e8e4e3;
+    font-family: "inconsolata", monospace;
+    font-style: normal;
     height: 300px;
     overflow-y: auto;
     white-space: pre-wrap;
-    font-family: "inconsolata", monospace;
-    font-style: normal;
+    padding-left: 20px;
 }
