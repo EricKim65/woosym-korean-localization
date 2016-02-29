@@ -77,12 +77,13 @@ class WSKL_Combined_Tax {
 			add_filter( 'woocommerce_pay_form_args',
 			            array( __CLASS__, 'callback_pay_form_args' ), 20 );
 
-			// 완전히 다른 세금 클래스인 경우는
-			/** 배송비의 부가세를 판단한다. 만일 비과세 상품으로만 쇼핑을 한 경우 배송비에 대해 부가세를 부여한다. */
-			add_filter( 'woocommerce_package_rates', array(
-				__CLASS__,
-				'callback_woocommerce_package_rates',
-			), 10, 2 );
+			// 완전히 다른 세금 클래스인 경우는 이런 필터링을 걸쳐야 하지만,
+			// 과세/비과세를 담당하는 클래스를 Standard, Zero Rate 로 잡으면 굳이 필요 없다.
+			//			/** 배송비의 부가세를 판단한다. 만일 비과세 상품으로만 쇼핑을 한 경우 배송비에 대해 부가세를 부여한다. */
+			//			add_filter( 'woocommerce_package_rates', array(
+			//				__CLASS__,
+			//				'callback_woocommerce_package_rates',
+			//			), 10, 2 );
 		}
 	}
 
@@ -98,13 +99,14 @@ class WSKL_Combined_Tax {
 
 		if ( wskl_is_option_enabled( 'enable_combined_tax' ) ) {
 
+			$tax_class = sanitize_title( static::$predefined_tax_classes[0] );
 			/** @var array $vat_tax_rate 과세 클래스의 세율 */
 			$vat_tax_rate = WC_Tax::find_rates( array(
 				                                    'country'   => 'KR',
 				                                    'state'     => '',
 				                                    'city'      => '',
 				                                    'postcode'  => '',
-				                                    'tax_class' => sanitize_title( static::$predefined_tax_classes[0] ),
+				                                    'tax_class' => ( $tax_class == 'standard' ) ? '' : $tax_class,
 			                                    ) );
 
 			$vat_tax_keys = array_keys( $vat_tax_rate );
