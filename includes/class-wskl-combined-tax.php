@@ -472,24 +472,29 @@ class WSKL_Combined_Tax {
 		 * (부가가치세)      = 과세상품의 부가가치세
 		 */
 
-		// 부가가치세
-		$taxes_total = WC()->cart->get_taxes_total();
+		$order = wc_get_order( $pay_form_args['ordr_idxx'] );
 
-		// 배송비
-		$shipping_price = WC()->cart->shipping_total;
-		$shipping_tax   = wc_round_tax_total( WC()->cart->shipping_tax_total );
+		$taxes_total = $order->get_total_tax();
 
-		// 과세/비과세 승인금액의 합.
-		$supply_value_vat     = $shipping_price - $taxes_total;
+		// 배송비 공급가 (즉, 세금 없는 가격)
+		$shipping_price = $order->get_total_shipping();
+
+		// 과세/비과세 승인금액의 합. 각각의 공급가를 더함. 배송료는 부가세 포함이므로 미리 넣음.
+		$supply_value_vat = $shipping_price;
 		$supply_value_non_vat = 0;
 
-		foreach ( WC()->cart->get_cart() as $item ) {
+		foreach ( $order->get_items() as $item ) {
 			if ( $item['line_tax'] == 0 ) {
-				$supply_value_non_vat += ( $item['data']->price * $item['quantity'] ); // 비과세상품
+				$supply_value_non_vat += $item['line_total'];  // 비과세상품
 			} else {
-				$supply_value_vat += ( $item['data']->price * $item['quantity'] ); // 과세상품
+				$supply_value_vat += wc_round_tax_total( $item['line_total'] );
 			}
 		}
+
+		$total_price = $order->get_total();
+		assert(
+			( $supply_value_vat + $supply_value_non_vat + $taxes_total ) == $total_price
+		);
 
 		// 과세 승인금액
 		$pay_form_args['comm_tax_mny'] = $supply_value_vat;
@@ -498,7 +503,7 @@ class WSKL_Combined_Tax {
 		$pay_form_args['comm_free_mny'] = $supply_value_non_vat;
 
 		// 부가가치세
-		$pay_form_args['comm_vat_mny'] = $taxes_total + $shipping_tax;
+		$pay_form_args['comm_vat_mny'] = $taxes_total;
 
 		return $pay_form_args;
 	}
