@@ -61,21 +61,29 @@ class WSKL_Combined_Tax {
 		}
 
 		/** 복합과세 옵션 업데이트. 복합과세가 활성화되면 관련 설정을 초기화. */
-		add_action( 'update_option_' . wskl_get_option_name( 'enable_combined_tax' ),
-		            array( __CLASS__, 'callback_init_combined_tax_classes' ),
-		            10, 3 );
+		add_action(
+			'update_option_' . wskl_get_option_name( 'enable_combined_tax' ),
+			array( __CLASS__, 'callback_init_combined_tax_classes' ),
+			10,
+			3
+		);
 
 		if ( wskl_is_option_enabled( 'hide_display_cart_tax' ) ) {
 			/** 부가세 항목이 합계와 같이 출력되는 것을 숨긴다.  */
-			add_filter( 'woocommerce_cart_totals_order_total_html',
-			            array( __CLASS__, 'callback_hide_include_tax' ) );
+			add_filter(
+				'woocommerce_cart_totals_order_total_html',
+				array( __CLASS__, 'callback_hide_include_tax' )
+			);
 		}
 
 		if ( wskl_is_option_enabled( 'enable_combined_tax' ) ) {
 
 			/** 결제 단계에서 각 PG 마다 과세 설정에 대한 세부 옵션을 조정한다. */
-			add_filter( 'woocommerce_pay_form_args',
-			            array( __CLASS__, 'callback_pay_form_args' ), 20 );
+			add_filter(
+				'woocommerce_pay_form_args',
+				array( __CLASS__, 'callback_pay_form_args' ),
+				20
+			);
 
 			// 완전히 다른 세금 클래스인 경우는 이런 필터링을 걸쳐야 하지만,
 			// 과세/비과세를 담당하는 클래스를 Standard, Zero Rate 로 잡으면 굳이 필요 없다.
@@ -101,13 +109,15 @@ class WSKL_Combined_Tax {
 
 			$tax_class = sanitize_title( static::$predefined_tax_classes[0] );
 			/** @var array $vat_tax_rate 과세 클래스의 세율 */
-			$vat_tax_rate = WC_Tax::find_rates( array(
-				                                    'country'   => 'KR',
-				                                    'state'     => '',
-				                                    'city'      => '',
-				                                    'postcode'  => '',
-				                                    'tax_class' => ( $tax_class == 'standard' ) ? '' : $tax_class,
-			                                    ) );
+			$vat_tax_rate = WC_Tax::find_rates(
+				array(
+					'country'   => 'KR',
+					'state'     => '',
+					'city'      => '',
+					'postcode'  => '',
+					'tax_class' => ( $tax_class == 'standard' ) ? '' : $tax_class,
+				)
+			);
 
 			$vat_tax_keys = array_keys( $vat_tax_rate );
 
@@ -126,13 +136,17 @@ class WSKL_Combined_Tax {
 			}
 
 			/** @var array $tax_free_rate 비과세 클래스의 세율. 자명히, 0.0% */
-			$tax_free_rate = WC_Tax::find_rates( array(
-				                                     'country'   => 'KR',
-				                                     'state'     => '',
-				                                     'city'      => '',
-				                                     'postcode'  => '',
-				                                     'tax_class' => sanitize_title( static::$predefined_tax_classes[1] ),
-			                                     ) );
+			$tax_free_rate = WC_Tax::find_rates(
+				array(
+					'country'   => 'KR',
+					'state'     => '',
+					'city'      => '',
+					'postcode'  => '',
+					'tax_class' => sanitize_title(
+						static::$predefined_tax_classes[1]
+					),
+				)
+			);
 
 			$tax_free_rate_keys = array_keys( $tax_free_rate );
 
@@ -190,20 +204,36 @@ class WSKL_Combined_Tax {
 	 */
 	private static function init_tax_classes() {
 
-		$standard_class_pos = array_search( 'Standard',
-		                                    static::$predefined_tax_classes );
+		$standard_class_pos = array_search(
+			'Standard',
+			static::$predefined_tax_classes
+		);
 		if ( $standard_class_pos !== FALSE ) {
-			$tax_classes = array_merge( array_slice( static::$predefined_tax_classes,
-			                                         0, $standard_class_pos ),
-			                            array_slice( static::$predefined_tax_classes,
-			                                         $standard_class_pos + 1 ) );
+			$tax_classes = array_merge(
+				array_slice(
+					static::$predefined_tax_classes,
+					0,
+					$standard_class_pos
+				),
+				array_slice(
+					static::$predefined_tax_classes,
+					$standard_class_pos + 1
+				)
+			);
 		} else {
 			$tax_classes = &static::$predefined_tax_classes;
 		}
 
-		$redefined = array_map( 'trim', array_merge( $tax_classes,
-		                                             array_diff( WC_Tax::get_tax_classes(),
-		                                                         $tax_classes ) ) );
+		$redefined = array_map(
+			'trim',
+			array_merge(
+				$tax_classes,
+				array_diff(
+					WC_Tax::get_tax_classes(),
+					$tax_classes
+				)
+			)
+		);
 
 		update_option( 'woocommerce_tax_classes', implode( "\n", $redefined ) );
 
@@ -219,30 +249,36 @@ class WSKL_Combined_Tax {
 		 *                   - shipping
 		 *                   - compound
 		 */
-		$taxed = WC_Tax::find_rates( array(
-			                             'country'   => 'KR',
-			                             'state'     => '',
-			                             'city'      => '',
-			                             'postcode'  => '',
-			                             'tax_class' => $taxed_class,
-		                             ) );
+		$taxed = WC_Tax::find_rates(
+			array(
+				'country'   => 'KR',
+				'state'     => '',
+				'city'      => '',
+				'postcode'  => '',
+				'tax_class' => $taxed_class,
+			)
+		);
 
 		$taxed_rate_label = static::$predefined_tax_rates[0]; //과세율
-		$taxed_rate_found = static::find_tax_rate_label( $taxed,
-		                                                 $taxed_rate_label );
+		$taxed_rate_found = static::find_tax_rate_label(
+			$taxed,
+			$taxed_rate_label
+		);
 
 		if ( ! $taxed_rate_found ) {
-			WC_Tax::_insert_tax_rate( array(
-				                          'tax_rate_country'  => 'KR',
-				                          'tax_rate_state'    => '',
-				                          'tax_rate'          => '10.00',
-				                          'tax_rate_name'     => $taxed_rate_label,
-				                          'tax_rate_priority' => 1,
-				                          'tax_rate_shipping' => 1,
-				                          'tax_rate_compound' => 0,
-				                          'tax_rate_order'    => 0,
-				                          'tax_rate_class'    => $taxed_class,
-			                          ) );
+			WC_Tax::_insert_tax_rate(
+				array(
+					'tax_rate_country'  => 'KR',
+					'tax_rate_state'    => '',
+					'tax_rate'          => '10.00',
+					'tax_rate_name'     => $taxed_rate_label,
+					'tax_rate_priority' => 1,
+					'tax_rate_shipping' => 1,
+					'tax_rate_compound' => 0,
+					'tax_rate_order'    => 0,
+					'tax_rate_class'    => $taxed_class,
+				)
+			);
 		}
 
 		///////////////////////////////////////////////
@@ -251,31 +287,37 @@ class WSKL_Combined_Tax {
 		$untaxed_class = sanitize_title( static::$predefined_tax_classes[1] );
 
 		/** @var array $untaxed */
-		$untaxed = WC_Tax::find_rates( array(
-			                               'country'   => 'KR',
-			                               'state'     => '',
-			                               'city'      => '',
-			                               'postcode'  => '',
-			                               'tax_class' => $untaxed_class,
-		                               ) );
+		$untaxed = WC_Tax::find_rates(
+			array(
+				'country'   => 'KR',
+				'state'     => '',
+				'city'      => '',
+				'postcode'  => '',
+				'tax_class' => $untaxed_class,
+			)
+		);
 
 		$untaxed_rate_label = static::$predefined_tax_rates[1]; // 비과세율
-		$untaxed_rate_found = static::find_tax_rate_label( $untaxed,
-		                                                   $untaxed_rate_label );
+		$untaxed_rate_found = static::find_tax_rate_label(
+			$untaxed,
+			$untaxed_rate_label
+		);
 
 
 		if ( ! $untaxed_rate_found ) {
-			WC_Tax::_insert_tax_rate( array(
-				                          'tax_rate_country'  => 'KR',
-				                          'tax_rate_state'    => '',
-				                          'tax_rate'          => '0.00',
-				                          'tax_rate_name'     => $untaxed_rate_label,
-				                          'tax_rate_priority' => 1,
-				                          'tax_rate_shipping' => 0,
-				                          'tax_rate_compound' => 0,
-				                          'tax_rate_order'    => 0,
-				                          'tax_rate_class'    => $untaxed_class,
-			                          ) );
+			WC_Tax::_insert_tax_rate(
+				array(
+					'tax_rate_country'  => 'KR',
+					'tax_rate_state'    => '',
+					'tax_rate'          => '0.00',
+					'tax_rate_name'     => $untaxed_rate_label,
+					'tax_rate_priority' => 1,
+					'tax_rate_shipping' => 0,
+					'tax_rate_compound' => 0,
+					'tax_rate_order'    => 0,
+					'tax_rate_class'    => $untaxed_class,
+				)
+			);
 		}
 	}
 
@@ -354,16 +396,24 @@ class WSKL_Combined_Tax {
 	 */
 	private static function reset_tax_classes() {
 
-		$redefined = array_map( 'trim', array_diff( WC_Tax::get_tax_classes(),
-		                                            static::$predefined_tax_classes ) );
+		$redefined = array_map(
+			'trim',
+			array_diff(
+				WC_Tax::get_tax_classes(),
+				static::$predefined_tax_classes
+			)
+		);
 
 		update_option( 'woocommerce_tax_classes', implode( "\n", $redefined ) );
 	}
 
 	public static function callback_hide_include_tax( $value ) {
 
-		$value = preg_replace( '/<small class="includes_tax">.+<\/small>/', '',
-		                       $value );
+		$value = preg_replace(
+			'/<small class="includes_tax">.+<\/small>/',
+			'',
+			$value
+		);
 
 		return $value;
 	}
@@ -375,10 +425,13 @@ class WSKL_Combined_Tax {
 		$pg_agency = wskl_get_option( 'pg_agency' );
 
 		if ( method_exists( __CLASS__, "combined_tax_{$pg_agency}" ) ) {
-			return call_user_func_array( array(
-				                             __CLASS__,
-				                             "combined_tax_{$pg_agency}",
-			                             ), array( $pay_form_args, ) );
+			return call_user_func_array(
+				array(
+					__CLASS__,
+					"combined_tax_{$pg_agency}",
+				),
+				array( $pay_form_args, )
+			);
 		}
 
 		return $pay_form_args;
@@ -428,8 +481,6 @@ class WSKL_Combined_Tax {
 
 		return $pay_form_args;
 	}
-
-
 }
 
 
