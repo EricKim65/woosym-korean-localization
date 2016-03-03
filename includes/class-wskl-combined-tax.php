@@ -95,6 +95,7 @@ class WSKL_Combined_Tax {
 		}
 	}
 
+	/** @noinspection PhpUnusedLocalVariableInspection */
 	/**
 	 * @filter  woocommerce_package_rates
 	 *
@@ -103,7 +104,11 @@ class WSKL_Combined_Tax {
 	 *
 	 * @return array
 	 */
-	public static function callback_woocommerce_package_rates( array $rates, $package ) {
+	public static function callback_woocommerce_package_rates(
+		array $rates,
+		/** @noinspection PhpUnusedParameterInspection */
+		$package
+	) {
 
 		if ( wskl_is_option_enabled( 'enable_combined_tax' ) ) {
 
@@ -189,11 +194,17 @@ class WSKL_Combined_Tax {
 	 * @param $value
 	 * @param $option
 	 */
-	public static function callback_init_combined_tax_classes( $old_value, $value, $option ) {
+	public static function callback_init_combined_tax_classes(
+		/** @noinspection PhpUnusedParameterInspection */
+		$old_value,
+		$value,
+		/** @noinspection PhpUnusedParameterInspection */
+		$option
+	) {
 
 		if ( $value == 'on' ) {
 			static::init_tax_classes();
-			static::set_tax_options();
+			// static::set_tax_options();  // 조정의 여지가 있어 주석화.
 		} else {
 			static::reset_tax_classes();
 		}
@@ -345,6 +356,52 @@ class WSKL_Combined_Tax {
 	/**
 	 * @used-by callback_init_combined_tax_classes
 	 */
+	private static function reset_tax_classes() {
+
+		$redefined = array_map(
+			'trim',
+			array_diff(
+				WC_Tax::get_tax_classes(),
+				static::$predefined_tax_classes
+			)
+		);
+
+		update_option( 'woocommerce_tax_classes', implode( "\n", $redefined ) );
+	}
+
+	public static function callback_hide_include_tax( $value ) {
+
+		$value = preg_replace(
+			'/<small class="includes_tax">.+<\/small>/',
+			'',
+			$value
+		);
+
+		return $value;
+	}
+
+	public static function callback_pay_form_args( array $pay_form_args ) {
+
+		// var_dump( $pay_form_args );
+
+		$pg_agency = wskl_get_option( 'pg_agency' );
+
+		if ( method_exists( __CLASS__, "combined_tax_{$pg_agency}" ) ) {
+			return call_user_func_array(
+				array(
+					__CLASS__,
+					"combined_tax_{$pg_agency}",
+				),
+				array( $pay_form_args, )
+			);
+		}
+
+		return $pay_form_args;
+	}
+
+	/**
+	 * @used-by callback_init_combined_tax_classes
+	 */
 	private static function set_tax_options() {
 
 		///////////////////////////////////////////////////////////////////////
@@ -391,52 +448,16 @@ class WSKL_Combined_Tax {
 		update_option( 'woocommerce_flat_rate_settings', $flat_rate_settings );
 	}
 
+
+	/** @noinspection PhpUnusedPrivateMethodInspection */
+
 	/**
-	 * @used-by callback_init_combined_tax_classes
+	 * @used-by callback_pay_form_args
+	 *
+	 * @param array $pay_form_args
+	 *
+	 * @return array
 	 */
-	private static function reset_tax_classes() {
-
-		$redefined = array_map(
-			'trim',
-			array_diff(
-				WC_Tax::get_tax_classes(),
-				static::$predefined_tax_classes
-			)
-		);
-
-		update_option( 'woocommerce_tax_classes', implode( "\n", $redefined ) );
-	}
-
-	public static function callback_hide_include_tax( $value ) {
-
-		$value = preg_replace(
-			'/<small class="includes_tax">.+<\/small>/',
-			'',
-			$value
-		);
-
-		return $value;
-	}
-
-	public static function callback_pay_form_args( array $pay_form_args ) {
-
-		// var_dump( $pay_form_args );
-
-		$pg_agency = wskl_get_option( 'pg_agency' );
-
-		if ( method_exists( __CLASS__, "combined_tax_{$pg_agency}" ) ) {
-			return call_user_func_array(
-				array(
-					__CLASS__,
-					"combined_tax_{$pg_agency}",
-				),
-				array( $pay_form_args, )
-			);
-		}
-
-		return $pay_form_args;
-	}
-
 	private static function combined_tax_kcp( array $pay_form_args ) {
 
 		// 복합과세를 위한 서비스 코드
