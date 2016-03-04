@@ -582,14 +582,20 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'enable_combined_tax',
 					'label'       => __( '복합과세 활성화', 'wskl' ),
-					'description' => __( '복합과세 설정을 합니다.', 'wskl' ),
+					'description' => __(
+						'복합과세 설정을 합니다. 신용카드 결제 적용시 플러그인 제작사와 상의해주십시요.',
+						'wskl'
+					),
 					'type'        => 'checkbox',
 					'default'     => '',
 				),
 				array(
 					'id'          => 'hide_display_cart_tax',
-					'label'       => __( '장바구니의 세금액 숨기기', 'wskl' ),
-					'description' => __( '복합과세 활성화시 장바구니에 별도로 출력되는 세금 항목을 숨깁니다', 'wskl' ),
+					'label'       => __( '결제페이지의 세금액 숨기기', 'wskl' ),
+					'description' => __(
+						'복합과세 활성화시 결제 페이지에 표시되는 세금 항목을 숨깁니다.',
+						'wskl'
+					),
 					'type'        => 'checkbox',
 					'default'     => '',
 				),
@@ -853,8 +859,11 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			),
 		);
 
-
 		$settings['market_auto'] = include( WSKL_PATH . '/includes/admin/settings/marketing-automation.php' );
+
+		if ( wskl_lab_enabled() ) {
+			$settings['lab'] = include( WSKL_PATH . '/includes/admin/settings/lab.php' );
+		}
 
 		if ( wskl_debug_enabled() ) {
 			$settings['developer'] = include( WSKL_PATH . '/includes/admin/settings/developer.php' );

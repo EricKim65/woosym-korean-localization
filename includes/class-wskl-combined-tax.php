@@ -55,8 +55,8 @@ class WSKL_Combined_Tax {
 
 		if ( ! static::$predefined_tax_rates ) {
 			static::$predefined_tax_rates = array(
-				__( '복합과세 과세율', 'wskl' ),
-				__( '복합과세 비과세율', 'wskl' ),
+				__( '부가세율', 'wskl' ),
+				__( '부가세율', 'wskl' ),
 			);
 		}
 
@@ -382,11 +382,15 @@ class WSKL_Combined_Tax {
 
 	public static function callback_pay_form_args( array $pay_form_args ) {
 
-		// var_dump( $pay_form_args );
-
 		$pg_agency = wskl_get_option( 'pg_agency' );
 
-		if ( method_exists( __CLASS__, "combined_tax_{$pg_agency}" ) ) {
+		if ( wskl_is_option_enabled(
+			     "enable_combined_tax_{$pg_agency}"
+		     ) && method_exists(
+			     __CLASS__,
+			     "combined_tax_{$pg_agency}"
+		     )
+		) {
 			return call_user_func_array(
 				array(
 					__CLASS__,
@@ -480,7 +484,7 @@ class WSKL_Combined_Tax {
 		$shipping_price = $order->get_total_shipping();
 
 		// 과세/비과세 승인금액의 합. 각각의 공급가를 더함. 배송료는 부가세 포함이므로 미리 넣음.
-		$supply_value_vat = $shipping_price;
+		$supply_value_vat     = $shipping_price;
 		$supply_value_non_vat = 0;
 
 		foreach ( $order->get_items() as $item ) {
