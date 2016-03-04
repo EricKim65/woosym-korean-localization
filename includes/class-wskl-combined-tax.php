@@ -480,25 +480,20 @@ class WSKL_Combined_Tax {
 
 		$taxes_total = $order->get_total_tax();
 
-		// 배송비 공급가 (즉, 세금 없는 가격)
-		$shipping_price = $order->get_total_shipping();
-
-		// 과세/비과세 승인금액의 합. 각각의 공급가를 더함. 배송료는 부가세 포함이므로 미리 넣음.
-		$supply_value_vat     = $shipping_price;
+		// 과세/비과세 승인금액의 합. 비과세는 공급가를 더함.
 		$supply_value_non_vat = 0;
 
 		foreach ( $order->get_items() as $item ) {
 			if ( $item['line_tax'] == 0 ) {
 				$supply_value_non_vat += $item['line_total'];  // 비과세상품
-			} else {
+			} /* else {
 				$supply_value_vat += wc_round_tax_total( $item['line_total'] );
-			}
+			} */
 		}
 
 		$total_price = $order->get_total();
-		assert(
-			( $supply_value_vat + $supply_value_non_vat + $taxes_total ) == $total_price
-		);
+
+		$supply_value_vat = $total_price - $supply_value_non_vat - $taxes_total;
 
 		// 과세 승인금액
 		$pay_form_args['comm_tax_mny'] = $supply_value_vat;
