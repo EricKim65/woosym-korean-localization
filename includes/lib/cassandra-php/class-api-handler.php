@@ -13,12 +13,11 @@ function wskl_get_host_api_url() {
 
 		$url = wskl_get_option( 'develop_cassandra_url' );
 
-		return !empty( $url ) ? $url : WSKL_HOST_API_URL;
+		return ! empty( $url ) ? $url : WSKL_HOST_API_URL;
 	}
 
 	return WSKL_HOST_API_URL;
 }
-
 
 
 /**
@@ -30,14 +29,16 @@ function wskl_get_host_api_url() {
  */
 class BadResponseException extends \Exception {
 
-}
+	function handle_bad_response( $method ) {
 
-
-function handle_bad_response( $method, BadResponseException &$e ) {
-
-	$message = sprintf( '%s(): Bad response occurred. "%s"', $method, $e->getMessage() );
-	error_log( $message );
-	wp_die( $message );
+		$message = sprintf(
+			'Method %s(): Bad response occurred. Message: "%s"',
+			$method,
+			$this->getMessage()
+		);
+		error_log( $message );
+		wp_die( $message );
+	}
 }
 
 
@@ -58,16 +59,23 @@ class Rest_Api_Helper {
 	 * @param mixed  $body    전송하는 데이터. 기본은 빈 배열
 	 * @param array  $accepts 성공으로 간주할 원격지 응답. 기본은 array(200, )
 	 * @param array  $headers 추가 헤더.
-	 * @param bool   $throws  연결, 혹은 응답 코드에 문제가 있을 경우 예외처리를 하는가? FALSE 면 함수의 리턴은 FALSE
 	 *
-	 * @return array|bool 두 개의 키로 구성됨. 키는 'code', 'body' 이며 각각 원격지의 응답 코드와 응답 본문이 담경 씨다.
-	 *                    헤더 중 content-type 필드의 값이 application/json 인 경우 body 값은 미리 파싱하여 \stdClass 로 만든다.
-	 *                    만약 throws 파라미터가 FALSE 일 때 기대하지 않은 응답이 올 경우 FALSE 를 리턴한다.
+	 * @return array|bool 두 개의 키로 구성됨. 키는 'code', 'body' 이며 각각 원격지의 응답 코드와 응답
+	 *                    본문이 담경 씨다. 헤더 중 content-type 필드의 값이 application/json
+	 *                    인 경우 body 값은 미리 파싱하여 \stdClass 로 만든다. 만약 throws 파라미터가
+	 *                    FALSE 일 때 기대하지 않은 응답이 올 경우 FALSE 를 리턴한다.
 	 *
 	 *
-	 * @throws BadResponseException 의도한 응답 코드가 아닐 경우 던지는 예외. $throws 가 TRUE 일 때 동작 (기본)
+	 * @throws BadResponseException 의도한 응답 코드가 아닐 경우 던지는 예외. $throws 가 TRUE 일 때
+	 *                              동작 (기본)
 	 */
-	public static function request( $url, $method, $body = NULL, array $accepts = array( 200, ), array $headers = array(), $throws = FALSE ) {
+	public static function request(
+		$url,
+		$method,
+		$body = NULL,
+		array $accepts = array( 200, ),
+		array $headers = array()
+	) {
 
 		$args = array(
 			'headers' => &$headers,
@@ -79,14 +87,12 @@ class Rest_Api_Helper {
 
 		if ( is_wp_error( $response ) ) {
 
-			$message = sprintf( 'Response is WP_Error object: %s', $response->get_error_message() );
+			$message = sprintf(
+				'Response is WP_Error object: %s',
+				$response->get_error_message()
+			);
 
-			if ( $throws ) {
-				throw new BadResponseException( $message );
-			} else {
-				error_log( $message );
-				return FALSE;
-			}
+			throw new BadResponseException( $message );
 		}
 
 		$response_code = wp_remote_retrieve_response_code( $response );
@@ -94,14 +100,13 @@ class Rest_Api_Helper {
 
 		if ( array_search( $response_code, $accepts ) === FALSE ) {
 
-			$message = sprintf( "Invalid response code '%s', message: %s", $response_code, $response_body );
+			$message = sprintf(
+				"Invalid response code '%s', message: %s",
+				$response_code,
+				$response_body
+			);
 
-			if ( $throws ) {
-				throw new BadResponseException( $message );
-			} else {
-				error_log( $message );
-				return FALSE;
-			}
+			throw new BadResponseException( $message );
 		}
 
 		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
@@ -119,7 +124,13 @@ class Rest_Api_Helper {
 
 class ClientAPI {
 
-	public static function activate( $key_type, $key_value, $site_url, $company_name = '', $activate = FALSE ) {
+	public static function activate(
+		$key_type,
+		$key_value,
+		$site_url,
+		$company_name = '',
+		$activate = FALSE
+	) {
 
 		assert( $key_type && $key_value && $site_url );
 
@@ -136,14 +147,19 @@ class ClientAPI {
 				'activate'     => $activate,
 			);
 
-			$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 200, 403, ) );
+			$response = Rest_Api_Helper::request(
+				$url,
+				'POST',
+				$body,
+				array( 200, 403, )
+			);
 
 			if ( $response['code'] == 200 ) {
 				$obj = OrderItemRelation::from_response( $response['body'] );
 			}
 
 		} catch( BadResponseException $e ) {
-			handle_bad_response( __METHOD__, $e );
+			$e->handle_bad_response( __METHOD__ );
 		}
 
 		return $obj;
@@ -164,9 +180,15 @@ class ClientAPI {
 			'site_url'  => &$site_url,
 		);
 
-		$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 200, 403, ), array(), FALSE );
+		$response = Rest_Api_Helper::request(
+			$url,
+			'POST',
+			$body,
+			array( 200, 403, ),
+			array()
+		);
 
-		if ( is_array( $response ) ) {
+		try {
 
 			assert( isset( $response['code'] ) && isset( $response['body'] ) );
 
@@ -174,14 +196,8 @@ class ClientAPI {
 				$obj = OrderItemRelation::from_response( $response['body'] );
 			}
 
-			// $obj 은 계속 NULL 값으로 진행.
-
-		} else if ( $response === FALSE ) {
-
-			// 이 경우 연결 자체가 성립하지 않음을 뜻함.
-			// FALSE: 서버 연결이 되지 않았음.
-			// NULL: 서버 연결은 되었으나 기대한 응답이 오지 않음 (인증실패)
-			return FALSE;
+		} catch( BadResponseException $e ) {
+			$e->handle_bad_response( __METHOD__ );
 		}
 
 		return $obj;
@@ -191,21 +207,41 @@ class ClientAPI {
 
 class SalesAPI {
 
-	public static function send_data( $key_type, $key_value, $site_url, $user_id, $order ) {
+	public static function send_data(
+		$key_type,
+		$key_value,
+		$site_url,
+		$user_id,
+		$order
+	) {
 
 		$obj = NULL;
 
 		try {
 
 			$url     = wskl_get_host_api_url() . '/logs/sales/';
-			$body    = json_encode( static::create_body( $key_type, $key_value, $site_url, $user_id, $order ) );
+			$body    = json_encode(
+				static::create_body(
+					$key_type,
+					$key_value,
+					$site_url,
+					$user_id,
+					$order
+				)
+			);
 			$headers = array( 'content-type' => 'application/json', );
 
-			$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 201, ), $headers );
+			$response = Rest_Api_Helper::request(
+				$url,
+				'POST',
+				$body,
+				array( 201, ),
+				$headers
+			);
 			$obj      = Sales::from_response( $response['body'] );
 
 		} catch( BadResponseException $e ) {
-			handle_bad_response( __METHOD__, $e );
+			$e->handle_bad_response( __METHOD__ );
 		}
 
 		return $obj;
@@ -221,18 +257,28 @@ class SalesAPI {
 	 *
 	 * @return array
 	 */
-	private static function create_body( $key_type, $key_value, $site_url, $user_id, $order ) {
+	private static function create_body(
+		$key_type,
+		$key_value,
+		$site_url,
+		$user_id,
+		$order
+	) {
 
 		$order = wc_get_order( $order );
 
-		assert( $order instanceof \WC_Order, 'Sale object creation failed: $order is not a \WC_Order object.' );
+		assert(
+			$order instanceof \WC_Order,
+			'Sale object creation failed: $order is not a \WC_Order object.'
+		);
 
 		/** @noinspection PhpUndefinedFieldInspection */
 		$body = array(
 			'key_type'            => $key_type,
 			'key_value'           => $key_value,
 			'site_url'            => $site_url,
-			'user_id'             => $user_id,                           // Casper's User ID
+			'user_id'             => $user_id,
+			// Casper's User ID
 			'order_id'            => $order->id,
 			'order_date'          => $order->order_date,
 			'post_status'         => $order->post_status,
@@ -277,34 +323,73 @@ class SalesAPI {
 
 abstract class ProductLogAPI {
 
-	public static function send_data( $url, $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
+	public static function send_data(
+		$url,
+		$key_type,
+		$key_value,
+		$site_url,
+		$user_id,
+		$product_id,
+		$quantity,
+		$variation_id = 0
+	) {
 
 		$obj = NULL;
 
 		try {
 
-			$body    = json_encode( static::create_body( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id ) );
+			$body    = json_encode(
+				static::create_body(
+					$key_type,
+					$key_value,
+					$site_url,
+					$user_id,
+					$product_id,
+					$quantity,
+					$variation_id
+				)
+			);
 			$headers = array( 'content-type' => 'application/json', );
 
-			$response = Rest_Api_Helper::request( $url, 'POST', $body, array( 201, ), $headers );
+			$response = Rest_Api_Helper::request(
+				$url,
+				'POST',
+				$body,
+				array( 201, ),
+				$headers
+			);
 			$obj      = ProductLogs::from_response( $response['body'] );
 
 		} catch( BadResponseException $e ) {
-			handle_bad_response( __METHOD__, $e );
+			$e->handle_bad_response( __METHOD__ );
 		}
 
 		return $obj;
 	}
 
-	private static function create_body( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id ) {
+	private static function create_body(
+		$key_type,
+		$key_value,
+		$site_url,
+		$user_id,
+		$product_id,
+		$quantity,
+		$variation_id
+	) {
 
 		/** @var \WC_Product $product */
 		$product = wc_get_product( $product_id );
-		assert( $product instanceof \WC_Product, 'Product object retrieval failed: $product is not a \WC_Product.' );
+		assert(
+			$product instanceof \WC_Product,
+			'Product object retrieval failed: $product is not a \WC_Product.'
+		);
 
 		$terms = wp_get_post_terms( $product_id, 'product_cat' );
 		if ( is_array( $terms ) ) {
-			$term_names = array_map( function ( $t ) { return $t->name; }, $terms );
+			$term_names = array_map(
+				function ( $t ) { return $t->name; },
+				$terms
+			);
 			sort( $term_names );
 			$term_name = join( '|', $term_names );
 		} else {
@@ -334,34 +419,91 @@ abstract class ProductLogAPI {
 
 class AddToCartAPI extends ProductLogAPI {
 
-	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
+	public static function send_data(
+		$key_type,
+		$key_value,
+		$site_url,
+		$user_id,
+		$product_id,
+		$quantity,
+		$variation_id = 0
+	) {
 
-		return parent::send_data( wskl_get_host_api_url() . '/logs/add-to-carts/', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
+		return parent::send_data(
+			wskl_get_host_api_url() . '/logs/add-to-carts/',
+			$key_type,
+			$key_value,
+			$site_url,
+			$user_id,
+			$product_id,
+			$quantity,
+			$variation_id
+		);
 	}
 }
 
 
 class TodaySeenAPI extends ProductLogAPI {
 
-	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
+	public static function send_data(
+		$key_type,
+		$key_value,
+		$site_url,
+		$user_id,
+		$product_id,
+		$quantity,
+		$variation_id = 0
+	) {
 
-		return parent::send_data( wskl_get_host_api_url() . '/logs/today-seen/', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
+		return parent::send_data(
+			wskl_get_host_api_url() . '/logs/today-seen/',
+			$key_type,
+			$key_value,
+			$site_url,
+			$user_id,
+			$product_id,
+			$quantity,
+			$variation_id
+		);
 	}
 }
 
 
 class WishListAPI extends ProductLogAPI {
 
-	public static function send_data( $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id = 0 ) {
+	public static function send_data(
+		$key_type,
+		$key_value,
+		$site_url,
+		$user_id,
+		$product_id,
+		$quantity,
+		$variation_id = 0
+	) {
 
-		return parent::send_data( wskl_get_host_api_url() . '/logs/wish-lists/', $key_type, $key_value, $site_url, $user_id, $product_id, $quantity, $variation_id );
+		return parent::send_data(
+			wskl_get_host_api_url() . '/logs/wish-lists/',
+			$key_type,
+			$key_value,
+			$site_url,
+			$user_id,
+			$product_id,
+			$quantity,
+			$variation_id
+		);
 	}
 }
 
 
 class PostAPI {
 
-	public static function send_post( $key_type, $key_value, $site_url, $user_id, $post_id ) {
+	public static function send_post(
+		$key_type,
+		$key_value,
+		$site_url,
+		$user_id,
+		$post_id
+	) {
 
 		assert( $key_type && $key_value && $site_url );
 
@@ -382,7 +524,7 @@ class PostAPI {
 			Rest_Api_Helper::request( $url, 'POST', $body, array( 201, ) );
 
 		} catch( BadResponseException $e ) {
-			handle_bad_response( __METHOD__, $e );
+			$e->handle_bad_response( __METHOD__ );
 		}
 	}
 
