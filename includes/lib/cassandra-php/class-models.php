@@ -141,6 +141,33 @@ final class Domain extends CreatedUpdatedMixin implements APIResponseHandler {
 	private $deactivated;
 
 	/**
+	 * Mapping method. Rest API 호출 후 전달되는 JSON 은 parse 되어 stdClass 로 변환된다.
+	 * 이 때 stdClass 는 사용하기 매우 불안정하므로 Domain 부분은 Domain class 와 매핑시킨다.
+	 *
+	 * @param \stdClass $response
+	 *
+	 * @return Domain
+	 */
+	public static function from_response( \stdClass $response ) {
+
+		$obj = new static();
+
+		$obj->company_name = esc_textarea( $response->company_name );
+		$obj->url          = esc_url( $response->url );
+
+		if ( $response->deactivated ) {
+			$obj->deactivated = convert_datetime( $response->deactivated );
+		} else {
+			$obj->deactivated = NULL;
+		}
+
+		$obj->set_created( $response->created );
+		$obj->set_updated( $response->updated );
+
+		return $obj;
+	}
+
+	/**
 	 * @return string company_name getter
 	 */
 	public function get_company_name() {
@@ -170,33 +197,6 @@ final class Domain extends CreatedUpdatedMixin implements APIResponseHandler {
 	public function get_deactivated() {
 
 		return $this->deactivated;
-	}
-
-	/**
-	 * Mapping method. Rest API 호출 후 전달되는 JSON 은 parse 되어 stdClass 로 변환된다.
-	 * 이 때 stdClass 는 사용하기 매우 불안정하므로 Domain 부분은 Domain class 와 매핑시킨다.
-	 *
-	 * @param \stdClass $response
-	 *
-	 * @return Domain
-	 */
-	public static function from_response( \stdClass $response ) {
-
-		$obj = new static();
-
-		$obj->company_name = esc_textarea( $response->company_name );
-		$obj->url          = esc_url( $response->url );
-
-		if ( $response->deactivated ) {
-			$obj->deactivated = convert_datetime( $response->deactivated );
-		} else {
-			$obj->deactivated = NULL;
-		}
-
-		$obj->set_created( $response->created );
-		$obj->set_updated( $response->updated );
-
-		return $obj;
 	}
 }
 
@@ -230,6 +230,35 @@ final class Key extends CreatedUpdatedMixin implements APIResponseHandler {
 	 * @var \DateTime It is originally a 'date' class. Its time is always 23:59:59 in KST.
 	 */
 	private $expire_date;
+
+	/**
+	 * Mapping method. Rest API 호출 후 전달되는 JSON 은 parse 되어 stdClass 로 변환된다.
+	 * 이 때 stdClass 는 사용하기 매우 불안정하므로 Key class 와 매핑시킨다.
+	 *
+	 * @param \stdClass $response
+	 *
+	 * @return Key
+	 */
+	public static function from_response( \stdClass $response ) {
+
+		$obj = new static();
+
+		$obj->key        = esc_textarea( $response->key );
+		$obj->type       = esc_textarea( $response->type->type );
+		$obj->_is_active = filter_var(
+			$response->is_active,
+			FILTER_VALIDATE_BOOLEAN
+		);
+		$obj->issue_date = convert_datetime( $response->issue_date );
+
+		$obj->expire_date = convert_datetime( $response->expire_date );
+		$obj->expire_date->setTime( 23, 59, 59 );
+
+		$obj->set_created( $response->created );
+		$obj->set_updated( $response->updated );
+
+		return $obj;
+	}
 
 	/**
 	 * @return string key getter
@@ -285,32 +314,6 @@ final class Key extends CreatedUpdatedMixin implements APIResponseHandler {
 
 		return $interval->invert == 0 ? $interval->days : FALSE;
 	}
-
-	/**
-	 * Mapping method. Rest API 호출 후 전달되는 JSON 은 parse 되어 stdClass 로 변환된다.
-	 * 이 때 stdClass 는 사용하기 매우 불안정하므로 Key class 와 매핑시킨다.
-	 *
-	 * @param \stdClass $response
-	 *
-	 * @return Key
-	 */
-	public static function from_response( \stdClass $response ) {
-
-		$obj = new static();
-
-		$obj->key        = esc_textarea( $response->key );
-		$obj->type       = esc_textarea( $response->type->type );
-		$obj->_is_active = filter_var( $response->is_active, FILTER_VALIDATE_BOOLEAN );
-		$obj->issue_date = convert_datetime( $response->issue_date );
-
-		$obj->expire_date = convert_datetime( $response->expire_date );
-		$obj->expire_date->setTime( 23, 59, 59 );
-
-		$obj->set_created( $response->created );
-		$obj->set_updated( $response->updated );
-
-		return $obj;
-	}
 }
 
 
@@ -339,6 +342,64 @@ final class OrderItemRelation implements APIResponseHandler {
 	 */
 	private $user_id;
 
+	public static function from_response_list( array &$response ) {
+
+		$output = array();
+
+		foreach ( $response as &$elem ) {
+			$output[] = static::from_response( $elem );
+		}
+
+		return $output;
+	}
+
+	/**
+	 * @param \stdClass $response
+	 *
+	 * @return OrderItemRelation
+	 */
+	public static function from_response( \stdClass $response ) {
+
+		$obj = new static();
+
+		$obj->order_item_id = absint( $response->order_item_id );
+
+		if ( is_numeric( $response->key ) ) {
+
+			$obj->key = absint( $response->key );
+
+		} else if ( $response->key instanceof \stdClass ) {
+
+			$obj->key = Key::from_response( $response->key );
+
+		} else {
+
+			assert( FALSE, 'unknown $response->key structure.' );
+		}
+
+		if ( is_numeric( $response->domain ) ) {
+
+			$obj->domain = absint( $response->domain );
+
+		} else if ( $response->domain instanceof \stdClass ) {
+
+			$obj->domain = Domain::from_response( $response->domain );
+
+		} else if ( $response->domain === NULL ) {
+
+			// It can be null. Ok, do nothing.
+			$obj->domain = NULL;
+
+		} else {
+
+			assert( FALSE, 'unknown $response->domain structure.' );
+		}
+
+		$obj->user_id = absint( $response->user_id );
+
+		return $obj;
+	}
+
 	public function get_order_item_id() {
 
 		return $this->order_item_id;
@@ -357,67 +418,6 @@ final class OrderItemRelation implements APIResponseHandler {
 	public function get_user_id() {
 
 		return $this->user_id;
-	}
-
-	/**
-	 * @param \stdClass $response
-	 *
-	 * @return OrderItemRelation
-	 */
-	public static function from_response( \stdClass $response ) {
-
-		$obj = new static();
-
-		$obj->order_item_id = absint( $response->order_item_id );
-
-		if ( is_numeric( $response->key ) ) {
-
-			$obj->key = absint( $response->key );
-			assert( $obj->key !== FALSE, '$response->key assertion failed.' );
-
-		} else if ( $response->key instanceof \stdClass ) {
-
-			$obj->key = Key::from_response( $response->key );
-
-		} else {
-
-			assert( FALSE, 'unknown $response->key structure.' );
-		}
-
-		if ( is_numeric( $response->domain ) ) {
-
-			$obj->domain = absint( $response->domain );
-			assert( $obj->domain !== FALSE, '$response->domain assertion failed.' );
-
-		} else if ( $response->domain instanceof \stdClass ) {
-
-			$obj->domain = Domain::from_response( $response->domain );
-
-		} else if ( $response->domain === NULL ) {
-
-			// It can be null. Ok, do nothing.
-			$obj->domain = NULL;
-
-		} else {
-
-			assert( FALSE, 'unknown $response->domain structure.' );
-		}
-
-		$obj->user_id = absint( $response->user_id );
-		assert( $obj->user_id !== FALSE );
-
-		return $obj;
-	}
-
-	public static function from_response_list( array &$response ) {
-
-		$output = array();
-
-		foreach ( $response as &$elem ) {
-			$output[] = static::from_response( $elem );
-		}
-
-		return $output;
 	}
 }
 
@@ -476,6 +476,133 @@ class Sales implements APIResponseHandler {
 
 	/** @var \DateTime $completed_date */
 	private $completed_date;
+	/** @var array $sales_sub */
+	private $sales_sub = array();
+
+	/**
+	 * @param \stdClass $response
+	 *
+	 * @return Sales
+	 */
+	public static function from_response( \stdClass $response ) {
+
+		$obj = new static();
+
+		if ( property_exists(
+			     $response,
+			     'domain'
+		     ) && $response->domain instanceof \stdClass
+		) {
+			$obj->domain = Domain::from_response( $response->domain );
+		}
+
+		if ( property_exists( $response, 'post_date' ) ) {
+			$obj->post_date = convert_datetime( $response->post_date, FALSE );
+		}
+
+		if ( property_exists( $response, 'post_date_gmt' ) ) {
+			$obj->post_date_gmt = convert_datetime(
+				$response->post_date_gmt,
+				FALSE
+			);
+		}
+
+		if ( property_exists( $response, 'post_status' ) ) {
+			$obj->post_status = sanitize_text_field( $response->post_status );
+		}
+
+		if ( property_exists( $response, 'order_currency' ) ) {
+			$obj->order_currency = sanitize_text_field(
+				$response->order_currency
+			);
+		}
+
+		if ( property_exists( $response, 'customer_user_agent' ) ) {
+			$obj->customer_user_agent = sanitize_text_field(
+				$response->customer_user_agent
+			);
+		}
+
+		if ( property_exists( $response, 'customer_user' ) ) {
+			$obj->customer_user = absint( $response->customer_user );
+		}
+
+		if ( property_exists( $response, 'created_via' ) ) {
+			$obj->created_via = sanitize_text_field( $response->created_via );
+		}
+
+		if ( property_exists( $response, 'order_version' ) ) {
+			$obj->order_version = sanitize_text_field(
+				$response->order_version
+			);
+		}
+
+		if ( property_exists( $response, 'billing_country' ) ) {
+			$obj->billing_country = sanitize_text_field(
+				$response->billing_country
+			);
+		}
+
+		if ( property_exists( $response, 'billing_city' ) ) {
+			$obj->billing_city = sanitize_text_field( $response->billing_city );
+		}
+
+		if ( property_exists( $response, 'billing_state' ) ) {
+			$obj->billing_state = sanitize_text_field(
+				$response->billing_state
+			);
+		}
+
+		if ( property_exists( $response, 'shipping_country' ) ) {
+			$obj->shipping_country = sanitize_text_field(
+				$response->shipping_country
+			);
+		}
+
+		if ( property_exists( $response, 'shipping_city' ) ) {
+			$obj->shipping_city = sanitize_text_field(
+				$response->shipping_city
+			);
+		}
+
+		if ( property_exists( $response, 'shipping_state' ) ) {
+			$obj->shipping_state = sanitize_text_field(
+				$response->shipping_state
+			);
+		}
+
+		if ( property_exists( $response, 'payment_method' ) ) {
+			$obj->payment_method = sanitize_text_field(
+				$response->payment_method
+			);
+		}
+
+		if ( property_exists( $response, 'order_total' ) ) {
+			$obj->order_total = sanitize_text_field( $response->order_total );
+		}
+
+		if ( property_exists( $response, 'completed_date' ) ) {
+			$obj->completed_date = convert_datetime(
+				$response->completed_date,
+				FALSE
+			);
+		}
+
+		if ( property_exists( $response, 'sales_sub' ) && is_array(
+				$response->sales_sub
+			)
+		) {
+
+			foreach ( $response->sales_sub as &$sub ) {
+
+				if ( $sub instanceof \stdClass ) {
+					$obj->sales_sub[] = SalesSub::from_response( $sub );
+				}
+			}
+		}
+
+		return $obj;
+	}
 
 	/**
 	 * @return Domain
@@ -628,103 +755,6 @@ class Sales implements APIResponseHandler {
 
 		return $this->sales_sub;
 	}
-
-	/** @var array $sales_sub */
-	private $sales_sub = array();
-
-	/**
-	 * @param \stdClass $response
-	 *
-	 * @return Sales
-	 */
-	public static function from_response( \stdClass $response ) {
-
-		$obj = new static();
-
-		if ( property_exists( $response, 'domain' ) && $response->domain instanceof \stdClass ) {
-			$obj->domain = Domain::from_response( $response->domain );
-		}
-
-		if ( property_exists( $response, 'post_date' ) ) {
-			$obj->post_date = convert_datetime( $response->post_date, FALSE );
-		}
-
-		if ( property_exists( $response, 'post_date_gmt' ) ) {
-			$obj->post_date_gmt = convert_datetime( $response->post_date_gmt, FALSE );
-		}
-
-		if ( property_exists( $response, 'post_status' ) ) {
-			$obj->post_status = sanitize_text_field( $response->post_status );
-		}
-
-		if ( property_exists( $response, 'order_currency' ) ) {
-			$obj->order_currency = sanitize_text_field( $response->order_currency );
-		}
-
-		if ( property_exists( $response, 'customer_user_agent' ) ) {
-			$obj->customer_user_agent = sanitize_text_field( $response->customer_user_agent );
-		}
-
-		if ( property_exists( $response, 'customer_user' ) ) {
-			$obj->customer_user = absint( $response->customer_user );
-		}
-
-		if ( property_exists( $response, 'created_via' ) ) {
-			$obj->created_via = sanitize_text_field( $response->created_via );
-		}
-
-		if ( property_exists( $response, 'order_version' ) ) {
-			$obj->order_version = sanitize_text_field( $response->order_version );
-		}
-
-		if ( property_exists( $response, 'billing_country' ) ) {
-			$obj->billing_country = sanitize_text_field( $response->billing_country );
-		}
-
-		if ( property_exists( $response, 'billing_city' ) ) {
-			$obj->billing_city = sanitize_text_field( $response->billing_city );
-		}
-
-		if ( property_exists( $response, 'billing_state' ) ) {
-			$obj->billing_state = sanitize_text_field( $response->billing_state );
-		}
-
-		if ( property_exists( $response, 'shipping_country' ) ) {
-			$obj->shipping_country = sanitize_text_field( $response->shipping_country );
-		}
-
-		if ( property_exists( $response, 'shipping_city' ) ) {
-			$obj->shipping_city = sanitize_text_field( $response->shipping_city );
-		}
-
-		if ( property_exists( $response, 'shipping_state' ) ) {
-			$obj->shipping_state = sanitize_text_field( $response->shipping_state );
-		}
-
-		if ( property_exists( $response, 'payment_method' ) ) {
-			$obj->payment_method = sanitize_text_field( $response->payment_method );
-		}
-
-		if ( property_exists( $response, 'order_total' ) ) {
-			$obj->order_total = sanitize_text_field( $response->order_total );
-		}
-
-		if ( property_exists( $response, 'completed_date' ) ) {
-			$obj->completed_date = convert_datetime( $response->completed_date, FALSE );
-		}
-
-		if ( property_exists( $response, 'sales_sub' ) && is_array( $response->sales_sub ) ) {
-
-			foreach ( $response->sales_sub as &$sub ) {
-
-				if ( $sub instanceof \stdClass ) {
-					$obj->sales_sub[] = SalesSub::from_response( $sub );
-				}
-			}
-		}
-
-		return $obj;
-	}
 }
 
 
@@ -756,6 +786,60 @@ class SalesSub implements APIResponseHandler {
 
 	/** @var string $line_total 소수점 문제가 있을 수 있으므로 문자열 그대로 처리 */
 	private $line_total;
+
+	/**
+	 * @param \stdClass $response
+	 *
+	 * @return SalesSub
+	 */
+	public static function from_response( \stdClass $response ) {
+
+		$obj = new static();
+
+		if ( property_exists( $response, 'order_item_id' ) ) {
+			$obj->order_item_id = absint( $response->order_item_id );
+		}
+
+		if ( property_exists( $response, 'order_item_name' ) ) {
+			$obj->order_item_name = sanitize_text_field(
+				$response->order_item_name
+			);
+		}
+
+		if ( property_exists( $response, 'order_item_type' ) ) {
+			$obj->order_item_type = sanitize_text_field(
+				$response->order_item_type
+			);
+		}
+
+		if ( property_exists( $response, 'order_id' ) ) {
+			$obj->order_id = absint( $response->order_id );
+		}
+
+		if ( property_exists( $response, 'qty' ) ) {
+			$obj->qty = absint( $response->qty );
+		}
+
+		if ( property_exists( $response, 'product_id' ) ) {
+			$obj->product_id = absint( $response->product_id );
+		}
+
+		if ( property_exists( $response, 'variation_id' ) ) {
+			$obj->variation_id = absint( $response->variation_id );
+		}
+
+		if ( property_exists( $response, 'line_subtotal' ) ) {
+			$obj->line_subtotal = sanitize_text_field(
+				$response->line_subtotal
+			);
+		}
+
+		if ( property_exists( $response, 'line_total' ) ) {
+			$obj->line_total = sanitize_text_field( $response->line_total );
+		}
+
+		return $obj;
+	}
 
 	/**
 	 * @return int
@@ -827,54 +911,6 @@ class SalesSub implements APIResponseHandler {
 	public function get_line_total() {
 
 		return $this->line_total;
-	}
-
-	/**
-	 * @param \stdClass $response
-	 *
-	 * @return SalesSub
-	 */
-	public static function from_response( \stdClass $response ) {
-
-		$obj = new static();
-
-		if ( property_exists( $response, 'order_item_id' ) ) {
-			$obj->order_item_id = absint( $response->order_item_id );
-		}
-
-		if ( property_exists( $response, 'order_item_name' ) ) {
-			$obj->order_item_name = sanitize_text_field( $response->order_item_name );
-		}
-
-		if ( property_exists( $response, 'order_item_type' ) ) {
-			$obj->order_item_type = sanitize_text_field( $response->order_item_type );
-		}
-
-		if ( property_exists( $response, 'order_id' ) ) {
-			$obj->order_id = absint( $response->order_id );
-		}
-
-		if ( property_exists( $response, 'qty' ) ) {
-			$obj->qty = absint( $response->qty );
-		}
-
-		if ( property_exists( $response, 'product_id' ) ) {
-			$obj->product_id = absint( $response->product_id );
-		}
-
-		if ( property_exists( $response, 'variation_id' ) ) {
-			$obj->variation_id = absint( $response->variation_id );
-		}
-
-		if ( property_exists( $response, 'line_subtotal' ) ) {
-			$obj->line_subtotal = sanitize_text_field( $response->line_subtotal );
-		}
-
-		if ( property_exists( $response, 'line_total' ) ) {
-			$obj->line_total = sanitize_text_field( $response->line_total );
-		}
-
-		return $obj;
 	}
 }
 
