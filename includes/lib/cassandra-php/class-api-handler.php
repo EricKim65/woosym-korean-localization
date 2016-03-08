@@ -37,7 +37,7 @@ class BadResponseException extends \Exception {
 			$this->getMessage()
 		);
 		error_log( $message );
-		wp_die( $message );
+		// wp_die( $message );
 	}
 }
 
@@ -180,15 +180,14 @@ class ClientAPI {
 			'site_url'  => &$site_url,
 		);
 
-		$response = Rest_Api_Helper::request(
-			$url,
-			'POST',
-			$body,
-			array( 200, 403, ),
-			array()
-		);
-
 		try {
+
+			$response = Rest_Api_Helper::request(
+				$url,
+				'POST',
+				$body,
+				array( 200, 403, )
+			);
 
 			assert( isset( $response['code'] ) && isset( $response['body'] ) );
 
@@ -197,7 +196,10 @@ class ClientAPI {
 			}
 
 		} catch( BadResponseException $e ) {
+
 			$e->handle_bad_response( __METHOD__ );
+
+			$obj = FALSE;
 		}
 
 		return $obj;
