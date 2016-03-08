@@ -1,9 +1,12 @@
 <?php
 
 include_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
+include_once( 'api-setting.php' );
 
 use wskl\lib\cassandra;
 use wskl\lib\cassandra\ClientAPI;
+use wskl\lib\cassandra\OrderItemRelation;
+use wskl\lib\cassandra\Rest_Api_Helper;
 
 
 class CassandraAPITest extends WP_UnitTestCase {
@@ -12,13 +15,9 @@ class CassandraAPITest extends WP_UnitTestCase {
 
 	public function setUp() {
 
-		$this->paymentApiKey = 'payment-c9b661e154521514adecd81c792bf342';  // key for local cassandra!
+		$this->paymentApiKey = PAYMENT_API_KEY;  // key for local cassandra!
 
-		// update casper local site. Note that WSKL_DEBUG must be true.
-		update_option(
-			wskl_get_option_name( 'develop_cassandra_url' ),
-			'http://localhost:8000/api/v1'
-		);
+		update_test_cassandra_url();
 	}
 
 	// WSKL_DEBUG = TRUE 확인
@@ -33,7 +32,7 @@ class CassandraAPITest extends WP_UnitTestCase {
 		$url = \wskl\lib\cassandra\wskl_get_host_api_url(
 		       ) . '/auth/hello'; // use easter egg.
 
-		$response = \wskl\lib\cassandra\Rest_Api_Helper::request( $url, 'GET' );
+		$response = Rest_Api_Helper::request( $url, 'GET' );
 
 		$this->assertTrue( $response['code'] == 200 );
 		$this->assertTrue( isset( $response['body']->message ) );
@@ -53,7 +52,7 @@ class CassandraAPITest extends WP_UnitTestCase {
 		);
 
 		// is this really an OIR?
-		$this->assertTrue( $oir instanceof cassandra\OrderItemRelation );
+		$this->assertTrue( $oir instanceof OrderItemRelation );
 
 		// company name
 		$this->assertEquals(
@@ -83,7 +82,7 @@ class CassandraAPITest extends WP_UnitTestCase {
 	public function test_verifyPaymentAPIKey() {
 
 		// activate && verify --> get an oir
-		$oir = ClientAPI::activate(
+		ClientAPI::activate(
 			'payment',
 			$this->paymentApiKey,
 			site_url(),
@@ -95,9 +94,8 @@ class CassandraAPITest extends WP_UnitTestCase {
 
 		// var_dump( 'oir: ' . print_r( $oir, true ) );
 
-		$this->assertTrue( $oir instanceof cassandra\OrderItemRelation );
+		$this->assertTrue( $oir instanceof OrderItemRelation );
 		$this->assertTrue( $oir->get_key()->is_active() );
-
 
 		// deactivation && verify --> get null
 		ClientAPI::activate(
@@ -111,5 +109,19 @@ class CassandraAPITest extends WP_UnitTestCase {
 		$oir = ClientAPI::verify( 'payment', $this->paymentApiKey, site_url() );
 
 		$this->assertNull( $oir );
+
+		// test with wrong api url
+		// 서버 자체가 연결되지 않음은 서버가 아운되거나
+		// 서버가 500 에러를 내는 경우와 유사하다.
+		update_option(
+			wskl_get_option_name( 'develop_cassandra_url' ),
+			'http://localhost/wrongapiurl/wrong'
+		);
+
+		$oir = ClientAPI::verify( 'payment', $this->paymentApiKey, site_url() );
+
+		$this->assertFalse( $oir );
+
+		update_test_cassandra_url();
 	}
 }
