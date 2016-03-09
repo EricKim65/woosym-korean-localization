@@ -1,10 +1,9 @@
 <?php
 
 include_once( 'api-setting.php' );
-include_once( WSKL_PATH . '/includes/lib/auth/class-auth-model.php' );
+include_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth-info.php' );
 include_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
 
-use wskl\lib\auth\Auth_Model;
 use wskl\lib\cassandra\ClientAPI;
 use wskl\lib\cassandra\OrderItemRelation;
 
@@ -32,7 +31,7 @@ class AuthModelTest extends WP_UnitTestCase {
 
 	public function test_modelOir() {
 
-		$auth = new Auth_Model( 'payment' );
+		$auth = new \WSKL_Auth_Info( 'payment' );
 
 		$auth->set_oir( $this->oir );
 

@@ -2,12 +2,10 @@
 namespace wskl\lib\logs;
 
 require_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
-require_once( WSKL_PATH . '/includes/lib/auth/class-auth-model.php' );
+require_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth-info.php' );
 
-use wskl\lib\auth\Auth_Model;
 use wskl\lib\cassandra\AddToCartAPI;
 use wskl\lib\cassandra\TodaySeenAPI;
-use wskl\lib\cassandra\WishListAPI;
 
 
 class Product_Logs {
@@ -64,7 +62,7 @@ class Product_Logs {
 	 */
 	public static function callback_add_to_cart_validation( $is_valid, $product_id, $quantity, $variation_id = 0 /*, array $variations = array() */) {
 
-		$auth = new Auth_Model( 'marketing' );
+		$auth = new \WSKL_Auth_Info( 'marketing' );
 
 		if( $auth->is_verified() ) {
 
@@ -83,7 +81,7 @@ class Product_Logs {
 
 	public static function callback_woocommerce_before_single_product() {
 
-		$auth = new Auth_Model( 'marketing' );
+		$auth = new \WSKL_Auth_Info( 'marketing' );
 
 		if( $auth->is_verified() ) {
 

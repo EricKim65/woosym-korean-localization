@@ -1,13 +1,11 @@
 <?php
 
-namespace wskl\lib\auth;
-
 require_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
 
 use wskl\lib\cassandra\OrderItemRelation;
 
 
-class Auth_Model {
+class WSKL_Auth_Info {
 
 	public static  $nonce_action                   = 'wskl-client-license-nonce-action';
 	public static  $nonce_name                     = 'wskl-client-license-nonce-name';
@@ -33,9 +31,10 @@ class Auth_Model {
 		$this->oir = get_option( $this->meta_key, FALSE );
 	}
 
-	public function save() {
+	public function is_verified() {
 
-		update_option( $this->meta_key, $this->oir );
+		return $this->get_oir() && ( $this->get_oir()->get_domain()->get_url(
+			) == site_url() ) && $this->is_active() && ! $this->is_expired();
 	}
 
 	public function &get_oir() {
@@ -48,21 +47,21 @@ class Auth_Model {
 		$this->oir = $oir;
 	}
 
-	public function is_available() {
-
-		if ( $this->oir instanceof OrderItemRelation ) {
-
-			return $this->oir->get_order_item_id() > 0 && $this->oir->get_key() && $this->oir->get_user_id() > 0;
-		}
-
-		return FALSE;
-	}
-
 	public function is_active() {
 
 		if ( $this->is_available() ) {
 
 			return $this->get_oir()->get_key()->is_active();
+		}
+
+		return FALSE;
+	}
+
+	public function is_available() {
+
+		if ( $this->oir instanceof OrderItemRelation ) {
+
+			return $this->oir->get_order_item_id() > 0 && $this->oir->get_key() && $this->oir->get_user_id() > 0;
 		}
 
 		return FALSE;
@@ -78,15 +77,15 @@ class Auth_Model {
 		return FALSE;
 	}
 
-	public function is_verified() {
-
-		return $this->get_oir() && ( $this->get_oir()->get_domain()->get_url() == site_url() ) && $this->is_active() && ! $this->is_expired();
-	}
-
 	public function reset() {
 
 		$this->oir = FALSE;
 		$this->save();
+	}
+
+	public function save() {
+
+		update_option( $this->meta_key, $this->oir );
 	}
 
 	public function get_key_value() {

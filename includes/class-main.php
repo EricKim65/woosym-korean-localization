@@ -6,7 +6,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 		private static $_instance = null;
 
-		private $settings = null;
+		private $_settings = NULL;
 
 		public static function instance( $prefix, $file, $version ) {
 
@@ -97,8 +97,9 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 		/**
 		 * @return Woosym_Korean_Localization_Settings
 		 */
-		public function get_settings() {
-			return $this->settings;
+		public function settings() {
+
+			return $this->_settings;
 		}
 
 		function order_received_title( $title, $id ) {
@@ -334,32 +335,45 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			if ( $this->is_request( 'admin' ) ) {
 
 				wskl_load_module( '/includes/class-settings.php' );
-				$this->settings = Woosym_Korean_Localization_Settings::instance( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
+				$this->_settings = Woosym_Korean_Localization_Settings::instance(
+					WSKL_PREFIX,
+					WSKL_MAIN_FILE,
+					WSKL_VERSION
+				);
 
 				/** authorization */
-				wskl_load_module( '/includes/lib/auth/class-auth.php' );
-				$auth = new wskl\lib\auth\Auth( $this->settings );
+				wskl_load_module( '/includes/lib/auth/class-wskl-auth.php' );
+				new WSKL_Auth( $this->settings() );
 
 				/** post export */
-				wskl_load_module( '/includes/lib/mat-logs/class-post-export.php', 'enable_post_export' );
+				wskl_load_module(
+					'/includes/lib/marketing/class-post-export.php',
+					'enable_post_export'
+				);
 			}
 
 			if ( $this->is_request( 'frontend' ) ) {
 
 				// verification
-				wskl_load_module( '/includes/lib/auth/class-verification.php' );
-				$verification = new \wskl\lib\auth\Verification();
+				wskl_load_module(
+					'/includes/lib/auth/class-wskl-verification.php'
+				);
 
 				// sales log
-				wskl_load_module( '/includes/lib/mat-logs/class-sales.php', 'enable_sales_log' );
+				wskl_load_module(
+					'/includes/lib/marketing/class-sales.php',
+					'enable_sales_log'
+				);
 
-				wskl_load_module( '/includes/lib/mat-logs/class-product-logs.php' );
+				wskl_load_module(
+					'/includes/lib/marketing/class-product-logs.php'
+				);
 			}
 
 			/** 복합과세 */
 			wskl_load_module( '/includes/class-wskl-combined-tax.php' );
 
-			/** 다보리 배송 (테스팅) */
+			/** 다보리 배송 */
 			wskl_load_module( '/includes/class-wskl-shipping-method.php', 'enable_korean_shipping' );
 
 			/** IP blocking */

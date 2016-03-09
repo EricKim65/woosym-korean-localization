@@ -1,15 +1,13 @@
 <?php
 
-namespace wskl\lib\auth;
-
 require_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
-require_once( 'class-auth-model.php' );
+require_once( 'class-wskl-auth-info.php' );
 
 use wskl\lib\cassandra\ClientAPI;
 use wskl\lib\cassandra\OrderItemRelation;
 
 
-class Verification {
+class WSKL_Verification {
 
 	private $verified;
 
@@ -44,7 +42,7 @@ class Verification {
 			return TRUE;
 		}
 
-		$info = new Auth_Model( 'payment' );
+		$info = new WSKL_Auth_Info( 'payment' );
 
 		$key_type = $info->get_key_type();
 		$key_value = $info->get_key_value();
@@ -122,3 +120,6 @@ class Verification {
 		return $available_gateways;
 	}
 }
+
+
+return new WSKL_Verification();

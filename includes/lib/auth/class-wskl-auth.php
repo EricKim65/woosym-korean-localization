@@ -1,17 +1,16 @@
 <?php
 
-namespace wskl\lib\auth;
-
 require_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
-require_once( 'class-auth-model.php' );
+require_once( 'class-wskl-auth-info.php' );
 
 use wskl\lib\cassandra\ClientAPI;
 use wskl\lib\cassandra\OrderItemRelation;
 
 
-class Auth {
+class WSKL_Auth {
 
 	static private $nonce_action = 'activation_nonce_wskl_e9celjs&32n';
+
 	/** @var \Woosym_Korean_Localization_Settings */
 	private $wskl_setting;
 
@@ -49,7 +48,7 @@ class Auth {
 		$echo = FALSE
 	) {
 
-		$info = new Auth_Model( $key_type );
+		$info = new WSKL_Auth_Info( $key_type );
 
 		if ( $info->is_available() ) {
 
@@ -168,7 +167,7 @@ class Auth {
 			TRUE
 		);
 
-		$info_model = new Auth_Model( $key_type );
+		$info_model = new WSKL_Auth_Info( $key_type );
 
 		if ( $activation instanceof OrderItemRelation ) {
 
@@ -186,4 +185,3 @@ class Auth {
 		die();
 	}
 }
-

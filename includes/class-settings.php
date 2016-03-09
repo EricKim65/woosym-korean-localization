@@ -191,10 +191,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 						//define('WP_DEBUG', false); <br/>
 						define('WP_DEBUG',         true);  // Turn debugging ON <br/>
 						define('WP_DEBUG_DISPLAY', true); // Turn forced display OFF <br/>
-						define('WP_DEBUG_LOG',     true);  // Turn logging to wp-content/debug.log ON <br/> <br/>
-
-						<span class=\"wskl-notice\"><a href='" . $debug_link . "' target='_blank'>디버그 링크를 클릭하면 누적된 에러메시지가 보입니다.</a><br/></span>
-					",
+						define('WP_DEBUG_LOG',     true);  // Turn logging to wp-content/debug.log ON <br/><br/>
+						<a href='" . $debug_link . "' target='_blank'>디버그 링크를 클릭하면 누적된 에러메시지가 보입니다.</a>",
 						'wskl'
 					),
 					'type'        => 'caption',
@@ -533,16 +531,14 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 						'id'          => 'dummy_11',
 						'label'       => __( '상점등록', 'wskl' ),
 						'description' => __(
-							'
-						<span class="wskl-notice">상점등록 과정은 매우 중요한 사항이므로  정확히 숙지하고 실행해주셔야 합니다. </span></br>
+							'<span class="wskl-notice">상점등록 과정은 매우 중요한 사항이므로  정확히 숙지하고 실행해주셔야 합니다. </span></br>
 						1. 이니시스와 계약 체결 후 다음의 내용을 발급 받습니다.</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;A. 키패스워드(숫자 4자리)와  상점 아이디(10자리)를 해당설정에 입력하고 저장합니다.</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;B.키화일 등  4개 (keypass.enc, mcert.pem, mpriv.pem, readme.txt)</br>
                         2. 당 플러그인의 이니페이 홈 폴더중 “key” 폴더에 상점아이디와 동일한 이름의 서브 디렉터리를 만듭니다(대소문자 구별함.).</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;예)/public_html/wp-content/plugins/wskl/includes/lib/homeinicis/key/[상점아이디]</br>
                         3. 발급받은 화일  4개 (keypass.enc, mcert.pem, mpriv.pem, readme.txt)를 2.에서 만든 폴더에 복사합니다.</br>
- 						<font size="" color="blue">테스트시에는기본 설치된 테스트용 INIpayTest 상점아이디폴더가 사용되므로 참고하세요</span></br>
-  					',
+ 						<span class="wskl-info">테스트시에는기본 설치된 테스트용 INIpayTest 상점아이디폴더가 사용되므로 참고하세요</span></br>',
 							'wskl'
 						),
 						'type'        => 'caption',
@@ -693,7 +689,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 						'label'       => __( '가맹점 등록', 'wskl' ),
 						'description' => __(
 							'
-						<span class="wskl-notice">아임포트의 가맹점 등록 과정은 좀 특이하므로 세심한 주의를 요합니다.<br>고객의 결제 진행시 결제 정보를 아임포트 서버로 보내주면 아임포트 서버가 결제 처리를 대행하는<br> 구조이므로 각 결제 업체의 PG 연동 정보가 아임포트 회원 정보에 설정되어야 합니다.</span></br><font size="" color="blue">
+						<span class="wskl-notice">아임포트의 가맹점 등록 과정은 좀 특이하므로 세심한 주의를 요합니다.<br>고객의 결제 진행시 결제 정보를 아임포트 서버로 보내주면 아임포트 서버가 결제 처리를 대행하는<br> 구조이므로 각 결제 업체의 PG 연동 정보가 아임포트 회원 정보에 설정되어야 합니다.</span></br><span class="wskl-info">
 						1. 아임포트 회원가입/로그인 후 시스템설정->내정보 에서 확인된 정보를 입력합니다.</br>
                         &nbsp;&nbsp;아임포트 회원로그인 후 확인한 REST API 정보를 입력하고 저장합니다.</br><a href="https://admin.iamport.kr/settings" target="_blank">https://admin.iamport.kr/settings  REST API 정보를 확인하러 가기</a></br>
  						2. <a href="https://admin.iamport.kr/settings" target="_blank">https://admin.iamport.kr/settings</a> 의 "PG연동 설정"에서 <br>각 결제 대행업체에서 발급 받은 PG연동 정보를 설정합니다. </br> </font></br>
@@ -716,8 +712,15 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'id'          => 'dummy_1',
 					'label'       => __( '추가설정내용', 'wskl' ),
 					'description' => __(
-						'
-						<span class="wskl-notice">해당페이지 설정후 반드시 추가해야할 "우커머스 결제설정" 내용입니다.</span>   <a href="./admin.php?page=wc-settings&tab=checkout" target="_blank">결제설정 바로가기</a><br/>
+						'<span class="wskl-notice">해당페이지 설정후 반드시 추가해야할 "우커머스 결제설정" 내용입니다.</span><a href="' . esc_url(
+							add_query_arg(
+								array(
+									'page' => 'wc-settings',
+									'tab'  => 'checkout',
+								),
+								admin_url( 'admin.php' )
+							)
+						) . '" target="_blank">결제설정 바로가기</a><br/>
 						1. "해당 페이지를 설정하면 우커머스->설정->결제 설정"의 하위메뉴에 지정한 결제 방법이 추가됩니다. <br/>
 						   &nbsp;&nbsp;&nbsp;각각의 하위메뉴로 들어가서 활성화에 체크하여 주십시오.  <br/>
 						2. "우커머스->설정->결제옵션->지불게이트웨이"에서 고객의 결제페이지에 보일 "결제 방법의 순서"를 결정하여 주십시오.<br/>
@@ -806,7 +809,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'id'          => 'related_products_count',
 					'label'       => __( '관련상품표시 갯수', 'wskl' ),
 					'description' => __(
-						'관련상품에 표시되는 갯수를 결정합니다.<font color="red">(테마에 따라 적용되지 않는 경우도 있으므로 유의하세요.)</span>',
+						'관련상품에 표시되는 갯수를 결정합니다.<span class="wskl-info">(테마에 따라 적용되지 않는 경우도 있으므로 유의하세요.)</span>',
 						'wskl'
 					),
 					'type'        => 'shorttext',
@@ -1073,9 +1076,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'id'          => 'white_ipcode_list',
 					'label'       => __( '화이트 IP 코드 리스트', 'wskl' ),
 					'description' => __(
-						'차단하지 않을 국가의 IP 코드를 추가합니다. 컴마로 분리</br>
-					<font size="" color="green">예)KR,US,JP,CN => KR-한국 US-미국, JP-일본, CN-중국</span>					
-						',
+						'차단하지 않을 국가의 IP 코드를 추가합니다. 컴마로 분리.</br><span class="wskl-description">예) KR,US,JP,CN => KR-한국 US-미국, JP-일본, CN-중국</span>',
 						'wskl'
 					),
 					'type'        => 'longtext',
