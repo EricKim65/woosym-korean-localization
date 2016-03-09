@@ -217,7 +217,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'wskl'
 				),
 				__( '지불기능 인증', 'wskl' ),
-				\wskl\lib\auth\Auth::get_license_duration_string( 'payment' )
+				WSKL_Auth::get_license_duration_string( 'payment' )
 			);
 
 			$essential_description = sprintf(
@@ -227,7 +227,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'wskl'
 				),
 				__( '핵심기능 인증', 'wskl' ),
-				\wskl\lib\auth\Auth::get_license_duration_string( 'essential' )
+				WSKL_Auth::get_license_duration_string( 'essential' )
 			);
 
 			$extension_description = sprintf(
@@ -237,7 +237,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'wskl'
 				),
 				__( '확장기능 인증', 'wskl' ),
-				\wskl\lib\auth\Auth::get_license_duration_string( 'extension' )
+				WSKL_Auth::get_license_duration_string( 'extension' )
 			);
 
 			$marketing_automation_description = sprintf(
@@ -250,7 +250,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'마케팅자동화 인증',
 					'wskl'
 				),
-				\wskl\lib\auth\Auth::get_license_duration_string( 'marketing' )
+				WSKL_Auth::get_license_duration_string( 'marketing' )
 			);
 		}
 
