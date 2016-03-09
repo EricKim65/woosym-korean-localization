@@ -60,20 +60,20 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			}
 
 
-			if ( get_option( $this->_prefix . 'enable_sym_checkout' ) == 'on' ) {
+			if ( wskl_get_option( 'enable_sym_checkout' ) == 'on' ) {
 				add_action( 'woocommerce_init', array( $this, 'woosym_daum_kaddress' ), 1 );
 				add_action( 'wp_enqueue_scripts', array( $this, 'js_and_css' ) );
 			}
 
-			if ( get_option( $this->_prefix . 'disable_sku' ) == 'on' ) {
+			if ( wskl_get_option( 'disable_sku' ) == 'on' ) {
 				add_filter( 'wc_product_sku_enabled', '__return_false' );
 			}
 
-			if ( get_option( $this->_prefix . 'disable_returntoshop' ) == 'on' ) {
+			if ( wskl_get_option( 'disable_returntoshop' ) == 'on' ) {
 				add_filter( 'woocommerce_return_to_shop_redirect', array( $this, 'sym_change_empty_cart_button_url' ) );
 			}
 
-			if ( get_option( $this->_prefix . 'korean_won' ) == 'on' ) {
+			if ( wskl_get_option( 'korean_won' ) == 'on' ) {
 				add_filter( 'woocommerce_currencies', array( $this, 'woosym_kwon_currency' ) );
 				add_filter( 'woocommerce_currency_symbol', array( $this, 'woosym_kwon_currency_symbol' ), 10, 2 );
 			}
