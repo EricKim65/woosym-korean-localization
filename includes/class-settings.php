@@ -79,30 +79,6 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			56
 		);
 
-		//		if( !empty( $this->settings ) ) {
-		//
-		//			foreach( $this->settings as $tab => $config ) {
-		//
-		//				add_submenu_page(
-		//					WSKL_MENU_SLUG,
-		//					$config['title'],
-		//					$config['title'],
-		//					'manage_options',
-		//					WSKL_MENU_SLUG . '_' . $tab,
-		//					function() use ( $tab ) {
-		//						$url = add_query_arg(
-		//							array(
-		//								'page' => WSKL_MENU_SLUG,
-		//								'tab'  => $tab,
-		//							),
-		//							admin_url( 'admin.php' )
-		//						);
-		//						echo '<script type="text/javascript">location.href="' . $url .'"</script>';
-		//					}
-		//				);
-		//			}
-		//		}
-
 		remove_submenu_page( WSKL_MENU_SLUG, WSKL_MENU_SLUG );
 	}
 
@@ -317,8 +293,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				'국내의 모든 지불 대행 회사의 결제 플러그인을 지원합니다.<br/>
 						<span class="wskl-notice">현재 지원되지 않는 플러그인은 무료로 개발해드립니다.</span><br/>
 			            결제대행(PG)회사를 추가하기를 원하는 경우  service@econoq.co.kr 로 메일 주시면  1주일이내에 개발해 드리겠습니다.<br/>
-						<a href="http://www.symphonysoft.co.kr/" target="_blank">신규 플러그인 개발 요청 하러 가기</a><br/>
-										',
+						<a href="http://www.symphonysoft.co.kr/" target="_blank">신규 플러그인 개발 요청 하러 가기</a><br/>',
 				'wskl'
 			),
 			'fields'      => array(
@@ -403,10 +378,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 						'id'          => 'dummy_33',
 						'label'       => __( '아임포트 결정방법', 'wskl' ),
 						'description' => __(
-							'
-						<span class="wskl-notice">아임포트 결제와 관련된 내용은 아임포트 서버에서 실행되는 내용이므로 다보리에서 책임지지 않습니다. </span><br><a href="https://admin.iamport.kr/settings" target="_blank">아임포트 PG 설정 바로가기</a><br/>
-						1. 아임포트에서는 현재 카카오페이, LGU+, KCP, 이니시스, JT-Net, 나이스정보통신이 지원되며 <br>가맹점 설정은 아임포트 사이트에 회원가입/로그인한 후 설정하여야 합니다.
-					',
+							'<span class="wskl-notice">아임포트 결제와 관련된 내용은 아임포트 서버에서 실행되는 내용이므로 다보리에서 책임지지 않습니다. </span><br><a href="https://admin.iamport.kr/settings" target="_blank">아임포트 PG 설정 바로가기</a><br/>
+						1. 아임포트에서는 현재 카카오페이, LGU+, KCP, 이니시스, JT-Net, 나이스정보통신이 지원되며 <br>가맹점 설정은 아임포트 사이트에 회원가입/로그인한 후 설정하여야 합니다.',
 							'wskl'
 						),
 						'type'        => 'caption',
@@ -470,16 +443,14 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 						'id'          => 'dummy_11',
 						'label'       => __( '상점등록', 'wskl' ),
 						'description' => __(
-							'
-						<span class="wskl-notice">상점등록 과정은 매우 중요한 사항이므로  정확히 숙지하고 실행해주셔야 합니다. </span></br>
+							'<span class="wskl-notice">상점등록 과정은 매우 중요한 사항이므로  정확히 숙지하고 실행해주셔야 합니다. </span></br>
 						1. KCP와 계약 체결 후 다음의 내용을 발급 받습니다.</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;A.Site Code와 Site Key를 입력하고 저장합니다.</br>
                          2. 당 플러그인의 KCP 홈 폴더중 “bin” 폴더에 있는 pp_cli 화일의 실행권한을 755로 바꾸어 줍니다. 그대로 둘 경우 결제 않됨.</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;예)/public_html/wp-content/plugins/wskl/includes/lib/homekcp/bin/pp_cli</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;(1) ssh로 로그인 후, 해당폴더에서 "chmod 755 pp_cli" 실행 또는</br>
                         &nbsp;&nbsp;&nbsp;&nbsp;(2) FTP 로 접속하여 해당 화일에 오른쪽 마우스를 클릭 - "화일 권한" 확인 후 755 로 저장</br>
- 						<span class="wskl-info">테스트시에는기본 설치된 테스트용 KCP TEST  상점이 사용되므로 참고하세요</span></br>
-  					',
+ 						<span class="wskl-info">테스트시에는기본 설치된 테스트용 KCP TEST  상점이 사용되므로 참고하세요</span></br>',
 							'wskl'
 						),
 						'type'        => 'caption',
