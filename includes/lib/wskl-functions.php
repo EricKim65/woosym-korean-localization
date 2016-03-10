@@ -20,13 +20,44 @@ function wskl_get_option_name( $option_name ) {
  * @param        $option_name
  * @param string $default
  * @param bool   $use_native_prefix
+ *
  * @since 3.2.3-r2
  *
  * @return mixed|void
  */
-function wskl_get_option( $option_name, $default = '', $use_native_prefix = true ) {
+function wskl_get_option(
+	$option_name,
+	$default = '',
+	$use_native_prefix = TRUE
+) {
 
-	return $use_native_prefix ? get_option( wskl_get_option_name( $option_name ), $default ) : get_option( $option_name, $default );
+	return $use_native_prefix ? get_option(
+		wskl_get_option_name( $option_name ),
+		$default
+	) : get_option( $option_name, $default );
+}
+
+
+/**
+ * @param      $option_name
+ * @param      $option_value
+ * @param null $autoload
+ * @param bool $use_native_prefix
+ *
+ * @return bool
+ */
+function wskl_update_option(
+	$option_name,
+	$option_value,
+	$autoload = NULL,
+	$use_native_prefix = TRUE
+) {
+
+	return $use_native_prefix ? update_option(
+		wskl_get_option_name( $option_name ),
+		$option_value,
+		$autoload
+	) : update_option( $option_name, $option_value, $autoload );
 }
 
 
@@ -83,7 +114,12 @@ function wskl_load_module( $relative_path, $option_name = '' ) {
  *
  * @return mixed
  */
-function wskl_get_from_assoc( &$assoc_var, $key_name, $sanitize = '', $default = '' ) {
+function wskl_get_from_assoc(
+	&$assoc_var,
+	$key_name,
+	$sanitize = '',
+	$default = ''
+) {
 
 	$v = $default;
 
@@ -119,7 +155,10 @@ function wskl_REQUEST( $key_name, $sanitize = '', $default = '' ) {
 
 function wskl_setting_tab_url( $tab_name ) {
 
-	return add_query_arg( array( 'page' => WSKL_MENU_SLUG, 'tab' => $tab_name, ), admin_url( 'admin.php' ) );
+	return add_query_arg(
+		array( 'page' => WSKL_MENU_SLUG, 'tab' => $tab_name, ),
+		admin_url( 'admin.php' )
+	);
 }
 
 function wskl_plugin_url( $path ) {
@@ -136,14 +175,23 @@ function wskl_plugin_url( $path ) {
  * shortcut of enqueuing scripts
  *
  * @param string $handle
- * @param string $asset_path  스크립트 경로. 상대 경로일 경우, 항상 우리 플러그인의 루트 디렉토리를 기준으로 계산한다.
+ * @param string $asset_path  스크립트 경로. 상대 경로일 경우, 항상 우리 플러그인의 루트 디렉토리를 기준으로
+ *                            계산한다.
  * @param array  $depends
  * @param string $ver
  * @param bool   $in_footer
  * @param string $object_name 로컬라이징, 혹은 별도의 파라미터를 전달할 경우 입력한다.
  * @param array  $i10n        $object_name 과 같은 용도로 입력한다.
  */
-function wskl_enqueue_script( $handle, $asset_path, $depends = array(), $ver = WSKL_VERSION, $in_footer = false, $object_name = '', $i10n = array() ) {
+function wskl_enqueue_script(
+	$handle,
+	$asset_path,
+	$depends = array(),
+	$ver = WSKL_VERSION,
+	$in_footer = FALSE,
+	$object_name = '',
+	$i10n = array()
+) {
 
 	if ( ! preg_match( '/^https?:\/\//', $asset_path ) ) {
 		$asset_path = wskl_plugin_url( $asset_path );
@@ -160,6 +208,7 @@ function wskl_enqueue_script( $handle, $asset_path, $depends = array(), $ver = W
 
 
 function wskl_debug_enabled() {
+
 	return WP_DEBUG && defined( 'WSKL_DEBUG' ) && WSKL_DEBUG;
 }
 
@@ -167,4 +216,46 @@ function wskl_debug_enabled() {
 function wskl_lab_enabled() {
 
 	return defined( 'WSKL_LAB_FEATURES' ) && WSKL_LAB_FEATURES;
+}
+
+
+function wskl_license_authorized( $license_type ) {
+
+	$info = new WSKL_Auth_Info( $license_type );
+
+	return $info->is_available() && $info->is_verified();
+}
+
+
+function wskl_get_setting_tab_url( $tab ) {
+
+	return add_query_arg(
+		array(
+			'page' => WSKL_MENU_SLUG,
+			'tab'  => $tab,
+		),
+		admin_url( 'admin.php' )
+	);
+}
+
+
+function wskl_get_template(
+	$template_name,
+	array $args = array(),
+	$default_path = ''
+) {
+
+	if ( ! is_string( $template_name ) || empty( $template_name ) ) {
+		return;
+	}
+
+	if ( empty( $default_path ) ) {
+		$default_path = WSKL_PATH . '/includes/templates';
+	}
+
+	if ( substr( $template_name, 0, 1 ) !== '/' ) {
+		$template_name = '/' . $template_name;
+	}
+
+	wc_get_template( $template_name, $args, '', $default_path );
 }

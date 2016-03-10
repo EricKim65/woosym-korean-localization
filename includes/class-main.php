@@ -59,7 +59,6 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				}
 			}
 
-
 			if ( wskl_get_option( 'enable_sym_checkout' ) == 'on' ) {
 				add_action( 'woocommerce_init', array( $this, 'woosym_daum_kaddress' ), 1 );
 				add_action( 'wp_enqueue_scripts', array( $this, 'js_and_css' ) );
@@ -347,7 +346,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 				/** post export */
 				wskl_load_module(
-					'/includes/lib/marketing/class-post-export.php',
+					'/includes/lib/marketing/class-wskl-post-export.php',
 					'enable_post_export'
 				);
 			}

@@ -509,6 +509,8 @@ class PostAPI {
 
 		assert( $key_type && $key_value && $site_url );
 
+		$casper_post_id = NULL;
+
 		try {
 
 			$url = wskl_get_host_api_url() . '/posts/';
@@ -523,11 +525,20 @@ class PostAPI {
 				static::create_post_field( $post_id )
 			);
 
-			Rest_Api_Helper::request( $url, 'POST', $body, array( 201, ) );
+			$response = Rest_Api_Helper::request(
+				$url,
+				'POST',
+				$body,
+				array( 201, )
+			);
+
+			$casper_post_id = $response['body']->id;
 
 		} catch( BadResponseException $e ) {
 			$e->handle_bad_response( __METHOD__ );
 		}
+
+		return $casper_post_id;
 	}
 
 	private static function create_post_field( $post_id ) {
