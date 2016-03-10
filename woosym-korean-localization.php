@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:       우커머스-심포니 통합 플러그인
- * Version:           3.2.5-branch
+ * Version:           3.2.5-alpha1
  * Plugin URI:        https://www.dabory.com/
  * Description:       우커머스를 카페24 같이 편리하게 만들어주는 한국 쇼핑몰 환경 표준 플러그인.
  * Author:            (주)심포니소프트 - 다보리
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'WSKL_PATH', __DIR__ );
 define( 'WSKL_MAIN_FILE', __FILE__ );
 define( 'WSKL_PREFIX', 'wskl_' );
-define( 'WSKL_VERSION', '3.2.5-branch' );
+define( 'WSKL_VERSION', '3.2.5-alpha1' );
 
 define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
 
