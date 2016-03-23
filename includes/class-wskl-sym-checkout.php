@@ -447,7 +447,7 @@ class WSKL_Sym_Checkout {
 
 		wp_enqueue_script(
 			'daum_zipcode-js',
-			plugin_dir_url( WSKL_MAIN_FILE ) . 'js/daum-zipcode.js',
+			plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/js/daum-zipcode.js',
 			array( 'daum-postcode-v2-js', ),
 			WSKL_VERSION,
 			TRUE
