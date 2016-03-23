@@ -789,6 +789,16 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'default'     => '',
 				),
 				array(
+					'id'          => 'bacs_payer_name_in_own_column',
+					'label'       => __( '입금자 별도 행 출력', 'wskl' ),
+					'description' => __(
+						'활성화 시 주문 페이지에서 \'주문\' 열에 출력되는 입금인 이름을 별도의 열로 옮겨 출력합니다.',
+						'wskl'
+					),
+					'type'        => 'checkbox',
+					'default'     => '',
+				),
+				array(
 					'id'          => 'enable_combined_tax',
 					'label'       => __( '복합과세 활성화', 'wskl' ),
 					'description' => __(
