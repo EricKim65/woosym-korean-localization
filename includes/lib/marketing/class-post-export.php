@@ -1,27 +1,39 @@
 <?php
 
-namespace wskl\lib\posts;
-
+require_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth-info.php' );
 require_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
-require_once( WSKL_PATH . '/includes/lib/auth/class-auth-model.php' );
 
-use wskl\lib\auth\Auth_Model;
 use wskl\lib\cassandra\PostAPI;
+
 
 if( !defined( 'LAST_POST_EXPORT' ) ) {
 	define( 'LAST_POST_EXPORT', wskl_get_option_name( 'last_post_export' ) );
 }
 
 
-class Post_Export {
+class WSKL_Post_Export {
 
 	public static function initialize() {
+
+		$auth_info = new WSKL_Auth_Info( 'marketing' );
+
+		if ( ! $auth_info->is_verified() ) {
+
+			self::not_authorized_output();
+
+			return;
+		}
 
 		/**
 		 * @see wordpress/wp-admin/includes/meta-boxes.php post_submit_meta_box()
 		 */
 		add_action( 'post_submitbox_misc_actions', array( __CLASS__, 'callback_post_submitbox_misc_actions' ), 99, 1 );
 		add_action( 'save_post', array( __CLASS__, 'callback_save_post' ), 99, 3 );
+	}
+
+	public static function not_authorized_output() {
+
+
 	}
 
 	public static function callback_post_submitbox_misc_actions( \WP_Post $post ) {
@@ -45,7 +57,7 @@ class Post_Export {
 			return;
 		}
 
-		$auth = new Auth_Model( 'marketing' );
+		$auth = new \WSKL_Auth_Info( 'marketing' );
 
 		if ( $auth->is_verified() ) {
 
@@ -62,4 +74,5 @@ class Post_Export {
 	}
 }
 
-Post_Export::initialize();
+
+WSKL_Post_Export::initialize();

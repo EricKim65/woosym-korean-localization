@@ -315,19 +315,27 @@ EOD;
 
 			public static function get_gateway_methods() {
 
-				$checkout_methods  = (array) WSKL_Payment_Gates::get_checkout_methods();
-				$available_methods = array();
+				$enabled_methods = wskl_get_option( 'checkout_methods' );
+				$available_methods = array_keys(
+					WSKL_Payment_Gates::get_checkout_methods()
+				);
+				$result = array();
 
-				foreach ( $checkout_methods as $key => $method ) {
+				$checkout_methods = array_intersect(
+					$enabled_methods,
+					$available_methods
+				);
+
+				foreach ( $checkout_methods as $key ) {
 
 					$class_name = 'WC_Gateway_PayApp_' . ucfirst( $key );
 
 					if ( class_exists( $class_name ) ) {
-						$available_methods[] = $class_name;
+						$result[] = $class_name;
 					}
 				}
 
-				return $available_methods;
+				return $result;
 			}
 		}
 

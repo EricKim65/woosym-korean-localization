@@ -1,5 +1,8 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class WSKL_Payment_Gates {
 
@@ -57,29 +60,6 @@ class WSKL_Payment_Gates {
 		$sym_pg_agency          = get_option( wskl_get_option_name( 'pg_agency' ) );
 	}
 
-	public static function add_api_request( $api_request ) {
-
-		if ( class_exists( $api_request ) ) {
-			new $api_request();
-		}
-	}
-
-	public static function output_pay_gate_error() {
-
-		printf( '<div class="notice error"><p class="wskl-warning">%s: %s</p></div>', __( '다음 PG 모듈이 발견되지 않았습니다.', 'wskl' ), static::$pay_gate );
-	}
-
-	public static function get_pay_gates() {
-
-		return array(
-			'payapp'  => __( '페이앱', 'wskl' ),
-			'kcp'     => __( 'KCP', 'wskl' ),
-			'inicis'  => __( '이니시스', 'wskl' ),
-			'ags'     => __( '올더게이트', 'wskl' ),
-			'iamport' => __( '아임포트', 'wskl' ),
-		);
-	}
-
 	public static function get_checkout_methods( $extra_agency_slug = '' ) {
 
 		static $methods;
@@ -104,6 +84,33 @@ class WSKL_Payment_Gates {
 	public static function get_checkout_method_postfix() {
 
 		return __( '로 결제합니다.', 'wskl' );
+	}
+
+	public static function add_api_request( $api_request ) {
+
+		if ( class_exists( $api_request ) ) {
+			new $api_request();
+		}
+	}
+
+	public static function output_pay_gate_error() {
+
+		printf(
+			'<div class="notice error"><p class="wskl-warning">%s: %s</p></div>',
+			__( '다음 PG 모듈이 발견되지 않았습니다.', 'wskl' ),
+			static::$pay_gate
+		);
+	}
+
+	public static function get_pay_gates() {
+
+		return array(
+			'payapp' => __( '페이앱', 'wskl' ),
+			'kcp' => __( 'KCP', 'wskl' ),
+			'inicis' => __( '이니시스', 'wskl' ),
+			'ags' => __( '올더게이트', 'wskl' ),
+			'iamport' => __( '아임포트', 'wskl' ),
+		);
 	}
 }
 

@@ -49,18 +49,16 @@ function wskl_get_host_api_url() {
  */
 class BadResponseException extends \Exception {
 
-}
+	function handle_bad_response( $method ) {
 
-
-function handle_bad_response( $method, BadResponseException &$e ) {
-
-	$message = sprintf(
-		'%s(): Bad response occurred. "%s"',
-		$method,
-		$e->getMessage()
-	);
-	error_log( $message );
-	wp_die( $message );
+		$message = sprintf(
+			'Method %s(): Bad response occurred. Message: "%s"',
+			$method,
+			$this->getMessage()
+		);
+		error_log( $message );
+		// wp_die( $message );
+	}
 }
 
 
@@ -81,8 +79,6 @@ class Rest_Api_Helper {
 	 * @param mixed  $body    전송하는 데이터. 기본은 빈 배열
 	 * @param array  $accepts 성공으로 간주할 원격지 응답. 기본은 array(200, )
 	 * @param array  $headers 추가 헤더.
-	 * @param bool   $throws  연결, 혹은 응답 코드에 문제가 있을 경우 예외처리를 하는가? FALSE 면 함수의
-	 *                        리턴은 FALSE
 	 *
 	 * @return array|bool 두 개의 키로 구성됨. 키는 'code', 'body' 이며 각각 원격지의 응답 코드와 응답
 	 *                    본문이 담경 씨다. 헤더 중 content-type 필드의 값이 application/json
@@ -98,8 +94,7 @@ class Rest_Api_Helper {
 		$method,
 		$body = NULL,
 		array $accepts = array( 200, ),
-		array $headers = array(),
-		$throws = FALSE
+		array $headers = array()
 	) {
 
 		$args = array(
@@ -117,13 +112,7 @@ class Rest_Api_Helper {
 				$response->get_error_message()
 			);
 
-			if ( $throws ) {
-				throw new BadResponseException( $message );
-			} else {
-				error_log( $message );
-
-				return FALSE;
-			}
+			throw new BadResponseException( $message );
 		}
 
 		$response_code = wp_remote_retrieve_response_code( $response );
@@ -137,13 +126,7 @@ class Rest_Api_Helper {
 				$response_body
 			);
 
-			if ( $throws ) {
-				throw new BadResponseException( $message );
-			} else {
-				error_log( $message );
-
-				return FALSE;
-			}
+			throw new BadResponseException( $message );
 		}
 
 		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
@@ -196,7 +179,7 @@ class ClientAPI {
 			}
 
 		} catch( BadResponseException $e ) {
-			handle_bad_response( __METHOD__, $e );
+			$e->handle_bad_response( __METHOD__ );
 		}
 
 		return $obj;
@@ -217,16 +200,14 @@ class ClientAPI {
 			'site_url'  => &$site_url,
 		);
 
-		$response = Rest_Api_Helper::request(
-			$url,
-			'POST',
-			$body,
-			array( 200, 403, ),
-			array(),
-			FALSE
-		);
+		try {
 
-		if ( is_array( $response ) ) {
+			$response = Rest_Api_Helper::request(
+				$url,
+				'POST',
+				$body,
+				array( 200, 403, )
+			);
 
 			assert( isset( $response['code'] ) && isset( $response['body'] ) );
 
@@ -234,14 +215,11 @@ class ClientAPI {
 				$obj = OrderItemRelation::from_response( $response['body'] );
 			}
 
-			// $obj 은 계속 NULL 값으로 진행.
+		} catch( BadResponseException $e ) {
 
-		} else if ( $response === FALSE ) {
+			$e->handle_bad_response( __METHOD__ );
 
-			// 이 경우 연결 자체가 성립하지 않음을 뜻함.
-			// FALSE: 서버 연결이 되지 않았음.
-			// NULL: 서버 연결은 되었으나 기대한 응답이 오지 않음 (인증실패)
-			return FALSE;
+			$obj = FALSE;
 		}
 
 		return $obj;
@@ -285,7 +263,7 @@ class SalesAPI {
 			$obj      = Sales::from_response( $response['body'] );
 
 		} catch( BadResponseException $e ) {
-			handle_bad_response( __METHOD__, $e );
+			$e->handle_bad_response( __METHOD__ );
 		}
 
 		return $obj;
@@ -405,7 +383,7 @@ abstract class ProductLogAPI {
 			$obj      = ProductLogs::from_response( $response['body'] );
 
 		} catch( BadResponseException $e ) {
-			handle_bad_response( __METHOD__, $e );
+			$e->handle_bad_response( __METHOD__ );
 		}
 
 		return $obj;
@@ -551,6 +529,8 @@ class PostAPI {
 
 		assert( $key_type && $key_value && $site_url );
 
+		$casper_post_id = NULL;
+
 		try {
 
 			$url = wskl_get_host_api_url() . '/posts/';
@@ -565,11 +545,20 @@ class PostAPI {
 				static::create_post_field( $post_id )
 			);
 
-			Rest_Api_Helper::request( $url, 'POST', $body, array( 201, ) );
+			$response = Rest_Api_Helper::request(
+				$url,
+				'POST',
+				$body,
+				array( 201, )
+			);
+
+			$casper_post_id = $response['body']->id;
 
 		} catch( BadResponseException $e ) {
-			handle_bad_response( __METHOD__, $e );
+			$e->handle_bad_response( __METHOD__ );
 		}
+
+		return $casper_post_id;
 	}
 
 	private static function create_post_field( $post_id ) {

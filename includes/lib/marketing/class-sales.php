@@ -2,9 +2,8 @@
 namespace wskl\lib\sales;
 
 require_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
-require_once( WSKL_PATH . '/includes/lib/auth/class-auth-model.php' );
+require_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth-info.php' );
 
-use wskl\lib\auth\Auth_Model;
 use wskl\lib\cassandra\SalesAPI;
 
 
@@ -36,7 +35,7 @@ class Sales {
 
 	private function send_sales_log( $order_id ) {
 
-		$auth = new Auth_Model( 'marketing' );
+		$auth = new \WSKL_Auth_Info( 'marketing' );
 
 		if ( $auth->is_verified() ) {
 
