@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 function wskl_shipping_class_init() {
 
 	if ( ! class_exists( 'WSKL_Shipping_Method' ) ) :

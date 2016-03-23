@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 require_once( WSKL_PATH . '/includes/lib/geoip/geoip.inc' );
 
 

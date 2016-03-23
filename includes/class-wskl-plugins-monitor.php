@@ -1,5 +1,8 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Class WSKL_Plugin_Monitor

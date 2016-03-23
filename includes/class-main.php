@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 	final class Woosym_Korean_Localization extends WSKL_Sym_Mvc_Main {
@@ -59,10 +63,10 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				}
 			}
 
-			if ( wskl_get_option( 'enable_sym_checkout' ) == 'on' ) {
-				add_action( 'woocommerce_init', array( $this, 'woosym_daum_kaddress' ), 1 );
-				add_action( 'wp_enqueue_scripts', array( $this, 'js_and_css' ) );
-			}
+			//			if ( wskl_get_option( 'enable_sym_checkout' ) == 'on' ) {
+			//				add_action( 'woocommerce_init', array( $this, 'woosym_daum_kaddress' ), 1 );
+			//				add_action( 'wp_enqueue_scripts', array( $this, 'js_and_css' ) );
+			//			}
 
 			if ( wskl_get_option( 'disable_sku' ) == 'on' ) {
 				add_filter( 'wc_product_sku_enabled', '__return_false' );
@@ -367,6 +371,11 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				wskl_load_module(
 					'/includes/lib/marketing/class-product-logs.php'
 				);
+
+				wskl_load_module(
+					'/includes/lib/class-wskl-korean-address.php',
+					'enable_sym_checkout'
+				);
 			}
 
 			/** 복합과세 */
@@ -378,17 +387,24 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			/** IP blocking */
 			wskl_load_module( '/includes/class-wskl-ip-block.php', 'enable_countryip_block' );
 
-			/** 모듈 소셜 로그인 */
+			/** 소셜 로그인 */
 			wskl_load_module( '/includes/lib/class-social-login.php', 'enable_social_login' );
 
 			/** 바로 구매 */
 			wskl_load_module( '/includes/lib/class-direct-purchase.php', 'enable_direct_purchase' );
 
-			/** 모듈 배송추적*/
+			/** BACS 입금자 다른 이름 */
+			wskl_load_module(
+				'/includes/class-wskl-bacs-payer-name.php',
+				'enable_bacs_payer_name'
+			);
+
+			/** 배송추적 */
 			wskl_load_module( '/includes/class-wskl-shipping-tracking.php', 'enable_ship_track' );
 
 			/** 결제 (frontend/admin 둘 다 요구 ) */
 			wskl_load_module( '/includes/class-wskl-payment-gates.php', 'enable_sym_pg' );
+
 
 			if( wskl_debug_enabled() ) {
 				wskl_load_module( '/includes/lib/wskl-debugging.php' );
