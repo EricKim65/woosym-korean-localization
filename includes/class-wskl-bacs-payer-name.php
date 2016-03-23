@@ -97,7 +97,7 @@ class WSKL_BACS_Payer_Name {
 		}
 
 		echo '<div class="col2-set">';
-		echo '<div class="col-1">';
+		echo '<div class="col-1">&nbsp;</div><div class="col-2">';
 		woocommerce_form_field(
 			'bacs_payer_name',
 			array(
@@ -111,7 +111,7 @@ class WSKL_BACS_Payer_Name {
 				'required'    => FALSE,
 			)
 		);
-		echo '</div><div class="col-2">&nbsp;</div></div>';
+		echo '</div></div>';
 	}
 
 	/**
@@ -144,7 +144,6 @@ class WSKL_BACS_Payer_Name {
 	 * 스크립트 처리 콜백
 	 */
 	public static function enqueue_scripts() {
-
 		//		wskl_enqueue_script(
 		//			'wskl-payer-name-js',
 		//			'assets/js/bacs-payer-name.js',
