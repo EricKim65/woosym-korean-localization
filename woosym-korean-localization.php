@@ -68,6 +68,17 @@ if ( ! function_exists( 'wskl_plugin_monitor' ) ) :
 			                        'iamport_plugin',
 		                        ) );
 
+		/** WP-Members 대응 */
+		if ( wskl_is_option_enabled( 'enable_dabory_members' ) ) {
+
+			wskl_add_plugin_status( 'wp-members/wp-members.php',
+			                        'inactive',
+			                        array(
+				                        'WSKL_Plugins_React',
+				                        'wp_members',
+			                        ) );
+		}
+
 		// 플러그인 확인.
 		wskl_check_plugin_status();
 	}
