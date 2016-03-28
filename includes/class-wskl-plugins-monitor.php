@@ -23,13 +23,6 @@ class WSKL_Plugin_Monitor {
 				continue;
 			}
 
-//				if ( ! $plugin_name ) {
-//					$data = get_plugin_data( WP_PLUGIN_DIR . '/'. $plugin_file, false );
-//					if( isset( $data['Name'] ) ) {
-//						$plugin_name = $data['Name'];
-//					}
-//				}
-
 			switch ( $trigger ) {
 
 				case 'active':
@@ -65,7 +58,7 @@ function wskl_add_plugin_status( $plugin_file, $trigger = 'active', $callback = 
  */
 function wskl_check_plugin_status() {
 
-	apply_filters( 'wskl_plugin_status', WSKL_Plugin_MOnitor::$plugins );
+	apply_filters( 'wskl_plugin_status', WSKL_Plugin_Monitor::$plugins );
 	WSKL_Plugin_Monitor::check_plugin_status();
 }
 

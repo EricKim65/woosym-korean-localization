@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * 아임포트 결제 모듈 (http://www.iamport.kr/)
  *
@@ -8,7 +6,9 @@
  * (https://ko.wordpress.org/plugins/iamport-for-woocommerce/) 과의 이름 충돌을 피하기 위해
  * 'iamport' 라는 슬러그에 'wskl_' 접두사를 붙이도록 한다.
  */
+
 if ( ! class_exists( 'WSKL_Iamport_Main' ) ) :
+
 	class WSKL_Iamport_Main {
 
 		public static function init() {
@@ -21,7 +21,7 @@ if ( ! class_exists( 'WSKL_Iamport_Main' ) ) :
 			/**
 			 * @uses init_wc_gateway_iamport 파일 class-pg-iamport-common.php 에 정의.
 			 */
-			add_action( 'plugins_loaded', 'init_wc_gateway_wskl_iamport' );
+			add_action( 'init', 'init_wc_gateway_wskl_iamport' );
 
 			/**
 			 * 아임포트 게이트웨이 삽입
