@@ -100,7 +100,11 @@ class WSKL_Sym_Checkout {
 	 *
 	 * @return array
 	 */
-	private static function address_common_korean( $prefix, $address_fields ) {
+	private static function address_common_korean(
+		$prefix,
+		/** @noinspection PhpUnusedParameterInspection */
+		$address_fields
+	) {
 
 		// address_fields 로 전해지는 array 의 키 기본 값은 다음과 같다. (순서대로)
 		// {$prefix}_first_name: form-row-first
@@ -268,6 +272,7 @@ class WSKL_Sym_Checkout {
 	}
 
 	public static function output_hidden_form_fields(
+		/** @noinspection PhpUnusedParameterInspection */
 		$field,
 		$key,
 		/** @noinspection PhpUnusedParameterInspection */
