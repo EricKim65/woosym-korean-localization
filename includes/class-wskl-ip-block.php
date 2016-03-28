@@ -11,6 +11,28 @@ class WSKL_IP_Block {
 
 	public static function init() {
 
+
+		$database_files = self::get_geolocate_database_files();
+
+		foreach ( $database_files as $file ) {
+
+			if ( ! file_exists( $file ) ) {
+
+				WC_Geolocation::update_database();
+
+				// check again for stability.
+				if ( ! file_exists( $file ) ) {
+					add_action( 'admin_notices',
+					            array(
+						            __CLASS__,
+						            'output_database_not_found',
+					            ) );
+
+					return;
+				}
+			}
+		}
+
 		add_action( 'init', array( __CLASS__, 'wskl_country_ip_block' ) );
 
 		/**
@@ -19,6 +41,27 @@ class WSKL_IP_Block {
 		 */
 		add_filter( 'pre_update_option_' . wskl_get_option_name( 'white_ipcode_list' ),
 		            array( __CLASS__, 'set_target_domain' ) );
+	}
+
+	public static function get_geolocate_database_files() {
+
+		$upload_dir = wp_upload_dir();
+
+		return array(
+			$upload_dir['basedir'] . '/GeoIP.dat',
+			$upload_dir['basedir'] . '/GeoIPv6.dat',
+		);
+	}
+
+	/**
+	 * @action  admin_notices
+	 * @used-by init()
+	 */
+	public static function output_database_not_found() {
+
+		printf( '<div class="error notice"><p>%s</p></div>',
+		        __( '다보리 차단보안기능 알림: Geolocate 데이터베이스 파일이 발견되지 않아, 차단 기능이 동작하지 않고 있습니다.',
+		            'wskl' ) );
 	}
 
 	public static function wskl_country_ip_block() {
@@ -32,7 +75,8 @@ class WSKL_IP_Block {
 
 		// result sample: array( 'country' => KR, 'state' => '' );
 		$result     = WC_Geolocation::geolocate_ip( $_SERVER['REMOTE_ADDR'] );
-		$white_list = preg_replace( '/\s+/', '',
+		$white_list = preg_replace( '/\s+/',
+		                            '',
 		                            get_option( 'wskl_white_ipcode_list' ) );
 
 		// not a valid white list. ip block will be disabled.
