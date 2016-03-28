@@ -106,7 +106,6 @@ function init_wc_gateway_wskl_iamport() {
 			}
 
 
-
 			public function generate_multicheckbox_html( $key, $data ) {
 
 				$field    = $this->get_field_key( $key );
@@ -197,7 +196,9 @@ function init_wc_gateway_wskl_iamport() {
 				if ( $item_count == 1 ) {
 					$order_name = $first_item['name'];
 				} else {
-					$fmt        = _n( '외 %d개 상품', '외 %d개 상품들', $item_count - 1,
+					$fmt        = _n( '외 %d개 상품',
+					                  '외 %d개 상품들',
+					                  $item_count - 1,
 					                  'wskl' );
 					$order_name = $first_item['name'] . sprintf( $fmt,
 					                                             $item_count - 1 );
@@ -266,7 +267,7 @@ function init_wc_gateway_wskl_iamport() {
 
 			protected function variate( $slug ) {
 
-				$guided_methods = WSKL_Payment_Gates::get_checkout_methods( 'iamport' );
+				$guided_methods     = WSKL_Payment_Gates::get_checkout_methods( 'iamport' );
 				$payment_gate_names = WSKL_Payment_Gates::get_pay_gates();
 
 				// ID
@@ -289,7 +290,8 @@ function init_wc_gateway_wskl_iamport() {
 				$tab_href = add_query_arg( array(
 					                           'page' => WSKL_MENU_SLUG,
 					                           'tab'  => 'checkout-payment-gate',
-				                           ), admin_url( 'admin.php ' ) );
+				                           ),
+				                           admin_url( 'admin.php ' ) );
 
 				// Method title: 우커머스 > 설정 > 결제 (checkout) 탭에서 확인
 				$this->method_title = $payment_gate_names['iamport'] . " - {$guided_methods[ $slug ]}";
@@ -310,19 +312,23 @@ function init_wc_gateway_wskl_iamport() {
 
 			public static function get_gateway_methods() {
 
-				$checkout_methods  = (array) WSKL_Payment_Gates::get_checkout_methods( 'iamport' );
-				$available_methods = array();
+				$enabled_methods   = wskl_get_option( 'checkout_methods' );
+				$available_methods = array_keys( WSKL_Payment_Gates::get_checkout_methods() );
+				$result            = array();
 
-				foreach ( $checkout_methods as $key => $method ) {
+				$checkout_methods = array_intersect( $enabled_methods,
+				                                     $available_methods );
+
+				foreach ( $checkout_methods as $key ) {
 
 					$class_name = 'WC_Gateway_WSKL_Iamport_' . ucfirst( $key );
 
 					if ( class_exists( $class_name ) ) {
-						$available_methods[] = $class_name;
+						$result[] = $class_name;
 					}
 				}
 
-				return $available_methods;
+				return $result;
 			}
 		}    // class WC_Gateway_WSKL_Iamport ...
 
