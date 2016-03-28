@@ -121,7 +121,10 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			return $title;
 		}
 
-		function order_received_addition( $order_id ) {
+		function order_received_addition(
+			/** @noinspection PhpUnusedParameterInspection */
+			$order_id
+		) {
 
 			echo __( '<p><h5>  주문에 감사드리며 항상 정성을 다 하겠습니다 !</h5></p>', $this->_folder );
 		}
@@ -408,6 +411,10 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			/** 배송추적 */
 			wskl_load_module( '/includes/class-wskl-shipping-tracking.php', 'enable_ship_track' );
+
+			/** 다보리 멤버스 */
+			wskl_load_module( '/includes/class-wskl-dabory-members.php',
+			                  'enable_dabory_members' );
 
 			/** 결제 (frontend/admin 둘 다 요구 ) */
 			wskl_load_module( '/includes/class-wskl-payment-gates.php', 'enable_sym_pg' );
