@@ -42,7 +42,7 @@ class WSKL_Sym_Checkout {
 		            2 );
 
 		/**
-		 * @filter 'woocommerce_{$type}fields
+		 * @filter woocommerce_{$type}fields
 		 * @see    woocommerce/includes/class-wc-countries.php
 		 * @see    WC_Countries::get_address_fields()
 		 */
@@ -52,19 +52,12 @@ class WSKL_Sym_Checkout {
 		            2 );
 
 		/**
+		 * @filter woocommerce_form_field_{$type}
 		 * @see woocommerce/includes/wc-template-functions.php
 		 * @see woocommerce_form_field()
 		 */
-		add_filter( 'woocommerce_form_field_text',
-		            array( __CLASS__, 'output_hidden_text_form_fields' ),
-		            10,
-		            4 );
-
-		add_filter( 'woocommerce_form_field_country',
-		            array(
-			            __CLASS__,
-			            'output_hidden_country_form_field',
-		            ),
+		add_filter( 'woocommerce_form_field_hidden',
+		            array( __CLASS__, 'output_hidden_form_fields' ),
 		            10,
 		            4 );
 
@@ -122,12 +115,14 @@ class WSKL_Sym_Checkout {
 		// {$prefix}_state: form-row-first address-field
 		// {$prefix}_postcode: form-row-last address-field
 
+		$company_enabled = wskl_is_option_enabled( 'company' );
+
 		$field_template = array(
 
 			'first_name' => array(
 				'label'    => __( '이름', 'wskl' ),
 				'required' => TRUE,
-				'class'    => array( 'form-row-first' ),
+				'class'    => ( $company_enabled ) ? array( 'form-row-first' ) : array( 'form-row-wide' ),
 			),
 
 			// last_name 생략. fist_name 에 성과 이름을 모두 담음.
@@ -213,22 +208,25 @@ class WSKL_Sym_Checkout {
 			// 이후 필드는 사용자가 미리 채워 넣은 기본값으로 사용
 			// 그리고 실제 결제 폼에서는 보이지 않도록 처리
 			'last_name' => array(
+				'type'     => 'hidden',
 				'label'    => __( '성 (따로 기재하는 경우)', 'wskl' ),
 				'required' => FALSE,
 			),
 
 			'country' => array(
-				'type'     => 'country',
+				'type'     => 'hidden',
 				'label'    => __( '국가', 'wskl' ),
 				'required' => FALSE,
 			),
 
 			'city' => array(
+				'type'     => 'hidden',
 				'label'    => __( '주소 - 시/도(번지 이전까지)', 'wskl' ),
 				'required' => FALSE,
 			),
 
 			'state' => array(
+				'type'     => 'hidden',
 				'label'    => __( '주/군', 'wskl' ),
 				'required' => FALSE,
 			),
@@ -238,7 +236,7 @@ class WSKL_Sym_Checkout {
 
 		foreach ( $field_template as $key => $value ) {
 			// 회사명 표시 옵션이 켜져 있을 때만 회사 필드를 집어 넣음.
-			if ( $key == 'company' && ! wskl_is_option_enabled( 'company' ) ) {
+			if ( $key == 'company' && ! $company_enabled ) {
 				continue;
 			}
 			$output[ $prefix . $key ] = $value;
@@ -269,94 +267,18 @@ class WSKL_Sym_Checkout {
 		return $address_fields;
 	}
 
-	/**
-	 * 각 텍스트 타입 필드를 숨김. 한국 주소상 불필요해 보인다고 판단하는 부분은 숨김.
-	 * 세팅을 한국 주소라는 가정하에 잘 설정해 두었다면
-	 * 우커머스에서 제공하는 기본 필드들은 숨겨진 기본값으로 잘 제출된다.
-	 *
-	 * @filter  woocommerce_form_field_text
-	 * @used-by WSKL_Sym_Checkout::customize_checkout_address_fields()
-	 *
-	 * @param $field
-	 * @param $key
-	 * @param $args
-	 * @param $value
-	 *
-	 * @return string
-	 */
-	public static function output_hidden_text_form_fields(
+	public static function output_hidden_form_fields(
 		$field,
 		$key,
 		/** @noinspection PhpUnusedParameterInspection */
 		$args,
 		$value
 	) {
-
-		switch ( $key ) {
-			case 'billing_company':
-			case 'shipping_company':
-				if ( ! wskl_is_option_enabled( 'company' ) ) {
-					$field = static::output_hidden_field( $key, $value );
-				}
-				break;
-			case 'billing_last_name':
-			case 'billing_city':
-			case 'billing_state':
-			case 'shipping_last_name':
-			case 'shipping_city':
-			case 'shipping_state':
-				$field = static::output_hidden_field( $key, $value );
-				break;
-		}
-
-		return $field;
-	}
-
-	/**
-	 * @param $key
-	 * @param $value
-	 *
-	 * @return string
-	 */
-	private static function output_hidden_field( $key, $value ) {
 
 		return sprintf( '<input type="hidden" name="%s" id="%s" value="%s" />',
 		                esc_attr( $key ),
 		                esc_attr( $key ),
 		                esc_attr( $value ) );
-	}
-
-	/**
-	 * 각 국가 타입 필드를 숨김. 한국 주소상 불필요해 보인다고 판단하는 부분은 숨김.
-	 * 세팅을 한국 주소라는 가정하에 잘 설정해 두었다면
-	 * 우커머스에서 제공하는 기본 필드들은 숨겨진 기본값으로 잘 제출된다.
-	 *
-	 * @filter  woocommerce_form_field_country
-	 * @used-by WSKL_Sym_Checkout::customize_checkout_address_fields()
-	 *
-	 * @param $field
-	 * @param $key
-	 * @param $args
-	 * @param $value
-	 *
-	 * @return string
-	 */
-	public static function output_hidden_country_form_field(
-		$field,
-		$key,
-		/** @noinspection PhpUnusedParameterInspection */
-		$args,
-		$value
-	) {
-
-		switch ( $key ) {
-			case 'billing_country':
-			case 'shipping_country':
-				$field = static::output_hidden_field( $key, $value );
-				break;
-		}
-
-		return $field;
 	}
 
 	/**
@@ -405,9 +327,9 @@ class WSKL_Sym_Checkout {
 			$field .= sprintf( '<label for="%s" class="%s">%s%s</label>',
 			                   $escaped_key,
 			                   esc_attr( implode( ' ', $args['label_class'] ) ),
-			                   $escaped_label,
+			                   '&nbsp;', // $escaped_label,
 			                   $required );
-			$field .= sprintf( '<input type="button" name="%s" id="%s" value="%s" /></p>%s',
+			$field .= sprintf( '<input type="button" class="button" name="%s" id="%s" value="%s" /></p>%s',
 			                   $escaped_key,
 			                   $escaped_key,
 			                   $escaped_label,
