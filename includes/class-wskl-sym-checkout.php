@@ -202,7 +202,7 @@ class WSKL_Sym_Checkout {
 
 			'phone'     => array(
 				'label'       => __( '휴대전화 번호', 'wskl' ),
-				// 'type'        => 'tel',
+				'type'        => 'text',
 				'placeholder' => _x( '000-0000-0000', 'placeholder', 'wskl' ),
 				'clear'       => TRUE,
 				'class'       => array( 'input-text', 'form-row-last', ),
