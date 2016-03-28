@@ -153,6 +153,7 @@ class WSKL_Sym_Checkout {
 				'label'    => __( '회사명', 'wskl' ),
 				'required' => TRUE,
 				'class'    => array( 'form-row-last' ),
+				'clear'    => TRUE,
 			),
 
 			'filler_1' => array(
@@ -224,7 +225,7 @@ class WSKL_Sym_Checkout {
 				'type'        => 'tel',
 				'placeholder' => _x( '000-0000-0000', 'placeholder', 'wskl' ),
 				'clear'       => TRUE,
-				'class'       => array( 'form-row-last', ),
+				'class'       => array( 'input-text', 'form-row-last', ),
 				'required'    => TRUE,
 				'validate'    => array( 'phone' ),
 			),
@@ -262,7 +263,7 @@ class WSKL_Sym_Checkout {
 			}
 			$output[ $prefix . $key ] = $value;
 		}
-		
+
 		return $output;
 	}
 
@@ -314,9 +315,11 @@ class WSKL_Sym_Checkout {
 	) {
 
 		switch ( $key ) {
+			case 'billing_company':
 			case 'billing_last_name':
 			case 'billing_city':
 			case 'billing_state':
+			case 'shipping_company':
 			case 'shipping_last_name':
 			case 'shipping_city':
 			case 'shipping_state':
