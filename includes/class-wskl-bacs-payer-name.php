@@ -104,9 +104,8 @@ class WSKL_BACS_Payer_Name {
 				'type'        => 'text',
 				'class'       => array( 'form-row', 'form-row-wide' ),
 				'label'       => __( '입금자 이름', 'wskl' ),
-				'placeholder' => __(
-					'직접 은행 이체만. 계좌 이름과 입금자 이름을 별도로 할 때만',
-					'wskl'
+				'placeholder' => __( '무통장 입금자 이름이 다를 경우',
+				                     'wskl'
 				),
 				'required'    => FALSE,
 			)
