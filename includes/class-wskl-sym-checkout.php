@@ -165,7 +165,7 @@ class WSKL_Sym_Checkout {
 				'label'       => __( '우편번호', 'wskl' ),
 				'placeholder' => __( '우편번호', 'wskl' ),
 				'required'    => TRUE,
-				'class'       => array( 'form-row-first' ),
+				'class'       => array( 'form-row-first', 'address-field' ),
 				'validate'    => array( 'postcode' ),
 			),
 
@@ -228,6 +228,29 @@ class WSKL_Sym_Checkout {
 				'required'    => TRUE,
 				'validate'    => array( 'phone' ),
 			),
+
+			// 이후 필드는 사용자가 미리 채워 넣은 기본값으로 사용
+			// 그리고 실제 결제 폼에서는 보이지 않도록 처리
+			'last_name' => array(
+				'label'    => __( '성 (따로 기재하는 경우)', 'wskl' ),
+				'required' => FALSE,
+			),
+
+			'country' => array(
+				'type'     => 'country',
+				'label'    => __( '국가', 'wskl' ),
+				'required' => FALSE,
+			),
+
+			'city' => array(
+				'label'    => __( '주소 - 시/도(번지 이전까지)', 'wskl' ),
+				'required' => FALSE,
+			),
+
+			'state' => array(
+				'label'    => __( '주/군', 'wskl' ),
+				'required' => FALSE,
+			),
 		);
 
 		$output = array();
@@ -239,15 +262,7 @@ class WSKL_Sym_Checkout {
 			}
 			$output[ $prefix . $key ] = $value;
 		}
-
-		// 기본적으로 만들어진 phone 이후의 필드,
-		// last_name, country, city, state 정보를 밀어 넣는다.
-		foreach ( $address_fields as $key => $val ) {
-			if ( ! array_key_exists( $key, $output ) ) {
-				$output[ $key ] = $val;
-			}
-		}
-
+		
 		return $output;
 	}
 
@@ -301,9 +316,11 @@ class WSKL_Sym_Checkout {
 		switch ( $key ) {
 			case 'billing_last_name':
 			case 'billing_city':
+			case 'billing_state':
 			case 'shipping_last_name':
 			case 'shipping_city':
-				$field = $field = static::output_hidden_field( $key, $value );
+			case 'shipping_state':
+				$field = static::output_hidden_field( $key, $value );
 				break;
 		}
 
