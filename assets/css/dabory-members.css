@@ -1,0 +1,31 @@
+.context-opened {
+    display: none;
+    margin-left: 5px;
+}
+
+.context-closed {
+}
+
+.arrow-right {
+    margin-right: 10px;
+    padding: 2px;
+}
+
+span.description {
+    margin-left: 10px;
+}
+
+div.spacing {
+    margin-bottom: 50px;
+}
+
+a.context-edit:hover, a.context-view:hover,
+a.context-edit:visited, a.context-view:visited,
+a.context-edit:link, a.context-view:link,
+a.context-edit:active, a.context-view:active,
+a.arrow-right:hover, a.arrow-left:hover,
+a.arrow-right:visited, a.arrow-left:visited,
+a.arrow-right:link, a.arrow-left:link,
+a.arrow-right:active, a.arrow-left:active {
+    text-decoration: none;
+}

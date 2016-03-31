@@ -153,6 +153,22 @@ function wskl_REQUEST( $key_name, $sanitize = '', $default = '' ) {
 }
 
 
+function wskl_verify_nonce( $nonce_action, $nonce_value ) {
+
+	class NonceVerificationFailureException extends Exception {
+
+		public function __construct() {
+
+			$this->message = 'Nonce verification failed.';
+		}
+	}
+
+
+	if ( ! wp_verify_nonce( $nonce_value, $nonce_action ) ) {
+		throw new NonceVerificationFailureException();
+	}
+}
+
 function wskl_setting_tab_url( $tab_name ) {
 
 	return add_query_arg(
