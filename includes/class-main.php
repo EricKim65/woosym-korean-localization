@@ -41,6 +41,8 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			parent::__construct( $file, $version );
 
+			$this->init_constants();
+
 			// 모듈 삽입.
 			$this->init_modules();
 
@@ -110,6 +112,19 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 		public function settings() {
 
 			return $this->_settings;
+		}
+
+		public function init_constants() {
+
+			$this->define( 'DAUM_POSTCODE_HTTP', 'http://dmaps.daum.net/map_js_init/postcode.v2.js' );
+			$this->define( 'DAUM_POSTCODE_HTTPS', 'https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js' );
+		}
+
+		private function define( $constant, $expression ) {
+
+			if ( ! defined( $constant ) ) {
+				define( $constant, $expression );
+			}
 		}
 
 		function order_received_title( $title, $id ) {
