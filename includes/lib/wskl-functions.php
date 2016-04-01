@@ -254,7 +254,6 @@ function wskl_get_setting_tab_url( $tab ) {
 	);
 }
 
-
 function wskl_get_template(
 	$template_name,
 	array $args = array(),
@@ -274,4 +273,25 @@ function wskl_get_template(
 	}
 
 	wc_get_template( $template_name, $args, '', $default_path );
+}
+
+function wskl_enqueue_daum_postcode_scripts() {
+
+	/** @noinspection PhpUndefinedConstantInspection */
+	$api_uri = is_ssl() ? DAUM_POSTCODE_HTTPS : DAUM_POSTCODE_HTTP;
+
+	wp_enqueue_script(
+		'daum-postcode-v2',
+		$api_uri,
+		NULL,
+		NULL,
+		FALSE
+	);  // in the header area
+}
+
+function wskl_check_abspath() {
+
+	if ( ! defined( 'ABSPATH' ) ) {
+		exit;
+	}
 }
