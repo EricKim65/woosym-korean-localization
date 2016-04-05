@@ -8,6 +8,7 @@ require_once( WSKL_PATH . '/includes/lib/sym-mvc/wskl-sym-mvc-framework.php' );
 require_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth.php' );
 require_once( WSKL_PATH . '/includes/lib/shipping-tracking/class-wskl-agent-helper.php' );
 require_once( WSKL_PATH . '/includes/class-wskl-payment-gates.php' );
+require_once( WSKL_PATH . '/includes/lib/wskl-settings-update-callbacks.php' );
 
 
 final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
@@ -24,8 +25,22 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 		parent::__construct( $prefix, $file, $version );
 
-		add_action( 'admin_enqueue_scripts',
+		add_action(
+			'admin_enqueue_scripts',
 			array( $this, 'callback_admin_enqueue_scripts' )
+		);
+
+		$this->init_update_callbacks();
+	}
+
+	public function init_update_callbacks() {
+
+		/** 다보리 멤버스 업데이트 */
+		add_action(
+			'update_option_' . wskl_get_option_name( 'enable_dabory_members' ),
+			'callback_enable_dabory_members',
+			10,
+			3
 		);
 	}
 
@@ -78,7 +93,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 		_doing_it_wrong(
 			__FUNCTION__,
 			__( 'Cheatin&#8217; huh?', 'wskl' ),
-			'2.1'
+			WSKL_VERSION
 		);
 	}
 
@@ -87,13 +102,14 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 		_doing_it_wrong(
 			__FUNCTION__,
 			__( 'Cheatin&#8217; huh?', 'wskl' ),
-			'2.1'
+			WSKL_VERSION
 		);
 	}
 
 	public function add_menu_item() {  // Add settings page to admin menu
 
-		$this->setting_menu_hook = add_menu_page( __( '다보리', 'wskl' ),
+		$this->setting_menu_hook = add_menu_page(
+			__( '다보리', 'wskl' ),
 			__( '다보리', 'wskl' ),
 			'manage_options',
 			WSKL_MENU_SLUG,
@@ -129,7 +145,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			}
 		}
 
-		$debug_link = 'http://' . $_SERVER['HTTP_HOST'] . str_replace( 'wp-admin',
+		$debug_link = 'http://' . $_SERVER['HTTP_HOST'] . str_replace(
+				'wp-admin',
 				'wp-content',
 				$prefix
 			) . '/plugins/sym-mvc-framework/includes/debug.php';
@@ -138,14 +155,16 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 		$settings['preview'] = array(
 			'title'       => __( '일러두기', 'wskl' ),
-			'description' => __( '다보리를 만든 목적과 사용 방법 및 구매와 기술지원 방법과 업그레이드 등을 설명합니다.',
+			'description' => __(
+				'다보리를 만든 목적과 사용 방법 및 구매와 기술지원 방법과 업그레이드 등을 설명합니다.',
 				'wskl'
 			),
 			'fields'      => array(
 				array(
 					'id'          => 'dummy_1',
 					'label'       => __( '제작 목적', 'wskl' ),
-					'description' => __( '
+					'description' => __(
+						'
 						<span class="wskl-notice">1. "워드프레스와 우커머스를 Cafe24나 고도몰처럼" 더 쉽고 더 편리하게 만들었습니다.<br/>
 						2. 쇼핑몰 영업에 꼭 필요한 기능만을 모두 담아서 최소의 비용으로 제공합니다. <br/>
 						3. "다보리 마케팅 자동화 서버와 연동"하여 중소상공인을 위한 "마케팅 자동화" 서비스를 제공합니다. <br/></span>
@@ -159,7 +178,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'dummy_2',
 					'label'       => __( '사용방법', 'wskl' ),
-					'description' => __( '
+					'description' => __(
+						'
 						<span class="wskl-notice">플러그인 인증키로 "제품 인증"을 하기 전에는 본플러그인의 기능을 사용할 수 없습니다.<br/></span>
 						<a href="https://www.dabory.com/" target="_blank" >"다보리 플러그인 인증키 확인" 페이지로 바로가기</a>
 					',
@@ -171,7 +191,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'dummy_5',
 					'label'       => __( '업데이트/기술지원', 'wskl' ),
-					'description' => __( '
+					'description' => __(
+						'
 						<a href="http://www.symphonysoft.co.kr/%ED%94%8C%EB%9F%AC%EA%B7%B8%EC%9D%B8/" target="_blank" >플러그인 다운로드</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.dabory.co.kr/cs/service/" target="_blank">기술지원 요청 바로가기</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.dabory.com/shoppingmall/webhosting/" target="_blank" >전용관리 웹호스팅 알아보기</a><br/>
 					',
 						'wskl'
@@ -182,7 +203,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'dummy_10',
 					'label'       => __( '디버그 방법', 'wskl' ),
-					'description' => __( "
+					'description' => __(
+						"
 						<span class=\"wskl-notice\">wp-config.php를 아래와 같이 수정하십시오.<br/></span>
 						//define('WP_DEBUG', false); <br/>
 						define('WP_DEBUG',         true);  // Turn debugging ON <br/>
@@ -204,25 +226,29 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 		if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'authentication' ) {
 
-			$payment_description = sprintf( '%s <a href="#" id="payment_license_activation">%s</a><br/><span id="payment_license_status">%s</span>',
+			$payment_description = sprintf(
+				'%s <a href="#" id="payment_license_activation">%s</a><br/><span id="payment_license_status">%s</span>',
 				__( '지불기능 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
 				__( '지불기능 인증', 'wskl' ),
 				WSKL_Auth::get_license_duration_string( 'payment' )
 			);
 
-			$essential_description = sprintf( '%s <a href="#" id="essential_license_activation">%s</a><br/><span id="essential_license_status">%s</span>',
+			$essential_description = sprintf(
+				'%s <a href="#" id="essential_license_activation">%s</a><br/><span id="essential_license_status">%s</span>',
 				__( '핵심기능 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
 				__( '핵심기능 인증', 'wskl' ),
 				WSKL_Auth::get_license_duration_string( 'essential' )
 			);
 
-			$extension_description = sprintf( '%s <a href="#" id="extension_license_activation">%s</a><br/><span id="extension_license_status">%s</span>',
+			$extension_description = sprintf(
+				'%s <a href="#" id="extension_license_activation">%s</a><br/><span id="extension_license_status">%s</span>',
 				__( '확장기능 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
 				__( '확장기능 인증', 'wskl' ),
 				WSKL_Auth::get_license_duration_string( 'extension' )
 			);
 
-			$marketing_automation_description = sprintf( '%s <a href="#" id="marketing_automation_license_activation">%s</a><br/><span id="marketing_automation_license_status">%s</span>',
+			$marketing_automation_description = sprintf(
+				'%s <a href="#" id="marketing_automation_license_activation">%s</a><br/><span id="marketing_automation_license_status">%s</span>',
 				__( '마케팅자동화 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
 				__( '마케팅자동화 인증', 'wskl' ),
 				WSKL_Auth::get_license_duration_string( 'marketing' )
@@ -231,7 +257,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 		$settings['authentication'] = array(
 			'title'       => __( '제품인증', 'wskl' ),
-			'description' => __( '제품 구매 또는 무료 사용시 www.dabory.com에서 부여된 활성화키로 플러그인을 먼저 활성화후 사용 가능합니다.<br/>
+			'description' => __(
+				'제품 구매 또는 무료 사용시 www.dabory.com에서 부여된 활성화키로 플러그인을 먼저 활성화후 사용 가능합니다.<br/>
 						<a href="https://www.dabory.com/my-account/view-order/" target="_blank" ><span class="wskl-notice">"다보리 플러그인 인증키 확인" 페이지로 바로가기</span></a>',
 				'wskl'
 			),
@@ -239,7 +266,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'dummy_3',
 					'label'       => __( '사이트 주소(URL)', 'wskl' ),
-					'description' => __( '
+					'description' => __(
+						'
 						' . get_option( 'siteurl' ) . '<br/>
 						<span class="wskl-notice">인증키는 사이트 주소와 다보리 메타(meta) 서버 측과 동기화되어 활성화되므로 <br/>
 						관리자모드 "설정"에서 "사이트를 변경하는 경우" 다시 기능 활성화를 하셔야 합니다. </span>
@@ -288,7 +316,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 		$settings['checkout-payment-gate'] = array(
 			'title'       => __( '지불기능(A)', 'wskl' ),
-			'description' => __( '국내의 모든 지불 대행 회사의 결제 플러그인을 지원합니다.<br/>
+			'description' => __(
+				'국내의 모든 지불 대행 회사의 결제 플러그인을 지원합니다.<br/>
 						<span class="wskl-notice">현재 지원되지 않는 플러그인은 무료로 개발해드립니다.</span><br/>
 			            결제대행(PG)회사를 추가하기를 원하는 경우  service@econoq.co.kr 로 메일 주시면  1주일이내에 개발해 드리겠습니다.<br/>
 						<a href="http://www.symphonysoft.co.kr/" target="_blank">신규 플러그인 개발 요청 하러 가기</a><br/>',
@@ -298,7 +327,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'enable_sym_pg',
 					'label'       => __( '다보리 PG 사용 설정', 'wskl' ),
-					'description' => __( '다보리 PG (Payment Gateway) 기능 사용 여부를 설정합니다.',
+					'description' => __(
+						'다보리 PG (Payment Gateway) 기능 사용 여부를 설정합니다.',
 						'wskl'
 					),
 					'type'        => 'checkbox',
@@ -307,7 +337,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'pg_agency',
 					'label'       => __( '결제대행업체', 'wskl' ),
-					'description' => __( '<span class="wskl-notice">변경시 자동으로 저장됩니다.</span> ',
+					'description' => __(
+						'<span class="wskl-notice">변경시 자동으로 저장됩니다.</span> ',
 						'wskl'
 					),
 					'type'        => 'select',
@@ -324,14 +355,16 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			case 'inicis':
 			case 'ags':
 				$agencies_common_fields                      = include( WSKL_PATH . '/includes/admin/settings/checkout-payment-gate/fields/classic-pg-agencies-common-fields-1.php' );
-				$settings['checkout-payment-gate']['fields'] = array_merge( $settings['checkout-payment-gate']['fields'],
+				$settings['checkout-payment-gate']['fields'] = array_merge(
+					$settings['checkout-payment-gate']['fields'],
 					$agencies_common_fields
 				);
 				break;
 
 			// 페이앱 전용 필드 #1
 			case 'payapp':
-				array_push( $settings['checkout-payment-gate']['fields'],
+				array_push(
+					$settings['checkout-payment-gate']['fields'],
 
 					array(
 						'id'          => 'checkout_methods',
@@ -350,7 +383,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 			// 아임포트 전용 필드 #1
 			case 'iamport':
-				array_push( $settings['checkout-payment-gate']['fields'],
+				array_push(
+					$settings['checkout-payment-gate']['fields'],
 
 					array(
 						'id'          => 'checkout_methods',
@@ -384,8 +418,10 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 			// 페이앱 전용 필드 #2: 인증사항
 			case 'payapp':
-				$settings['checkout-payment-gate']['fields'] = array_merge( $settings['checkout-payment-gate']['fields'],
-					include( WSKL_PATH . '/includes/admin/settings/checkout-payment-gate/fields/payapp/payapp-fields.php' ) );
+				$settings['checkout-payment-gate']['fields'] = array_merge(
+					$settings['checkout-payment-gate']['fields'],
+					include( WSKL_PATH . '/includes/admin/settings/checkout-payment-gate/fields/payapp/payapp-fields.php' )
+				);
 				break;
 
 			case 'kcp':
@@ -676,7 +712,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 		$settings['checkout-shipping'] = array(
 			'title'       => __( '핵심기능(B)', 'wskl' ),
-			'description' => __( '여기서 결제 페이지의 배송정보 입력 방법 배송 방법등을 설정한다.',
+			'description' => __(
+				'여기서 결제 페이지의 배송정보 입력 방법 배송 방법등을 설정한다.',
 				'wskl'
 			),
 			'fields'      => array(
@@ -690,7 +727,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'enable_bacs_payer_name',
 					'label'       => __( '입금인 지정 기능', 'wskl' ),
-					'description' => __( '\'직접 은행 이체 (BACS)\' 결제 방법에서 고객이 입금인 이름을 별도로 지정하게 할 수 있습니다.',
+					'description' => __(
+						'\'직접 은행 이체 (BACS)\' 결제 방법에서 고객이 입금인 이름을 별도로 지정하게 할 수 있습니다.',
 						'wskl'
 					),
 					'type'        => 'checkbox',
@@ -699,7 +737,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'bacs_payer_name_in_own_column',
 					'label'       => __( '입금자 별도 행 출력', 'wskl' ),
-					'description' => __( '활성화 시 주문 페이지에서 \'주문\' 열에 출력되는 입금인 이름을 별도의 열로 옮겨 출력합니다.',
+					'description' => __(
+						'활성화 시 주문 페이지에서 \'주문\' 열에 출력되는 입금인 이름을 별도의 열로 옮겨 출력합니다.',
 						'wskl'
 					),
 					'type'        => 'checkbox',
@@ -708,7 +747,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'enable_combined_tax',
 					'label'       => __( '복합과세 활성화', 'wskl' ),
-					'description' => __( '복합과세 설정을 합니다. 신용카드 결제 적용시 플러그인 제작사와 상의해주십시요.',
+					'description' => __(
+						'복합과세 설정을 합니다. 신용카드 결제 적용시 플러그인 제작사와 상의해주십시요.',
 						'wskl'
 					),
 					'type'        => 'checkbox',
@@ -717,7 +757,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'hide_display_cart_tax',
 					'label'       => __( '결제페이지의 세금액 숨기기', 'wskl' ),
-					'description' => __( '복합과세 활성화시 결제 페이지에 표시되는 세금 항목을 숨깁니다.',
+					'description' => __(
+						'복합과세 활성화시 결제 페이지에 표시되는 세금 항목을 숨깁니다.',
 						'wskl'
 					),
 					'type'        => 'checkbox',
@@ -726,7 +767,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'company',
 					'label'       => __( '회사명 입력 가능', 'wskl' ),
-					'description' => __( '사업자 대상 위주 판매의 경우 회사명을 입력 가능 설정을 합니다.',
+					'description' => __(
+						'사업자 대상 위주 판매의 경우 회사명을 입력 가능 설정을 합니다.',
 						'wskl'
 					),
 					'type'        => 'checkbox',
@@ -735,7 +777,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'korean_won',
 					'label'       => __( '한국 원화 표시 설정', 'wskl' ),
-					'description' => __( '우커머스->설정->일반->통화에서 대한민국(원)표시가 나오도록 합니다.<br/>국내용 우커머스 쇼핑몰은 반드시 <a href="http://www.symphonysoft.co.kr/cs/activity/">우커머스-설정-일반</a> 에서 통화->대한민국(KRW), 통화 기호 위치->오른쪽으로 세팅하여 주십시오 !</br> <span class="wskl-notice">그렇지 않으면 고객의 결제  진행이 되지 않습니다. </span>',
+					'description' => __(
+						'우커머스->설정->일반->통화에서 대한민국(원)표시가 나오도록 합니다.<br/>국내용 우커머스 쇼핑몰은 반드시 <a href="http://www.symphonysoft.co.kr/cs/activity/">우커머스-설정-일반</a> 에서 통화->대한민국(KRW), 통화 기호 위치->오른쪽으로 세팅하여 주십시오 !</br> <span class="wskl-notice">그렇지 않으면 고객의 결제  진행이 되지 않습니다. </span>',
 						'wskl'
 					),
 					'type'        => 'checkbox',
@@ -751,7 +794,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'disable_returntoshop',
 					'label'       => __( '상점으로 돌아가기 버튼해제 ', 'wskl' ),
-					'description' => __( '상점으로 돌아가기 버튼클릭 시 메인 홈으로 가게 합니다.',
+					'description' => __(
+						'상점으로 돌아가기 버튼클릭 시 메인 홈으로 가게 합니다.',
 						'wskl'
 					),
 					'type'        => 'checkbox',
@@ -760,7 +804,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'related_products_count',
 					'label'       => __( '관련상품표시 갯수', 'wskl' ),
-					'description' => __( '관련상품에 표시되는 갯수를 결정합니다.<span class="wskl-info">(테마에 따라 적용되지 않는 경우도 있으므로 유의하세요.)</span>',
+					'description' => __(
+						'관련상품에 표시되는 갯수를 결정합니다.<span class="wskl-info">(테마에 따라 적용되지 않는 경우도 있으므로 유의하세요.)</span>',
 						'wskl'
 					),
 					'type'        => 'shorttext',
@@ -778,7 +823,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'related_products_priority',
 					'label'       => __( '관련상품 필터 우선순위' ),
-					'description' => __( '테마나 타 플러그인에서 관련상품 값을 덮어쓸 수 있습니다. 만약 원하는 결과가 나오지 않으면 이 숫자를 늘려서 우선 순위를 낮춰 보세요',
+					'description' => __(
+						'테마나 타 플러그인에서 관련상품 값을 덮어쓸 수 있습니다. 만약 원하는 결과가 나오지 않으면 이 숫자를 늘려서 우선 순위를 낮춰 보세요',
 						'wskl'
 					),
 					'type'        => 'shorttext',
@@ -810,22 +856,15 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 		if ( wskl_is_option_enabled( 'enable_dabory_members' ) ) {
 			$members_description .= sprintf(
 				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'page' => 'wpmem-settings',
-							'tab'  => 'dabory-members',
-						),
-						admin_url( 'options-general.php' )
-					)
-				),
+				esc_url( wskl_wp_members_url() ),
 				__( '다보리 멤버스 설정으로 이동', 'wskl' )
 			);
 		}
 
 		$settings['ship_tracking'] = array(
 			'title'       => __( '편의기능(C)', 'wskl' ),
-			'description' => __( '배송회사와의 송장번호를 통하여 연결을 할 수 있도록 합니다.</br>아래에서 사용 택배회사가 없을 경우 service@econoq.co.kr 로 메일 주시면 추가해드리겠습니다.',
+			'description' => __(
+				'배송회사와의 송장번호를 통하여 연결을 할 수 있도록 합니다.</br>아래에서 사용 택배회사가 없을 경우 service@econoq.co.kr 로 메일 주시면 추가해드리겠습니다.',
 				'wskl'
 			),
 			'fields'      => array(
@@ -859,12 +898,20 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'type'        => 'checkbox',
 					'default'     => '',
 				),
+				array(
+					'id'          => 'hide_product_review_tab',
+					'label'       => __( '상품 리뷰 숨김', 'wskl' ),
+					'description' => __( '상품 페이지의 리뷰 탭을 보이지 않게 합니다.', 'wskl' ),
+					'type'        => 'checkbox',
+					'default'     => '',
+				),
 			),
 		);
 
 		$settings['social-login'] = array(
 			'title'       => __( '소셜기능(S)', 'wskl' ),
-			'description' => __( '계정관리와  로그인 관련 설정입니다.(소셜 아이콘은 includeds/lib/custom 폴더를 참조)',
+			'description' => __(
+				'계정관리와  로그인 관련 설정입니다.(소셜 아이콘은 includeds/lib/custom 폴더를 참조)',
 				'wskl'
 			),
 			'fields'      => array(
@@ -1026,14 +1073,16 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 		$settings['b_security'] = array(
 			'title'       => __( '차단보안기능(R)', 'wskl' ),
-			'description' => __( '특별한 관리없이 악성댓글이나 악성트래픽이 대폭 감소합니다. 한국인 대상 사이트의 경우 한국,미국만 오픈해도 됩니다.',
+			'description' => __(
+				'특별한 관리없이 악성댓글이나 악성트래픽이 대폭 감소합니다. 한국인 대상 사이트의 경우 한국,미국만 오픈해도 됩니다.',
 				'wskl'
 			),
 			'fields'      => array(
 				array(
 					'id'          => 'enable_countryip_block',
 					'label'       => __( '국가별 IP 차단', 'wskl' ),
-					'description' => __( '국가별 IP를 차단하여 해킹을 미연에 방지합니다.</br>
+					'description' => __(
+						'국가별 IP를 차단하여 해킹을 미연에 방지합니다.</br>
 						활성화시 반드시 아래의 "화이트리스트 국가코드"를 넣어 주십시오',
 						'wskl'
 					),
@@ -1043,7 +1092,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'white_ipcode_list',
 					'label'       => __( '화이트 IP 코드 리스트', 'wskl' ),
-					'description' => __( '차단하지 않을 국가의 IP 코드를 추가합니다. 컴마로 분리. 자세한 국가코드는 <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">ISO 3166-1 alpha-2</a>를 참고하세요. </br><span class="wskl-description">예) KR,US,JP,CN => KR-한국 US-미국, JP-일본, CN-중국</span>',
+					'description' => __(
+						'차단하지 않을 국가의 IP 코드를 추가합니다. 컴마로 분리. 자세한 국가코드는 <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">ISO 3166-1 alpha-2</a>를 참고하세요. </br><span class="wskl-description">예) KR,US,JP,CN => KR-한국 US-미국, JP-일본, CN-중국</span>',
 						'wskl'
 					),
 					'type'        => 'longtext',
@@ -1053,7 +1103,10 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'dummy_3232',
 					'label'       => __( '작동 상황', 'wskl' ),
-					'description' => ( site_url() == wskl_get_option( 'ip_block_target' ) ) ? '<span class="wskl-info">' . __( '차단 기능이 동작합니다.',
+					'description' => ( site_url() == wskl_get_option(
+							'ip_block_target'
+						) ) ? '<span class="wskl-info">' . __(
+							'차단 기능이 동작합니다.',
 							'wskl'
 						) . '</span>' : '<span class="wskl-notice">' . __(
 							'도메인이 변경되어 기능이 중지되었습니다. 설정 저장 버튼을 눌러 다시 활성화시켜 주세요',

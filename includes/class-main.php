@@ -8,7 +8,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 	final class Woosym_Korean_Localization extends WSKL_Sym_Mvc_Main {
 
-		private static $_instance = null;
+		private static $_instance = NULL;
 
 		private $_settings = NULL;
 
@@ -46,22 +46,28 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			// 모듈 삽입.
 			$this->init_modules();
 
-			if( $this->is_request( 'frontend' ) ) {
+			if ( $this->is_request( 'frontend' ) ) {
 
 				// 관련상품 표시 갯수
 				$related_products_count = (int) get_option( wskl_get_option_name( 'related_products_count' ) );
 				if ( $related_products_count > 0 ) {
 
-					$priority = (int)get_option( wskl_get_option_name( 'related_products_priority' ) );
-					$callback = function( $args ) {
+					$priority = (int) get_option( wskl_get_option_name( 'related_products_priority' ) );
+					$callback = function ( $args ) {
 
 						$args['posts_per_page'] = (int) get_option( wskl_get_option_name( 'related_products_count' ) );
-						$args['columns']        = (int) get_option( wskl_get_option_name( 'related_products_columns' ) );
+						$args['columns']        = (int) get_option(
+							wskl_get_option_name( 'related_products_columns' )
+						);
 
 						return $args;
 					};
 
 					add_filter( 'woocommerce_output_related_products_args', $callback, $priority, 1 );
+				}
+
+				if ( wskl_is_option_enabled( 'hide_product_review_tab' ) ) {
+					add_filter( 'woocommerce_product_tabs', array( __CLASS__, 'callback_hide_product_review_tab' ) );
 				}
 			}
 
@@ -92,6 +98,11 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			add_filter( 'the_title', array( $this, 'order_received_title' ), 10, 2 );
 			add_action( 'woocommerce_thankyou', array( $this, 'order_received_addition' ) );
+
+			register_activation_hook( WSKL_MAIN_FILE, array( $this, 'on_activated' ) );
+			register_deactivation_hook( WSKL_MAIN_FILE, array( $this, 'on_deactivated' ) );
+
+			add_action( 'admin_bar_menu', array( $this, 'callback_admin_bar_menu' ), 99 );
 
 			/**
 			 * @see woocommerce/includes/wc-template-functions.php woocommerce_form_field()
@@ -428,14 +439,16 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			wskl_load_module( '/includes/class-wskl-shipping-tracking.php', 'enable_ship_track' );
 
 			/** 다보리 멤버스 */
-			wskl_load_module( '/includes/class-wskl-dabory-members.php',
-			                  'enable_dabory_members' );
+			wskl_load_module(
+				'/includes/class-wskl-dabory-members.php',
+				'enable_dabory_members'
+			);
 
 			/** 결제 (frontend/admin 둘 다 요구 ) */
 			wskl_load_module( '/includes/class-wskl-payment-gates.php', 'enable_sym_pg' );
 
 
-			if( wskl_debug_enabled() ) {
+			if ( wskl_debug_enabled() ) {
 				wskl_load_module( '/includes/lib/wskl-debugging.php' );
 			}
 		}
@@ -463,6 +476,129 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			}
 
 			throw new LogicException( 'is_request() does not support type: ' . $type );
+		}
+
+		/**
+		 * @callback
+		 * @action    activate_{$file}
+		 *
+		 */
+		public function on_activated() {
+
+		}
+
+		/**
+		 * @callback
+		 * @action    deactivate_{$file}
+		 */
+		public function on_deactivated() {
+
+			// dabory members
+			remove_role( 'withdrawer' );
+		}
+
+		public function callback_admin_bar_menu( WP_Admin_Bar $wp_admin_bar ) {
+
+			$wp_admin_bar->add_node(
+				array(
+					'id'     => 'wskl-root',
+					'title'  => '<span class="ab-icon"></span><span>' . __( '다보리', 'wskl' ) . '</span>',
+					'parent' => FALSE,
+					'href'   => wskl_get_setting_tab_url( '' ),
+					'meta'   => array(),
+				)
+			);
+
+			$sub_menus = array(
+				array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-preview',
+					'title'  => __( '일러두기', 'wskl' ),
+					'href'   => wskl_get_setting_tab_url( 'preview' ),
+				),
+				array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-authentication',
+					'title'  => __( '제품인증', 'wskl' ),
+					'href'   => wskl_get_setting_tab_url( 'authentication' ),
+				),
+				array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-checkout-payment-gate',
+					'title'  => __( '지불기능', 'wskl' ),
+					'href'   => wskl_get_setting_tab_url( 'checkout-payment-gate' ),
+				),
+				array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-checkout-shipping',
+					'title'  => __( '핵심기능', 'wskl' ),
+					'href'   => wskl_get_setting_tab_url( 'checkout-shipping' ),
+				),
+				array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-ship_tracking',
+					'title'  => __( '편의기능', 'wskl' ),
+					'href'   => wskl_get_setting_tab_url( 'ship_tracking' ),
+				),
+				array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-social-login',
+					'title'  => __( '소셜기능', 'wskl' ),
+					'href'   => wskl_get_setting_tab_url( 'social-login' ),
+				),
+				array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-b_security',
+					'title'  => __( '차단보안기능', 'wskl' ),
+					'href'   => wskl_get_setting_tab_url( 'b_security' ),
+				),
+				array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-marketing',
+					'title'  => __( '마케팅자동화기능', 'wskl' ),
+					'href'   => wskl_get_setting_tab_url( 'marketing' ),
+				),
+			);
+
+			if ( wskl_lab_enabled() ) {
+				$sub_menus[] = array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-lab',
+					'title'  => __( '다보리 실험실', 'wskl' ),
+					'href'   => wskl_get_setting_tab_url( 'lab' ),
+				);
+			}
+
+			if ( wskl_debug_enabled() ) {
+				$sub_menus[] = array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-developer',
+					'title'  => __( '개발자용 ', 'wskl' ),
+					'href'   => wskl_get_setting_tab_url( 'developer' ),
+				);
+			}
+
+			if ( wskl_is_option_enabled( 'enable_dabory_members' ) ) {
+				$sub_menus[] = array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-dabory-members',
+					'title'  => __( '다보리 멤버스 설정', 'wskl' ),
+					'href'   => wskl_wp_members_url(),
+				);
+			}
+
+			foreach ( $sub_menus as $menu ) {
+				$wp_admin_bar->add_menu( $menu );
+			}
+		}
+
+		public function callback_hide_product_review_tab( $tabs ) {
+
+			if ( isset( $tabs['reviews'] ) ) {
+				unset( $tabs['reviews'] );
+			}
+
+			return $tabs;
 		}
 	}
 

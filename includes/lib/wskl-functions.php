@@ -186,6 +186,17 @@ function wskl_plugin_url( $path ) {
 	return plugin_dir_url( WSKL_MAIN_FILE ) . $path;
 }
 
+function wskl_wp_members_url( $tab = 'dabory-members' ) {
+
+	return add_query_arg(
+		array(
+			'page' => 'wpmem-settings',
+			'tab'  => $tab,
+		),
+		admin_url( 'options-general.php' )
+	);
+}
+
 
 /**
  * shortcut of enqueuing scripts

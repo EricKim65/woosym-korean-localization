@@ -1,5 +1,9 @@
 <?php
 
+include_once( WSKL_PATH . '/includes/admin/class-wskl-dabory-members-admin-settings.php' );
+
+use WSKL_Dabory_Members_Admin_Settings as Settings;
+
 
 class WSKL_Dabory_Members_Registration {
 
@@ -29,7 +33,7 @@ class WSKL_Dabory_Members_Registration {
 
 		// 약관 출력
 		if ( wskl_is_option_enabled( 'members_show_terms' ) ) {
-			add_filter( 'wpmem_pre_register_data', array( __CLASS__, 'validate_agreements' ) );
+			add_action( 'wpmem_pre_register_data', array( __CLASS__, 'validate_agreements' ) );
 			add_filter( 'wpmem_register_form_rows', array( __CLASS__, 'include_terms' ), 10, 2 );
 		}
 
@@ -38,11 +42,23 @@ class WSKL_Dabory_Members_Registration {
 			add_filter( 'wpmem_register_form_rows', array( __CLASS__, 'include_postcode_button' ), 10, 2 );
 		}
 
-		// 패스워드 최소 길이 설정
+		// 패스워드 강도 미터기 기능
+		if ( wskl_is_option_enabled( 'members_password_strength_meter' ) ) {
+			add_filter( 'wpmem_register_form_rows', array( __CLASS__, 'include_password_strength_meter' ), 10, 1 );
+		}
 
-		// 패스워드 문자 조합 설정
+		// 패스워드 관련 validation check
+		add_action( 'wpmem_pre_register_data', array( __CLASS__, 'validate_password' ) );
+
+		// 등록 완료 후 로그인 처리
+		if ( wskl_is_option_enabled( 'members_logged_in_after_registration' ) ) {
+			add_action( 'wpmem_post_register_data', array( __CLASS__, 'let_registered_user_logged_in' ) );
+		}
 
 		// 등록 완료 페이지 설정
+		if ( wskl_is_option_enabled( 'members_show_registration_complete' ) ) {
+			add_action( 'wpmem_register_redirect', array( __CLASS__, 'redirect_to_welcome_page' ), 9 );
+		}
 	}
 
 	/**
@@ -90,6 +106,29 @@ class WSKL_Dabory_Members_Registration {
 
 	/**
 	 * @callback
+	 * @filter    wpmem_register_form_rows
+	 * @used-by   WSKL_Dabory_Members_Registration::init()
+	 *
+	 * @param  array $rows
+	 *
+	 * @return array
+	 */
+	public static function include_password_strength_meter( $rows ) {
+
+		foreach ( $rows as &$row ) {
+			if ( $row['meta'] == 'password' ) {
+				$row['field_after'] = '<span class="password-strength-meter">' . __(
+						'패스워드를 입력하세요.',
+						'wskl'
+					) . '</span>' . $row['field_after'];
+			}
+		}
+
+		return $rows;
+	}
+
+	/**
+	 * @callback
 	 * @action    wp_enqueue_scripts
 	 */
 	public static function add_registration_scripts() {
@@ -115,6 +154,22 @@ class WSKL_Dabory_Members_Registration {
 				TRUE
 			);
 		}
+
+		// password strength meter. Since WP Version 2.8 (https://codex.wordpress.org/Version_2.8)
+		if ( wskl_is_option_enabled( 'members_password_strength_meter' ) ) {
+			wp_enqueue_script( 'password-strength-meter' );
+			wskl_enqueue_script(
+				'dabory-members-password-strength-meter',
+				'assets/js/dabory-members-password-strength-meter.js',
+				array( 'jquery', 'password-strength-meter' ),
+				WSKL_VERSION,
+				TRUE,
+				'passwordMeterObj',
+				array(
+					'passwordEmpty' => __( '패스워드를 입력하세요.', 'wskl' ),
+				)
+			);
+		}
 	}
 
 	/**
@@ -138,7 +193,7 @@ class WSKL_Dabory_Members_Registration {
 	 * 약관에 모두 동의했는지 검사하는 로직
 	 *
 	 * @callback
-	 * @filter  wpmem_pre_register_data
+	 * @action  wpmem_pre_register_data
 	 * @used-by WSKL_Dabory_Members_Registration::init()
 	 *
 	 * @param $fields
@@ -271,6 +326,72 @@ class WSKL_Dabory_Members_Registration {
 PHP_EOD;
 
 		return $output;
+	}
+
+	/**
+	 * @callback
+	 * @action    wpmem_pre_register_data
+	 *
+	 * @param array $fields
+	 */
+	public static function validate_password( array $fields ) {
+
+		global $wpmem_themsg;
+
+		$min_length = intval( wskl_get_option( 'members_password_min_length' ), Settings::get_password_min_length() );
+
+		// 패스워드 최소 길이 설정
+		if ( wskl_is_option_enabled( 'members_enable_password_length' ) ) {
+			if ( isset( $fields['password'] ) && $min_length ) {
+				if ( strlen( $fields['password'] ) < $min_length ) {
+					$wpmem_themsg = _n( '비밀번호는 %d자 이상으로 작성해 주세요.', '비밀번호는 %d자 이상으로 작성해 주세요.', $min_length, 'wskl' );
+				}
+			}
+		}
+
+		// 패스워드 문자 조합 설정
+		if ( wskl_is_option_enabled( 'members_password_mixed_chars' ) ) {
+			if ( ! self::check_password_mixed_chars( $fields['password'] ) ) {
+				$wpmem_themsg = __( '비밀번호에는 특수문자와 숫자가 각각 1글자 이상씩 포함되어야 합니다.', 'wskl' );
+			}
+		}
+	}
+
+	public static function check_password_mixed_chars( $password ) {
+
+		return preg_match(
+			apply_filters( 'dabory_members_mixed_chars', '/^(?=.*[0-9])(?=.*[\W])(.+)/' ),
+			$password
+		);
+	}
+
+	public static function redirect_to_welcome_page() {
+
+		$page_id = intval( wskl_get_option( 'members_page_registration_complete' ) );
+
+		if ( $page_id ) {
+			wp_redirect( get_page_link( $page_id ) );
+			exit;
+		}
+	}
+
+	public static function let_registered_user_logged_in( $fields ) {
+
+		$username = $fields['username'];
+		$password = $fields['password'];
+
+		if ( ! empty( $username ) && ! empty( $password ) ) {
+			$user = wp_signon(
+				array(
+					'user_login'    => $username,
+					'user_password' => $password,
+				)
+			);
+
+			if ( is_wp_error( $user ) ) {
+				wp_die( $user->get_error_message() );
+			}
+		}
 	}
 }
 

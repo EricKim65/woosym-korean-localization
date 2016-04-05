@@ -91,6 +91,15 @@ class WSKL_Dabory_Members_Admin_Settings {
 
 			// 비밀번호 최소 길이 (number)
 			array( 'password_min_length', 'intval', 0 ),
+
+			// 비밀번호 강도 사용 (checkbox)
+			array( 'password_strength_meter', 'sanitize_text_field', 'no' ),
+
+			// 가입 후 로그인 (checkbox)
+			array( 'logged_in_after_registration', 'sanitize_text_field', 'no' ),
+
+			// 탈퇴 회원의 즉시 삭제 (checkbox)
+			array( 'delete_after_withdrawal', 'sanitize_text_field', 'no' ),
 		);
 
 		foreach ( $options as $elem ) {
@@ -304,5 +313,10 @@ class WSKL_Dabory_Members_Admin_Settings {
 			esc_html( $desc ),
 			$attr
 		);
+	}
+
+	public static function get_password_min_length() {
+
+		return apply_filters( 'dabory_members_password_min_length', self::PASSWORD_MIN_LENGTH );
 	}
 }

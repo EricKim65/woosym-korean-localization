@@ -1,4 +1,13 @@
-<?php use WSKL_Dabory_Members_Admin_Settings as Settings; ?>
+<?php
+/**
+ * 일러두기: 여기서 등록한 키 값은 WSKL_Dabory_Members_Admin_Settings 클래스
+ * extract_option_values, validate_option_values 메소드에서 처리해 줘야 DB 레코드에 등록됨을 주의!
+ */
+use WSKL_Dabory_Members_Admin_Settings as Settings;
+
+
+?>
+
 
 <div class="metabox-holder">
 	<div id="post-body">
@@ -118,10 +127,7 @@
 									'',
 									array(
 										'type' => 'number',
-										'min'  => apply_filters(
-											'dabory_members_password_min_length',
-											Settings::PASSWORD_MIN_LENGTH
-										),
+										'min'  => Settings::get_password_min_length(),
 									),
 									Settings::PASSWORD_MIN_LENGTH
 								); ?>
@@ -129,6 +135,11 @@
 									'password_mixed_chars',
 									__( '비밀번호 문자 조합', 'wskl' ),
 									__( '숫자와 특수문자를 포함하도록 강제합니다.', 'wskl' )
+								); ?>
+								<?php Settings::output_checkbox(
+									'password_strength_meter',
+									__( '비밀번호 강도 표시', 'wskl' ),
+									__( '입력한 비밀번호의 강도를 표시하여 보다 강력한 패스워드를 생성하도록 유도합니다.', 'wskl' )
 								); ?>
 							</ul>
 						</div>
@@ -143,18 +154,28 @@
 									__( '페이지 보이기', 'wskl' ),
 									__( '가입 완료시 등록 완료 메시지를 보여줍니다.', 'wskl' )
 								); ?>
+								<?php Settings::output_checkbox(
+									'logged_in_after_registration',
+									__( '가입 후 로그인', 'wskl' ),
+									__( '가입 완료 후 바로 사용자를 로그인 상태로 만듭니다.', 'wskl' )
+								); ?>
 							</ul>
 						</div>
 						<!-- 탈퇴 페이지 설정 -->
 						<div>
 							<h3>
-								<?php _e( '탈퇴 페이지 설정', 'wskl' ); ?>
+								<?php _e( '회원 탈퇴 설정', 'wskl' ); ?>
 							</h3>
 							<ul>
 								<?php Settings::output_checkbox(
 									'enable_withdrawal_shortcode',
 									__( '페이지 보이기', 'wskl' ),
-									__( '탈퇴 페이지를 사용합니다.', 'wskl' )
+									__( '회원 탈퇴 기능을 사용합니다.', 'wskl' )
+								); ?>
+								<?php Settings::output_checkbox(
+									'delete_after_withdrawal',
+									__( '사용자 삭제', 'wskl' ),
+									__( '회원 탈퇴시 그 회원의 정보를 즉시 데이터베이스에서 삭제합니다.', 'wskl' )
 								); ?>
 							</ul>
 						</div>
