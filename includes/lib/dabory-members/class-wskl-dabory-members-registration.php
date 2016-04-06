@@ -157,10 +157,9 @@ class WSKL_Dabory_Members_Registration {
 
 		// password strength meter. Since WP Version 2.8 (https://codex.wordpress.org/Version_2.8)
 		if ( wskl_is_option_enabled( 'members_password_strength_meter' ) ) {
-			wp_enqueue_script( 'password-strength-meter' );
 			wskl_enqueue_script(
-				'dabory-members-password-strength-meter',
-				'assets/js/dabory-members-password-strength-meter.js',
+				'dabory-members-registration',
+				'assets/js/dabory-members-registration.js',
 				array( 'jquery', 'password-strength-meter' ),
 				WSKL_VERSION,
 				TRUE,
@@ -270,12 +269,24 @@ class WSKL_Dabory_Members_Registration {
 			),
 		);
 
+		$idx = 1;
+		$cnt = count( self::$agreement_keys );
+
+		if ( $cnt > 1 ) {
+			$terms_rows[] = array(
+				'field' => '<div id="check-all-wrapper"><label for="checkbox-all">'
+				           . '<input type="checkbox" id="checkbox-all" class="checkbox-agreement">'
+				           . __( '아래 약관에 모두 동의합니다.', 'wskl' ) . '</label></div>',
+			);
+		}
+
 		foreach ( self::$agreement_keys as $key ) {
-			$field = self::get_tos_page_text( $key );
+			$field = self::get_tos_page_text( $key, $idx == $cnt );
 			if ( ! empty( $field ) ) {
 				$terms_rows[] = array(
 					'field' => $field,
 				);
+				++ $idx;
 			}
 		}
 
@@ -287,11 +298,12 @@ class WSKL_Dabory_Members_Registration {
 	 *
 	 * @used-by WSKL_Dabory_Members_Registration::include_terms()
 	 *
-	 * @param $key
+	 * @param string $key
+	 * @param bool   $is_last
 	 *
 	 * @return string
 	 */
-	private static function get_tos_page_text( $key ) {
+	private static function get_tos_page_text( $key, $is_last ) {
 
 		$post_id = intval( wskl_get_option( 'members_page_' . $key ) );
 
@@ -303,6 +315,7 @@ class WSKL_Dabory_Members_Registration {
 		$title          = esc_html( $post->post_title );
 		$content        = wpautop( wptexturize( esc_html( $post->post_content ) ) );
 		$agreement_text = __( '약관에 동의합니다.', 'wskl' );
+		$last           = $is_last ? 'last' : '';
 		$checked        = ( wskl_POST( 'checkbox-' . $key ) == 'yes' ) ? 'checked' : '';
 
 		if ( isset( self::$validation_errors[ $key ] ) ) {
@@ -312,13 +325,13 @@ class WSKL_Dabory_Members_Registration {
 		}
 
 		$output = <<< PHP_EOD
-<div class="tos-wrapper $validation_error_css_class">
+<div class="tos-wrapper $last $validation_error_css_class">
 	<h3 class="tos-title">$title</h3>
 	<div class="text tos-content tos-content-$key">
 		$content
 	</div>
 	<label for="checkbox-$key">
-		<input type="checkbox" id="checkbox-$key" class="text tos-agreement" name="checkbox-$key" value="yes" $checked />
+		<input type="checkbox" id="checkbox-$key" class="checkbox-agreement" name="checkbox-$key" value="yes" $checked />
 		$agreement_text
 	</label>
 	<span class="req">*</span>
