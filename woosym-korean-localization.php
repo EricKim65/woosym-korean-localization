@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // plugin's defines
 define( 'WSKL_PATH', __DIR__ );
 define( 'WSKL_MAIN_FILE', __FILE__ );
+define( 'WSKL_PLUGIN', 'woosym-korean-localization/woosym-korean-localization.php' );
 define( 'WSKL_PREFIX', 'wskl_' );
 define( 'WSKL_VERSION', '3.3.0' );
 
@@ -29,9 +30,10 @@ if ( ! defined( 'WSKL_DEBUG' ) ) {
 }
 
 require_once( WSKL_PATH . '/includes/lib/sym-mvc/wskl-sym-mvc-framework.php' );
-require_once( WSKL_PATH . '/includes/lib/wskl-plugin.php' );
 require_once( WSKL_PATH . '/includes/lib/wskl-functions.php' );
+require_once( WSKL_PATH . '/includes/lib/wskl-plugin.php' );
 require_once( WSKL_PATH . '/includes/lib/wskl-template-functions.php' );
+
 
 if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
@@ -52,12 +54,20 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 		public function __clone() {
 
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wskl' ), '2.1' );
+			_doing_it_wrong(
+				__FUNCTION__,
+				__( 'You\'re calling __clone() for a singleton class.', 'wskl' ),
+				WSKL_VERSION
+			);
 		}
 
 		public function __wakeup() {
 
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wskl' ), '2.1' );
+			_doing_it_wrong(
+				__FUNCTION__,
+				__( 'You\'re calling __wakeup() for a singleton class.', 'wskl' ),
+				WSKL_VERSION
+			);
 		}
 
 		/**
@@ -68,10 +78,58 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 		 */
 		public function __construct( $file = '', $version = '1.0.0' ) {
 
+			do_action( 'wskl_before_init' );
+
 			$this->init_constants();
 
-			// 모듈 삽입.
+			$this->check_compatibility();
+
+			if ( ! wskl_woocommerce_found() ) {
+				return;
+			}
+
+			$this->init_hooks();
+
 			$this->init_modules();
+
+			do_action( 'wskl_init' );
+
+		} // End __construct ()
+
+		/**
+		 * @return Woosym_Korean_Localization_Settings
+		 */
+		public function settings() {
+
+			return $this->_settings;
+		}
+
+		public function init_constants() {
+
+			$this->define( 'DAUM_POSTCODE_HTTP', 'http://dmaps.daum.net/map_js_init/postcode.v2.js' );
+			$this->define( 'DAUM_POSTCODE_HTTPS', 'https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js' );
+		}
+
+		/**
+		 * @uses Woosym_Korean_Localization::on_plugin_activated()
+		 * @uses Woosym_Korean_Localization::on_plugin_deactivated()
+		 * @uses Woosym_Korean_Localization::after_plugin_activated()
+		 * @uses Woosym_Korean_Localization::check_compatibility()
+		 */
+		public function init_hooks() {
+
+			register_activation_hook( WSKL_MAIN_FILE, array( $this, 'on_plugin_activated' ) );
+			register_deactivation_hook( WSKL_MAIN_FILE, array( $this, 'on_plugin_deactivated' ) );
+
+			/** right after the activation */
+			add_action( 'activated_plugin', array( $this, 'after_plugin_activated' ) );
+
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+
+			$plugin = plugin_basename( WSKL_MAIN_FILE );
+			/** 플러그인 목록의 action 항목 편집 */
+			add_filter( "plugin_action_links_{$plugin}", array( $this, 'add_settings_link' ), 999 );
 
 			if ( $this->is_request( 'frontend' ) ) {
 
@@ -114,71 +172,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			add_filter( 'the_title', array( $this, 'order_received_title' ), 10, 2 );
 			add_action( 'woocommerce_thankyou', array( $this, 'order_received_addition' ) );
 
-			register_activation_hook( WSKL_MAIN_FILE, array( $this, 'on_activated' ) );
-			register_deactivation_hook( WSKL_MAIN_FILE, array( $this, 'on_deactivated' ) );
-
 			add_action( 'admin_bar_menu', array( $this, 'callback_admin_bar_menu' ), 99 );
-		} // End __construct ()
-
-		/**
-		 * @return Woosym_Korean_Localization_Settings
-		 */
-		public function settings() {
-
-			return $this->_settings;
-		}
-
-		public function init_constants() {
-
-			$this->define( 'DAUM_POSTCODE_HTTP', 'http://dmaps.daum.net/map_js_init/postcode.v2.js' );
-			$this->define( 'DAUM_POSTCODE_HTTPS', 'https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js' );
-		}
-
-		private function define( $constant, $expression ) {
-
-			if ( ! defined( $constant ) ) {
-				define( $constant, $expression );
-			}
-		}
-
-		function order_received_title( $title, $id ) {
-
-			if ( is_order_received_page() && get_the_ID() === $id ) {
-				$title = "주문이 완료되었습니다.";
-			}
-
-			return $title;
-		}
-
-		function order_received_addition(
-			/** @noinspection PhpUnusedParameterInspection */
-			$order_id
-		) {
-
-			echo __( '<p><h5>  주문에 감사드리며 항상 정성을 다 하겠습니다 !</h5></p>', $this->_folder );
-		}
-
-		function woosym_kwon_currency( $currencies ) {
-
-			$currencies['KRW'] = __( '대한민국', 'woocommerce' );
-
-			return $currencies;
-		}
-
-		function woosym_kwon_currency_symbol( $currency_symbol, $currency ) {
-
-			switch ( $currency ) {
-				case 'KRW':
-					$currency_symbol = __( '원', 'wskl' );
-					break;
-			}
-
-			return $currency_symbol;
-		}
-
-		function sym_change_empty_cart_button_url() {
-
-			return get_site_url();
 		}
 
 		public function init_modules() {
@@ -266,50 +260,215 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			}
 		}
 
-		/**
-		 * clone of WooCommerce::is_request
-		 *
-		 * @see \WooCommerce::is_request
-		 *
-		 * @param $type
-		 *
-		 * @return bool
-		 */
-		public function is_request( $type ) {
+		/** @callback */
+		public function enqueue_scripts() {
 
-			switch ( $type ) {
-				case 'admin' :
-					return is_admin();
-				case 'ajax' :
-					return defined( 'DOING_AJAX' );
-				case 'cron' :
-					return defined( 'DOING_CRON' );
-				case 'frontend' :
-					return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
+			wp_enqueue_style(
+				'wskl-common',
+				plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/common.css',
+				array(),
+				WSKL_VERSION
+			);
+
+			wp_enqueue_style(
+				'wskl-frontend',
+				plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/frontend.css',
+				array( 'wskl-common', ),
+				WSKL_VERSION
+			);
+		}
+		
+		/**
+		 * @callback
+		 * @action    admin_enqueue_scripts
+		 */
+		public function admin_enqueue_scripts() {
+
+			wp_enqueue_style(
+				'wskl-common',
+				plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/common.css',
+				array(),
+				WSKL_VERSION
+			);
+
+			wp_enqueue_style(
+				'wskl-admin',
+				plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/admin.css',
+				array( 'wskl-common', ),
+				WSKL_VERSION
+			);
+		}
+
+		/**
+		 * @callback
+		 * @filter    plugin_action_links_{$plugin}
+		 *
+		 * @param $links
+		 *
+		 * @return array
+		 */
+		public function add_settings_link( $links ) {
+
+			if ( isset( $links['0'] ) && FALSE !== strstr( $links[0], 'Settings' ) ) {
+				unset( $links[0] );
 			}
 
-			throw new LogicException( 'is_request() does not support type: ' . $type );
+			$dabory_url = add_query_arg(
+				'page',
+				WSKL_MENU_SLUG,
+				admin_url( 'admin.php' )
+			);
+
+			$settings_link = wskl_html_anchor(
+				__( 'Settings' ),
+				array( 'href' => $dabory_url, ),
+				TRUE
+			);
+
+			$links['settings'] = $settings_link;
+
+			if ( wskl_is_option_enabled( 'enable_dabory_members' ) ) {
+
+				$links[] = wskl_html_anchor(
+					__( '다보리 멤버스', 'wskl' ),
+					array( 'href' => wskl_wp_members_url() ),
+					TRUE
+				);
+			}
+
+			return $links;
+		}
+
+		function order_received_title( $title, $id ) {
+
+			if ( is_order_received_page() && get_the_ID() === $id ) {
+				$title = "주문이 완료되었습니다.";
+			}
+
+			return $title;
+		}
+
+		function order_received_addition(
+			/** @noinspection PhpUnusedParameterInspection */
+			$order_id
+		) {
+
+			echo __( '<p><h5>주문에 감사드리며 항상 정성을 다 하겠습니다 !</h5></p>', $this->_folder );
+		}
+
+		function woosym_kwon_currency( $currencies ) {
+
+			$currencies['KRW'] = __( '대한민국', 'woocommerce' );
+
+			return $currencies;
+		}
+
+		function woosym_kwon_currency_symbol( $currency_symbol, $currency ) {
+
+			switch ( $currency ) {
+				case 'KRW':
+					$currency_symbol = __( '원', 'wskl' );
+					break;
+			}
+
+			return $currency_symbol;
+		}
+
+		function sym_change_empty_cart_button_url() {
+
+			return get_site_url();
+		}
+
+		public function check_compatibility() {
+
+			/** Check other plugins and notify to users. */
+			add_action( 'plugins_loaded', array( $this, 'do_plugin_monitor' ), 1 );
 		}
 
 		/**
 		 * @callback
-		 * @action    activate_{$file}
+		 * @action    plugins_loaded
+		 */
+		public function do_plugin_monitor() {
+
+			require_once( WSKL_PATH . '/includes/class-wskl-plugins-monitor.php' );
+			require_once( WSKL_PATH . '/includes/class-wskl-plugins-react.php' );
+
+			/** 우커머스 비할성화 시 알림.*/
+			wskl_add_plugin_status(
+				'woocommerce/woocommerce.php',
+				'inactive',
+				array( 'WSKL_Plugins_React', 'woocommerce' )
+			);
+
+			/** SYM-MVC 활성화 시 대응 */
+			wskl_add_plugin_status(
+				'sym-mvc-framework/sym-mvc-framework.php',
+				'active',
+				array(
+					'WSKL_Plugins_React',
+					'sym_mvc_framework_is_active',
+				)
+			);
+
+			/** 아임포트 활성화 시 대응 */
+			wskl_add_plugin_status(
+				'iamport-for-woocommerce/IamportPlugin.php',
+				'active',
+				array(
+					'WSKL_Plugins_React',
+					'iamport_plugin',
+				)
+			);
+
+			/** WP-Members 대응 */
+			wskl_add_plugin_status(
+				'wp-members/wp-members.php',
+				'inactive',
+				array(
+					'WSKL_Plugins_React',
+					'wp_members',
+				)
+			);
+
+			// 플러그인 확인.
+			wskl_check_plugin_status();
+		}
+
+		/**
+		 * @callback
+		 */
+		public function on_plugin_activated() {
+		}
+
+		/**
+		 * @callback
+		 */
+		public function on_plugin_deactivated() {
+		}
+
+		/**
+		 * @callback
+		 * @action     activated_plugin
+		 * @used-by    Woosym_Korean_Localization::init_hooks()
+		 * @uses       Woosym_Korean_Localization::ensure_plugin_loading_sequence()
 		 *
+		 * @param $plugin
 		 */
-		public function on_activated() {
+		public function after_plugin_activated( $plugin ) {
 
+			if ( $plugin != WSKL_PLUGIN ) {
+				return;
+			}
+
+			$this->ensure_plugin_loading_sequence();
 		}
 
 		/**
 		 * @callback
-		 * @action    deactivate_{$file}
+		 *
+		 * @param \WP_Admin_Bar $wp_admin_bar
 		 */
-		public function on_deactivated() {
-
-			// dabory members
-			remove_role( 'withdrawer' );
-		}
-
 		public function callback_admin_bar_menu( WP_Admin_Bar $wp_admin_bar ) {
 
 			$wp_admin_bar->add_node(
@@ -405,6 +564,13 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			}
 		}
 
+		/**
+		 * @callback
+		 *
+		 * @param $tabs
+		 *
+		 * @return array
+		 */
 		public function callback_hide_product_review_tab( $tabs ) {
 
 			if ( isset( $tabs['reviews'] ) ) {
@@ -412,6 +578,58 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			}
 
 			return $tabs;
+		}
+
+		/**
+		 * 우리 플러그인이 우커머스보다 뒤쪽에 로딩되도록 조정
+		 *
+		 * @used-by    Woosym_Korean_Localization::after_plugin_activated
+		 */
+		public function ensure_plugin_loading_sequence() {
+
+			$active_plugins = (array) get_option( 'active_plugins', array() );
+			$wc_index       = array_search( 'woocommerce/woocommerce.php', $active_plugins );
+			$wskl_index     = array_search( WSKL_PLUGIN, $active_plugins );
+
+			if ( $wc_index !== FALSE && $wskl_index !== FALSE && $wc_index > $wskl_index ) {
+
+				unset( $active_plugins[ $wskl_index ] );
+				$active_plugins[] = WSKL_PLUGIN;
+
+				update_option( 'active_plugins', array_values( $active_plugins ) );
+			}
+		}
+
+		/**
+		 * clone of WooCommerce::is_request
+		 *
+		 * @see \WooCommerce::is_request
+		 *
+		 * @param $type
+		 *
+		 * @return bool
+		 */
+		public function is_request( $type ) {
+
+			switch ( $type ) {
+				case 'admin' :
+					return is_admin();
+				case 'ajax' :
+					return defined( 'DOING_AJAX' );
+				case 'cron' :
+					return defined( 'DOING_CRON' );
+				case 'frontend' :
+					return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
+			}
+
+			throw new LogicException( 'is_request() does not support type: ' . $type );
+		}
+
+		private function define( $constant, $expression ) {
+
+			if ( ! defined( $constant ) ) {
+				define( $constant, $expression );
+			}
 		}
 	}
 
@@ -422,115 +640,4 @@ function WSKL() {
 	return Woosym_Korean_Localization::instance( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
 }
 
-add_action( 'plugins_loaded', 'wskl_plugin_monitor', 1 );
-add_action( 'plugins_loaded', 'wskl_startup_plugin', 2 );
-
-if ( ! function_exists( 'wskl_plugin_monitor' ) ) :
-
-	function wskl_plugin_monitor() {
-
-		require_once( WSKL_PATH . '/includes/class-wskl-plugins-monitor.php' );
-		require_once( WSKL_PATH . '/includes/class-wskl-plugins-react.php' );
-
-		/** 우커머스 비할성화 시 알림.*/
-		wskl_add_plugin_status(
-			'woocommerce/woocommerce.php',
-			'inactive',
-			array( 'WSKL_Plugins_React', 'woocommerce' )
-		);
-
-		/** SYM-MVC 활성화 시 대응 */
-		wskl_add_plugin_status(
-			'sym-mvc-framework/sym-mvc-framework.php',
-			'active',
-			array(
-				'WSKL_Plugins_React',
-				'sym_mvc_framework_is_active',
-			)
-		);
-
-		/** 아임포트 활성화 시 대응 */
-		wskl_add_plugin_status(
-			'iamport-for-woocommerce/IamportPlugin.php',
-			'active',
-			array(
-				'WSKL_Plugins_React',
-				'iamport_plugin',
-			)
-		);
-
-		/** WP-Members 대응 */
-		wskl_add_plugin_status(
-			'wp-members/wp-members.php',
-			'inactive',
-			array(
-				'WSKL_Plugins_React',
-				'wp_members',
-			)
-		);
-
-		// 플러그인 확인.
-		wskl_check_plugin_status();
-	}
-
-endif;
-
-if ( ! function_exists( 'wskl_startup_plugin' ) ) :
-
-	function wskl_startup_plugin() {
-
-		if ( ! wskl_woocommerce_found() ) {
-			// 에러 메시지는 별도로 출력됨.
-			return;
-		}
-
-		if ( is_admin() ) {
-			add_action(
-				'admin_enqueue_scripts',
-				function () {
-
-					wp_enqueue_style(
-						'wskl-admin-css',
-						plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/admin.css'
-					);
-				}
-			);
-		}
-
-		if ( ! function_exists( 'wskl_plugin_add_settings_link' ) ) {
-
-			function wskl_plugin_add_settings_link( $links ) {
-
-				if ( isset( $links['0'] ) && FALSE !== strstr( $links[0], 'Settings' ) ) {
-					unset( $links[0] );
-				}
-
-				$dabory_url = add_query_arg(
-					'page',
-					WSKL_MENU_SLUG,
-					admin_url( 'admin.php' )
-				);
-
-				$settings_link = wskl_html_anchor(
-					__( 'Settings' ),
-					array( 'href' => $dabory_url, ),
-					TRUE
-				);
-
-				$links['settings'] = $settings_link;
-
-				return $links;
-			}
-		}
-
-		$plugin = plugin_basename( __FILE__ );
-		add_filter(
-			"plugin_action_links_$plugin",
-			'wskl_plugin_add_settings_link',
-			99
-		);
-
-		$GLOBALS['wskl'] = WSKL();
-	}
-
-endif;
+$GLOBALS['wskl'] = WSKL();

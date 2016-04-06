@@ -9,11 +9,8 @@ if ( ! class_exists( 'WSKL_Plugins_React' ) ) :
 	class WSKL_Plugins_React {
 
 		private static $sym_mvc;
-		private static $sym_mvc_in_ours;
 
 		public static function init() {
-
-			static::$sym_mvc_in_ours = WSKL_PATH . '/includes/lib/sym-mvc/wskl-sym-mvc-framework.php';
 		}
 
 		/**
@@ -125,7 +122,7 @@ if ( ! class_exists( 'WSKL_Plugins_React' ) ) :
 		public static function output_iamport_is_active() {
 
 			printf(
-				'<div class="error notice"><p>%s</p></div>',
+				'<div class="notice notice-warning"><p>%s</p></div>',
 				__(
 					'다보리 알림: "우커머스용 아임포트 플러그인"이 활성화되어 있습니다! 다보리의 아임포트 지불 기능과 겹칩니다. "우커머스용 아임포트 플러그인"을 비활성화시켜 주세요.',
 					'wskl'
