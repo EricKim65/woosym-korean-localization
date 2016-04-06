@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
 /**
  * Class WSKL_Combined_Tax
  *
@@ -387,18 +388,11 @@ class WSKL_Combined_Tax {
 
 		$pg_agency = wskl_get_option( 'pg_agency' );
 
-		if ( wskl_is_option_enabled(
-			     "enable_combined_tax_{$pg_agency}"
-		     ) && method_exists(
-			     __CLASS__,
-			     "combined_tax_{$pg_agency}"
-		     )
+		if ( wskl_is_option_enabled( "enable_combined_tax_{$pg_agency}" ) &&
+		     method_exists( __CLASS__, "combined_tax_{$pg_agency}" )
 		) {
 			return call_user_func_array(
-				array(
-					__CLASS__,
-					"combined_tax_{$pg_agency}",
-				),
+				array( __CLASS__, "combined_tax_{$pg_agency}", ),
 				array( $pay_form_args, )
 			);
 		}

@@ -66,7 +66,6 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
 
   function local_settings() {
 
-    global $sym_checkout_methods;
     global $sym_pg_title;
     global $sym_checkout_titles;
     global $sym_checkout_desc;
@@ -131,10 +130,10 @@ class WC_Kcp_Common extends WC_Payment_Gateway {
   function mobile_ok() {
 
     $device = $_SERVER['HTTP_USER_AGENT'];
-    if ( stripos( $device, "Android" ) || stripos( $device,
-                                                   "iPhone" ) || stripos( $device,
-                                                                          "iPod" ) || stripos( $device,
-                                                                                               "iPad" )
+	  if ( stripos( $device, "Android" ) ||
+	       stripos( $device, "iPhone" ) ||
+	       stripos( $device, "iPod" ) ||
+	       stripos( $device, "iPad" )
     ) {
       return TRUE;
     } else {
