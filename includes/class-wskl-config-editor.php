@@ -313,8 +313,8 @@ class WSKL_Config_Editor {
 			$dummy_match   = array( '' );
 			$extra_defines = "\n";
 
-			foreach ( array_keys( $config ) as $key ) {
-				$extra_defines .= self::get_define( $config, $dummy_match, $key ) . "\n";
+			foreach ( array_keys( $extra_config ) as $key ) {
+				$extra_defines .= self::get_define( $extra_config, $dummy_match, $key ) . "\n";
 			}
 
 			if ( empty( $last_match ) ) {
