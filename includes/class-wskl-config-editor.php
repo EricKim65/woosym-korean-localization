@@ -168,6 +168,16 @@ class WSKL_Config_Editor {
 		$create_backup = $_POST['create-backup'] == 'yes';
 
 		self::create_new_wp_config( $new_config, $extra_config, $create_backup );
+
+		add_action(
+			'admin_notices',
+			function () {
+
+				echo '<div class="updated settings-error notice is-dismissible"><p><strong>' . __(
+						'Settings saved.'
+					) . '</strong></p></div>';
+			}
+		);
 	}
 
 	/**
@@ -371,6 +381,16 @@ class WSKL_Config_Editor {
 		wskl_update_option( 'config_editor_keys_to_filter', $values );
 
 		self::$keys_to_filter = array_merge( self::$fixed_filtered_keys, $values );
+
+		add_action(
+			'admin_notices',
+			function () {
+
+				echo '<div class="updated settings-error notice is-dismissible"><p><strong>' . __(
+						'Settings saved.'
+					) . '</strong></p></div>';
+			}
+		);
 	}
 
 	/**

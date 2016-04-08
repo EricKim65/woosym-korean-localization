@@ -10,8 +10,12 @@
 	<h3 class="title">
 		<?php _e( 'WP Config 편집기', 'wskl' ) ?>
 	</h3>
-	<p class="title">
+	<p>
 		<?php _e( '설정 변경은 워드프레스 동작 전반에 영향을 끼칩니다. 주의해서 사용하세요.', 'wskl' ); ?>
+		<?php _e(
+			'<a href="https://codex.wordpress.org/Editing_wp-config.php" target="_blank">코덱스 페이지</a>',
+			'wskl'
+		); ?>
 	</p>
 
 	<?php $readonly = ! $writable ? 'readonly' : ''; ?>
@@ -33,11 +37,22 @@
 						<?php echo esc_html( $key ); ?>
 					</th>
 					<td>
-						<input type="text"
-						       class="input wskl-long-input"
-						       name="config-<?php echo esc_attr( $key ); ?>"
-						       value="<?php echo esc_attr( $value ); ?>" <?php echo $readonly; ?>
-						/>
+						<?php if ( in_array( $value, array( 'true', 'TRUE', 'false', 'FALSE' ) ) ) : ?>
+							<select name="config-<?php echo esc_attr( $key ); ?> <?php echo $readonly; ?>">
+								<option value="true" <?php echo $value == 'true' || $value == 'TRUE' ? 'selected' : ''; ?>>
+									<?php _e( '켜집', 'wskl' ); ?>
+								</option>
+								<option value="false" <?php echo $value == 'false' || $value == 'FALSE' ? 'selected' : ''; ?>>
+									<?php _e( '꺼짐', 'wskl' ); ?>
+								</option>
+							</select>
+						<?php else : ?>
+							<input type="text"
+							       class="input wskl-long-input"
+							       name="config-<?php echo esc_attr( $key ); ?>"
+							       value="<?php echo esc_attr( $value ); ?>" <?php echo $readonly; ?>
+							/>
+						<?php endif; ?>
 					</td>
 				</tr>
 			<?php endforeach; ?>
@@ -71,43 +86,50 @@
 		</table>
 
 		<?php if ( $writable ) : ?>
-		<script type="text/javascript">
-			(function ($) {
-				function onClickAddButton() {
-					var tr = $(this).closest('tr.form-row');
-					var cloned = tr.clone();
+			<script type="text/javascript">
+				(function ($) {
+					function onClickAddButton() {
+						var tr = $(this).closest('tr.form-row');
+						var cloned = tr.clone();
 
-					var config = cloned.find('input[name^="new-config"]');
-					var value = cloned.find('input[name^="new-value"]');
+						var config = cloned.find('input[name^="new-config"]');
+						var value = cloned.find('input[name^="new-value"]');
 
-					var config_name = config.attr('name');
-					var value_name = value.attr('name');
-					var config_seq = config_name.substring('new-config-'.length, config_name.length);
-					var value_seq = value_name.substring('new-value-'.length, value_name.length);
+						var config_name = config.attr('name');
+						var value_name = value.attr('name');
+						var config_seq = config_name.substring('new-config-'.length, config_name.length);
+						var value_seq = value_name.substring('new-value-'.length, value_name.length);
 
-					if ($.isNumeric(config_seq) && $.isNumeric(value_seq)) {
-						config.attr('name', 'new-config-' + (parseInt(config_seq) + 1));
-						value.attr('name', 'new-value-' + (parseInt(value_seq) + 1));
-						cloned.find('button.wskl-add').bind('click', onClickAddButton);
-						cloned.find('button.wskl-remove').bind('click', onClickRemoveButton);
-						cloned.find('button.hidden').removeClass('hidden');
-						cloned.insertAfter(tr);
+						if ($.isNumeric(config_seq) && $.isNumeric(value_seq)) {
+							config.attr('name', 'new-config-' + (parseInt(config_seq) + 1));
+							value.attr('name', 'new-value-' + (parseInt(value_seq) + 1));
+							cloned.find('button.wskl-add').bind('click', onClickAddButton);
+							cloned.find('button.wskl-remove').bind('click', onClickRemoveButton);
+							cloned.find('button.hidden').removeClass('hidden');
+							cloned.insertAfter(tr);
+						}
 					}
-				}
 
-				function onClickRemoveButton() {
-					$(this).closest('tr.form-row').remove();
-				}
+					function onClickRemoveButton() {
+						$(this).closest('tr.form-row').remove();
+					}
 
-				$('button.wskl-add').click(onClickAddButton);
-				$('button.wskl-remove').click(onClickRemoveButton);
-			})(jQuery);
-		</script>
-		<input type="hidden" name="action" value="wskl-update-wp-config"/>
-		<?php wp_nonce_field( 'wskl-config-editor', 'wskl-config-editor' ); ?>
-		<?php submit_button( __( 'Save' ) ); ?>
+					$('button.wskl-add').click(onClickAddButton);
+					$('button.wskl-remove').click(onClickRemoveButton);
+				})(jQuery);
+			</script>
+			<input type="hidden" name="action" value="wskl-update-wp-config"/>
+			<?php wp_nonce_field( 'wskl-config-editor', 'wskl-config-editor' ); ?>
+		<?php endif; ?>
+
+		<?php
+		$submit_button_attr = array();
+		if ( ! $writable ) {
+			$submit_button_attr['disabled'] = 'disabled';
+		}
+		submit_button( __( 'WP Config 업데이트', 'wskl' ), 'primary', 'submit', TRUE, $submit_button_attr ); ?>
+
 	</form>
-<?php endif; ?>
 
 	<h3 class="title">
 		<?php _e( '설정값 필터링', 'wskl' ) ?>
@@ -134,6 +156,6 @@
 		</div>
 		<input type="hidden" name="action" value="wskl-update-wp-config-filter"/>
 		<?php wp_nonce_field( 'wskl-config-filter-nonce', 'wskl-config-filter-nonce' ); ?>
-		<?php submit_button( __( 'Save' ) ); ?>
+		<?php submit_button( __( '필터링 값 업데이트', 'wskl' ) ); ?>
 	</form>
 </div>
