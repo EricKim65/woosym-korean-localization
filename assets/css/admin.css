@@ -25,3 +25,15 @@ pre.wskl-log-display {
     white-space: pre-wrap;
     padding-left: 20px;
 }
+
+.wskl-label-input {
+    width: 100%;
+}
+
+.wskl-long-input {
+    width: 40%;
+}
+
+.wskl-add-remove-button {
+    width: 32px;
+}

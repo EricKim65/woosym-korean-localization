@@ -145,12 +145,6 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			}
 		}
 
-		$debug_link = 'http://' . $_SERVER['HTTP_HOST'] . str_replace(
-				'wp-admin',
-				'wp-content',
-				$prefix
-			) . '/plugins/sym-mvc-framework/includes/debug.php';
-
 		$pg_agency = get_option( wskl_get_option_name( 'pg_agency' ) );
 
 		$settings['preview'] = array(
@@ -200,20 +194,30 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'type'        => 'caption',
 					'default'     => '',
 				),
+				//				array(
+				//					'id'          => 'dummy_10',
+				//					'label'       => __( '디버그 방법', 'wskl' ),
+				//					'description' => __(
+				//						"
+				//						<span class=\"wskl-notice\">wp-config.php를 아래와 같이 수정하십시오.<br/></span>
+				//						//define('WP_DEBUG', false); <br/>
+				//						define('WP_DEBUG',         true);  // Turn debugging ON <br/>
+				//						define('WP_DEBUG_DISPLAY', true); // Turn forced display OFF <br/>
+				//						define('WP_DEBUG_LOG',     true);  // Turn logging to wp-content/debug.log ON <br/><br/>
+				//						<a href='" . $debug_link . "' target='_blank'>디버그 링크를 클릭하면 누적된 에러메시지가 보입니다.</a>",
+				//						'wskl'
+				//					),
+				//					'type'        => 'caption',
+				//					'default'     => '',
+				//				),
 				array(
-					'id'          => 'dummy_10',
-					'label'       => __( '디버그 방법', 'wskl' ),
+					'id'          => 'enable_config_editor',
+					'label'       => __( '설정편집', 'wskl' ),
 					'description' => __(
-						"
-						<span class=\"wskl-notice\">wp-config.php를 아래와 같이 수정하십시오.<br/></span>
-						//define('WP_DEBUG', false); <br/>
-						define('WP_DEBUG',         true);  // Turn debugging ON <br/>
-						define('WP_DEBUG_DISPLAY', true); // Turn forced display OFF <br/>
-						define('WP_DEBUG_LOG',     true);  // Turn logging to wp-content/debug.log ON <br/><br/>
-						<a href='" . $debug_link . "' target='_blank'>디버그 링크를 클릭하면 누적된 에러메시지가 보입니다.</a>",
+						'간단한 wp-config.php 설정 편집 기능 사용.<br><span class="wskl-notice">이 설정은 wp-config.php 파일을 편집합니다. 숙련된 사용자만 이용하세요.</span>',
 						'wskl'
 					),
-					'type'        => 'caption',
+					'type'        => 'checkbox',
 					'default'     => '',
 				),
 			),

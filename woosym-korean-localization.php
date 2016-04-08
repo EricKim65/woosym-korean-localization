@@ -195,6 +195,12 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 					'/includes/lib/marketing/class-wskl-post-export.php',
 					'enable_post_export'
 				);
+
+				/** wp-config.php editor */
+				wskl_load_module(
+					'/includes/class-wskl-config-editor.php',
+					'enable_config_editor'
+				);
 			}
 
 			if ( $this->is_request( 'frontend' ) ) {
@@ -352,7 +358,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			$order_id
 		) {
 
-			echo __( '<p><h5>주문에 감사드리며 항상 정성을 다 하겠습니다 !</h5></p>', $this->_folder );
+			echo __( '<p><h5>주문에 감사드리며 항상 정성을 다 하겠습니다 !</h5></p>', 'wskl' );
 		}
 
 		function woosym_kwon_currency( $currencies ) {
