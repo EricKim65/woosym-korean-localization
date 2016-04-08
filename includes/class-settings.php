@@ -214,7 +214,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'id'          => 'enable_config_editor',
 					'label'       => __( '설정편집', 'wskl' ),
 					'description' => __(
-						'간단한 wp-config.php 설정 편집 기능 사용.<br><span class="wskl-notice">이 설정은 wp-config.php 파일을 편집합니다. 숙련된 사용자만 이용하세요.</span>',
+						'간단한 wp-config.php 설정 편집 기능 사용.<br><span class="wskl-notice">이 설정은 wp-config.php 파일을 편집합니다. 유지보수시에만 제한적으로 이용하세요.</span>',
 						'wskl'
 					),
 					'type'        => 'checkbox',
