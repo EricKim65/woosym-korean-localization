@@ -7,15 +7,15 @@ wskl_check_abspath();
  * 간단하게 설정 파일을 편집하는 모듈
  *
  * 단, 해당 조건을 만족해야 한다.
- *
  * 1. 모듈은 쓰기 권한이 있어야 한다.
  * 2. wp-config.php 파일은 ABSPATH 가 define 되어 있어야 한다.
- * 3. ABSPATH 이외에 적어도 한 번 이상은 주석 처리가 되어 있다 하더라도 define 이 설정되어야 한다.
- *    그렇지 않으면 모듈은 새로운 정의를 파일에 추가할 수 없다.
- * 4. 안정성을 위해, 또 실제로 PHP 프로그래밍 상, 같은 define 을 두 번 이상 만들지 말 것
- * 5. __DIR__, __FILE__ 같은 매직 상수를 쓸 수 없다. 이 경우 폼으로 전달된 문자에 한헤 문자열 평가를 해야 하는데
+ * 3. 안정성을 위해, 또 실제로 PHP 프로그래밍 상, 같은 define 을 두 번 이상 만들지 말 것
+ * 4. __DIR__, __FILE__ 같은 매직 상수를 쓸 수 없다. 이 경우 폼으로 전달된 문자에 한헤 문자열 평가를 해야 하는데
  *    그렇게 되면 심각한 보안 문제를 일으킬 수 있다.
  *
+ * 주의: 폼에서 받은 내용을 바탕으로 값을 쓸 때는 주석 처리된 define 도 영향을 받을 수 있다.
+ * define( 'A', "A" );
+ * // define( 'A', "B" );  # 이 경우 주석처리되어 있지만 값이 영향을 받을 수 있다.
  *
  * Class WSKL_Config_Editor
  */
@@ -26,11 +26,6 @@ class WSKL_Config_Editor {
 
 	/** define( ... , ... ); 부분을 추출하는 정규 표현 */
 	const REGEX_DEFINES = '/define\s*\(\s*(\'|")(.+?)(\'|")\s*,\s*(.+?)\s*\)\s*;/';
-
-	/**
-	 * @var array 키는 해당 define 카워드, 값은 define 이 정의하는 상수
-	 */
-	private static $config;
 
 	/**
 	 * @var array define 중 웹으로 편집하기에 적절하지 않은 키워드를 필터링
@@ -52,6 +47,18 @@ class WSKL_Config_Editor {
 		'SECURE_AUTH_SALT',
 	);
 
+	/**
+	 * @var array 사용자가 이 값을 $keys_to_filter 에 넣어 막지 않는 한 기본적으로 보이는 설정. 키는 설정 이름. 값은 디폴트 값.
+	 */
+	private static $must_use_configs = array(
+		'WP_DEBUG'          => 'FALSE', // WordPress default debug
+		'WP_DEBUG_LOG'      => 'FALSE', // Enable logging. see wp-content/debug.log
+		'WP_DEBUG_DISPLAY'  => 'FALSE', // Output debug message.
+		'SCRIPT_DEBUG'      => 'FALSE', // Use non-minified css or JavaScripts.
+		'WSKL_DEBUG'        => 'FALSE', // Our debug features.
+		'WSKL_LAB_FEATURES' => 'FALSE', // Our beta features.
+	);
+
 	public static function init() {
 
 		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
@@ -62,6 +69,8 @@ class WSKL_Config_Editor {
 			self::$fixed_filtered_keys,
 			(array) wskl_get_option( 'config_editor_keys_to_filter', array() )
 		);
+
+		self::$must_use_configs = apply_filters( 'wskl_config_editor_must_use_configs', self::$must_use_configs );
 	}
 
 	/**
@@ -290,17 +299,18 @@ class WSKL_Config_Editor {
 
 		$replace_callback = function ( $matches ) use ( &$config, &$last_match ) {
 
-			$key = trim( $matches[2] );
+			$key        = trim( $matches[2] );
+			$substitute = WSKL_Config_Editor::get_define( $config, $matches, $key );
 
 			if ( $key != 'ABSPATH' ) {
-				$last_match = $matches[0];
+				$last_match = $substitute;
 			}
 
-			return WSKL_Config_Editor::get_define( $config, $matches, $key );
+			return $substitute;
 		};
 
-		$content       = self::get_wp_config_content();
-		$last_match    = '';
+		$content    = self::get_wp_config_content();
+		$last_match = '';
 
 		// wp-config.php 파일의 내용을 업데이트.
 		// 주석 안의 내용, 혹은 중복된 define 값도 같이 없데이트 되어 버릴 수 있으니 주의.
@@ -320,7 +330,7 @@ class WSKL_Config_Editor {
 			if ( empty( $last_match ) ) {
 				$additional_define_pos = 0;
 			} else {
-				$additional_define_pos = strpos( $revised_content, $last_match ) + strlen( $last_match );
+				$additional_define_pos = strrpos( $revised_content, $last_match ) + strlen( $last_match );
 			}
 
 			$before_extra_defines = substr( $revised_content, 0, $additional_define_pos );
@@ -400,12 +410,14 @@ class WSKL_Config_Editor {
 	 */
 	public static function output_config_editor_menu() {
 
-		self::$config = self::get_wp_config();
+		$config      = self::get_wp_config();
+		$mu_defaults = array_diff_key( self::$must_use_configs, $config );
 
 		wskl_get_template(
 			'config-editor.php',
 			array(
-				'config'              => self::$config,
+				'config'              => $config,
+				'mu_defaults'         => $mu_defaults,
 				'writable'            => self::has_write_permission(),
 				'fixed_filtered_keys' => self::$fixed_filtered_keys,
 				'config_filter'       => array_diff( self::$keys_to_filter, self::$fixed_filtered_keys ),

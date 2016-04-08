@@ -1,6 +1,7 @@
 <?php
 /**
  * @var array $config
+ * @var array $mu_defaults
  * @var bool  $writable
  * @var array $fixed_filtered_keys
  * @var array $config_filter
@@ -38,12 +39,12 @@
 					</th>
 					<td>
 						<?php if ( in_array( $value, array( 'true', 'TRUE', 'false', 'FALSE' ) ) ) : ?>
-							<select name="config-<?php echo esc_attr( $key ); ?> <?php echo $readonly; ?>">
-								<option value="true" <?php echo $value == 'true' || $value == 'TRUE' ? 'selected' : ''; ?>>
-									<?php _e( '켜집', 'wskl' ); ?>
+							<select name="config-<?php echo esc_attr( $key ); ?>" <?php echo $readonly; ?>>
+								<option value="TRUE" <?php echo $value == 'true' || $value == 'TRUE' ? 'selected' : ''; ?>>
+									TRUE
 								</option>
-								<option value="false" <?php echo $value == 'false' || $value == 'FALSE' ? 'selected' : ''; ?>>
-									<?php _e( '꺼짐', 'wskl' ); ?>
+								<option value="FALSE" <?php echo $value == 'false' || $value == 'FALSE' ? 'selected' : ''; ?>>
+									FALSE
 								</option>
 							</select>
 						<?php else : ?>
@@ -57,12 +58,48 @@
 				</tr>
 			<?php endforeach; ?>
 			<?php if ( $writable ) : ?>
+				<?php
+				// must-use defaults
+				$idx = 1;
+				foreach ( $mu_defaults as $key => $value ) : ?>
+					<tr class="form-row">
+						<th>
+							<?php echo esc_html( $key ); ?>
+							<input
+								type="hidden"
+								name="<?php echo "new-config-$idx"; ?>"
+								value="<?php echo esc_attr( $key ); ?>"
+							/>
+						</th>
+						<td>
+							<?php if ( in_array( $value, array( 'true', 'TRUE', 'false', 'FALSE' ) ) ) : ?>
+								<select name="new-value-<?php echo $idx; ?>">
+									<option value="TRUE" <?php echo $value == 'true' || $value == 'TRUE' ? 'selected' : ''; ?>>
+										TRUE
+									</option>
+									<option value="FALSE" <?php echo $value == 'false' || $value == 'FALSE' ? 'selected' : ''; ?>>
+										FALSE
+									</option>
+								</select>
+							<?php else : ?>
+								<input type="text"
+								       class="input wskl-long-input"
+								       name="new-value-<?php echo $idx; ?>"
+								       value="<?php echo esc_attr( $value ); ?>" ?>
+								/>
+							<?php endif; ?>
+						</td>
+					</tr>
+					<?php
+					++ $idx;
+				endforeach;
+				?>
 				<tr class="form-row plus">
 					<th>
-						<input type="text" class="wskl-label-input" name="new-config-1"/>
+						<input type="text" class="wskl-label-input" name="new-config-<?php echo $idx; ?>"/>
 					</th>
 					<td>
-						<input type="text" class="wskl-long-input" name="new-value-1"/>
+						<input type="text" class="wskl-long-input" name="new-value-<?php echo $idx; ?>"/>
 					<span>
 						<button type="button" class="plus wskl-add-remove-button wskl-add">&plus;</button>
 						<button type="button" class="minus wskl-add-remove-button wskl-remove hidden">&minus;</button>
