@@ -53,11 +53,9 @@ function wskl_update_option(
 	$use_native_prefix = TRUE
 ) {
 
-	return $use_native_prefix ? update_option(
-		wskl_get_option_name( $option_name ),
-		$option_value,
-		$autoload
-	) : update_option( $option_name, $option_value, $autoload );
+	return $use_native_prefix ?
+		update_option( wskl_get_option_name( $option_name ), $option_value, $autoload ) :
+		update_option( $option_name, $option_value, $autoload );
 }
 
 
@@ -305,4 +303,9 @@ function wskl_check_abspath() {
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
 	}
+}
+
+function wskl_dump( $obj ) {
+
+	echo '<p><pre>' . print_r( $obj, TRUE ) . ' </pre>';
 }
