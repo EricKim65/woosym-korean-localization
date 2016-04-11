@@ -195,6 +195,11 @@ function wskl_wp_members_url( $tab = 'dabory-members' ) {
 	);
 }
 
+function wskl_wp_config_editor_url() {
+
+	return add_query_arg( 'page', 'wskl_config_editor', admin_url( 'admin.php' ) );
+}
+
 
 /**
  * shortcut of enqueuing scripts
