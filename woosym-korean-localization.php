@@ -21,8 +21,6 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 	final class Woosym_Korean_Localization {
 
-		public $version = '3.3.0-alpha2';
-
 		private static $_instance = NULL;
 
 		private $_settings = NULL;
@@ -99,7 +97,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
 			define( 'WSKL_PLUGIN', 'woosym-korean-localization/woosym-korean-localization.php' );
-			define( 'WSKL_VERSION', $this->version );
+			define( 'WSKL_VERSION', '3.3.0-alpha2' );
 
 			if ( ! defined( 'WSKL_DEBUG' ) ) {
 				define( 'WSKL_DEBUG', FALSE );
@@ -568,6 +566,15 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 					'id'     => 'wskl-dabory-members',
 					'title'  => __( '다보리 멤버스 설정', 'wskl' ),
 					'href'   => wskl_wp_members_url(),
+				);
+			}
+
+			if ( wskl_is_option_enabled( 'enable_config_editor' ) ) {
+				$sub_menus[] = array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-config-editor',
+					'title'  => __( 'WP Config 편집', 'wskl' ),
+					'href'   => wskl_wp_config_editor_url(),
 				);
 			}
 
