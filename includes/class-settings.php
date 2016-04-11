@@ -311,6 +311,16 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'default'     => '',
 				),
 				array(
+					'id'          => 'company',
+					'label'       => __( '회사명 입력 가능', 'wskl' ),
+					'description' => __(
+						'사업자 대상 위주 판매의 경우 회사명을 입력 가능 설정을 합니다.',
+						'wskl'
+					),
+					'type'        => 'checkbox',
+					'default'     => '',
+				),
+				array(
 					'id'          => 'pg_agency',
 					'label'       => __( '결제대행업체', 'wskl' ),
 					'description' => __(
@@ -740,16 +750,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'type'        => 'checkbox',
 					'default'     => '',
 				),
-				array(
-					'id'          => 'company',
-					'label'       => __( '회사명 입력 가능', 'wskl' ),
-					'description' => __(
-						'사업자 대상 위주 판매의 경우 회사명을 입력 가능 설정을 합니다.',
-						'wskl'
-					),
-					'type'        => 'checkbox',
-					'default'     => '',
-				),
+
 				array(
 					'id'          => 'korean_won',
 					'label'       => __( '한국 원화 표시 설정', 'wskl' ),

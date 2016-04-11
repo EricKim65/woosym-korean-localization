@@ -16,28 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// plugin's defines
-define( 'WSKL_PATH', __DIR__ );
-define( 'WSKL_MAIN_FILE', __FILE__ );
-define( 'WSKL_PLUGIN', 'woosym-korean-localization/woosym-korean-localization.php' );
-define( 'WSKL_PREFIX', 'wskl_' );
-define( 'WSKL_VERSION', '3.3.0-alpha2' );
-
-define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
-
-if ( ! defined( 'WSKL_DEBUG' ) ) {
-	define( 'WSKL_DEBUG', FALSE );
-}
-
-require_once( WSKL_PATH . '/includes/lib/sym-mvc/wskl-sym-mvc-framework.php' );
-require_once( WSKL_PATH . '/includes/lib/wskl-functions.php' );
-require_once( WSKL_PATH . '/includes/lib/wskl-plugin.php' );
-require_once( WSKL_PATH . '/includes/lib/wskl-template-functions.php' );
-
 
 if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 	final class Woosym_Korean_Localization {
+
+		public $version = '3.3.0-alpha2';
 
 		private static $_instance = NULL;
 
@@ -82,6 +66,8 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			$this->init_constants();
 
+			$this->includes();
+
 			$this->check_compatibility();
 
 			if ( ! wskl_woocommerce_found() ) {
@@ -92,7 +78,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			$this->init_modules();
 
-			do_action( 'wskl_init' );
+			do_action( 'wskl_loaded' );
 
 		} // End __construct ()
 
@@ -106,8 +92,30 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 		public function init_constants() {
 
+			// plugin's defines
+			define( 'WSKL_PATH', __DIR__ );
+			define( 'WSKL_MAIN_FILE', __FILE__ );
+			define( 'WSKL_PREFIX', 'wskl_' );
+
+			define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
+			define( 'WSKL_PLUGIN', 'woosym-korean-localization/woosym-korean-localization.php' );
+			define( 'WSKL_VERSION', $this->version );
+
+			if ( ! defined( 'WSKL_DEBUG' ) ) {
+				define( 'WSKL_DEBUG', FALSE );
+			}
+
 			$this->define( 'DAUM_POSTCODE_HTTP', 'http://dmaps.daum.net/map_js_init/postcode.v2.js' );
 			$this->define( 'DAUM_POSTCODE_HTTPS', 'https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js' );
+		}
+
+		public function includes() {
+
+			require_once( WSKL_PATH . '/includes/lib/sym-mvc/wskl-sym-mvc-framework.php' );
+			require_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth-info.php' );
+			require_once( WSKL_PATH . '/includes/lib/wskl-functions.php' );
+			require_once( WSKL_PATH . '/includes/lib/wskl-plugin.php' );
+			require_once( WSKL_PATH . '/includes/lib/wskl-template-functions.php' );
 		}
 
 		/**
@@ -131,44 +139,6 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			/** 플러그인 목록의 action 항목 편집 */
 			add_filter( "plugin_action_links_{$plugin}", array( $this, 'add_settings_link' ), 999 );
 
-			if ( $this->is_request( 'frontend' ) ) {
-
-				// 관련상품 표시 갯수
-				$related_products_count = (int) get_option( wskl_get_option_name( 'related_products_count' ) );
-				if ( $related_products_count > 0 ) {
-
-					$priority = (int) get_option( wskl_get_option_name( 'related_products_priority' ) );
-					$callback = function ( $args ) {
-
-						$args['posts_per_page'] = (int) get_option( wskl_get_option_name( 'related_products_count' ) );
-						$args['columns']        = (int) get_option(
-							wskl_get_option_name( 'related_products_columns' )
-						);
-
-						return $args;
-					};
-
-					add_filter( 'woocommerce_output_related_products_args', $callback, $priority, 1 );
-				}
-
-				if ( wskl_is_option_enabled( 'hide_product_review_tab' ) ) {
-					add_filter( 'woocommerce_product_tabs', array( __CLASS__, 'callback_hide_product_review_tab' ) );
-				}
-			}
-
-			if ( wskl_get_option( 'disable_sku' ) == 'on' ) {
-				add_filter( 'wc_product_sku_enabled', '__return_false' );
-			}
-
-			if ( wskl_get_option( 'disable_returntoshop' ) == 'on' ) {
-				add_filter( 'woocommerce_return_to_shop_redirect', array( $this, 'sym_change_empty_cart_button_url' ) );
-			}
-
-			if ( wskl_get_option( 'korean_won' ) == 'on' ) {
-				add_filter( 'woocommerce_currencies', array( $this, 'woosym_kwon_currency' ) );
-				add_filter( 'woocommerce_currency_symbol', array( $this, 'woosym_kwon_currency_symbol' ), 10, 2 );
-			}
-
 			add_filter( 'the_title', array( $this, 'order_received_title' ), 10, 2 );
 			add_action( 'woocommerce_thankyou', array( $this, 'order_received_addition' ) );
 
@@ -190,12 +160,6 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				wskl_load_module( '/includes/lib/auth/class-wskl-auth.php' );
 				new WSKL_Auth( $this->settings() );
 
-				/** post export */
-				wskl_load_module(
-					'/includes/lib/marketing/class-wskl-post-export.php',
-					'enable_post_export'
-				);
-
 				/** wp-config.php editor */
 				wskl_load_module(
 					'/includes/class-wskl-config-editor.php',
@@ -203,12 +167,83 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				);
 			}
 
-			if ( $this->is_request( 'frontend' ) ) {
+			/** IP blocking */
+			wskl_load_module( '/includes/class-wskl-ip-block.php', 'enable_countryip_block' );
 
-				// verification
-				wskl_load_module(
-					'/includes/lib/auth/class-wskl-verification.php'
-				);
+			if ( wskl_debug_enabled() ) {
+				wskl_load_module( '/includes/lib/wskl-debugging.php' );
+			}
+
+			$this->init_payment_modules();
+			$this->init_essential_modules();
+			$this->init_extension_modules();
+			$this->init_marketing_modules();
+		}
+
+		private function init_payment_modules() {
+
+			$this->admin_notice_unauthorized(
+				'payment',
+				'checkout-payment-gate',
+				array( __CLASS__, 'output_unauthorized_payment' )
+			);
+
+			if ( $this->is_request( 'frontend' ) ) {
+				// payment verification
+				wskl_load_module( '/includes/lib/auth/class-wskl-verification.php', 'enable_sym_pg' );
+			}
+
+			/**
+			 * 결제 (frontend/admin 둘 다 요구 )
+			 * payment 는 자체로 인증 확인을 하도록 됨.
+			 */
+			wskl_load_module( '/includes/class-wskl-payment-gates.php', 'enable_sym_pg' );
+		}
+
+		private function init_essential_modules() {
+
+			$authorized = $this->admin_notice_unauthorized(
+				'essential',
+				'checkout-shipping',
+				array( __CLASS__, 'output_unauthorized_essential' )
+			);
+
+			if ( ! $authorized ) {
+				return;
+			}
+
+			/** 기존 Woosym 모듈에 산개해 있던 훅들 */
+			wskl_load_module( '/includes/class-wskl-essential-module.php' );
+		}
+
+		private function init_extension_modules() {
+
+			$authorized = $this->admin_notice_unauthorized(
+				'extension',
+				'ship-tracking',
+				array( __CLASS__, 'output_unauthorized_extension' )
+			);
+
+			if ( ! $authorized ) {
+				return;
+			}
+
+			wskl_load_module( '/includes/class-wskl-extension-module.php' );
+		}
+
+		private function init_marketing_modules() {
+
+			$authorized = $this->admin_notice_unauthorized(
+				'marketing',
+				'marketing',
+				array( __CLASS__, 'output_unauthorized_marketing' )
+			);
+
+			if ( ! $authorized ) {
+				return;
+			}
+
+			if ( $this->is_request( 'frontend' ) ) {
 
 				// sales log
 				wskl_load_module(
@@ -219,50 +254,45 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				wskl_load_module(
 					'/includes/lib/marketing/class-product-logs.php'
 				);
+			}
 
-				/** 한국형 주소 및 체크아웃 필드 구성 */
+			if ( $this->is_request( 'admin' ) ) {
+
+				/** post export */
 				wskl_load_module(
-					'/includes/class-wskl-sym-checkout.php',
-					'enable_sym_checkout'
+					'/includes/lib/marketing/class-wskl-post-export.php',
+					'enable_post_export'
 				);
 			}
+		}
 
-			/** 복합과세 */
-			wskl_load_module( '/includes/class-wskl-combined-tax.php' );
+		/**
+		 * @param $license_type
+		 * @param $tab
+		 * @param $callback
+		 *
+		 * @used-by Woosym_Korean_Localization::init_payment_modules()
+		 * @used-by Woosym_Korean_Localization::init_essential_modules()
+		 * @used-by Woosym_Korean_Localization::init_extension_modules()
+		 * @used-by Woosym_Korean_Localization::init_marketing_modules()
+		 *
+		 * @return bool
+		 */
+		private function admin_notice_unauthorized( $license_type, $tab, $callback ) {
 
-			/** 다보리 배송 */
-			wskl_load_module( '/includes/class-wskl-shipping-method.php', 'enable_korean_shipping' );
+			$authorized = wskl_license_authorized( $license_type );
 
-			/** IP blocking */
-			wskl_load_module( '/includes/class-wskl-ip-block.php', 'enable_countryip_block' );
+			if ( ! $authorized && $this->is_request( 'admin' ) ) {
 
-			/** 소셜 로그인 */
-			wskl_load_module( '/includes/lib/class-social-login.php', 'enable_social_login' );
+				$page = wskl_GET( 'page' );
+				$_tab = wskl_GET( 'tab' );
 
-			/** 바로 구매 */
-			wskl_load_module( '/includes/lib/class-direct-purchase.php', 'enable_direct_purchase' );
-
-			/** BACS 입금자 다른 이름 */
-			wskl_load_module(
-				'/includes/class-wskl-bacs-payer-name.php',
-				'enable_bacs_payer_name'
-			);
-
-			/** 배송추적 */
-			wskl_load_module( '/includes/class-wskl-shipping-tracking.php', 'enable_ship_track' );
-
-			/** 다보리 멤버스 */
-			wskl_load_module(
-				'/includes/class-wskl-dabory-members.php',
-				'enable_dabory_members'
-			);
-
-			/** 결제 (frontend/admin 둘 다 요구 ) */
-			wskl_load_module( '/includes/class-wskl-payment-gates.php', 'enable_sym_pg' );
-
-			if ( wskl_debug_enabled() ) {
-				wskl_load_module( '/includes/lib/wskl-debugging.php' );
+				if ( $page == WSKL_MENU_SLUG && $_tab == $tab ) {
+					add_action( 'admin_notices', $callback );
+				}
 			}
+
+			return $authorized;
 		}
 
 		/** @callback */
@@ -282,7 +312,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				WSKL_VERSION
 			);
 		}
-		
+
 		/**
 		 * @callback
 		 * @action    admin_enqueue_scripts
@@ -359,29 +389,6 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 		) {
 
 			echo __( '<p><h5>주문에 감사드리며 항상 정성을 다 하겠습니다 !</h5></p>', 'wskl' );
-		}
-
-		function woosym_kwon_currency( $currencies ) {
-
-			$currencies['KRW'] = __( '대한민국', 'woocommerce' );
-
-			return $currencies;
-		}
-
-		function woosym_kwon_currency_symbol( $currency_symbol, $currency ) {
-
-			switch ( $currency ) {
-				case 'KRW':
-					$currency_symbol = __( '원', 'wskl' );
-					break;
-			}
-
-			return $currency_symbol;
-		}
-
-		function sym_change_empty_cart_button_url() {
-
-			return get_site_url();
 		}
 
 		public function check_compatibility() {
@@ -570,22 +577,6 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 		}
 
 		/**
-		 * @callback
-		 *
-		 * @param $tabs
-		 *
-		 * @return array
-		 */
-		public function callback_hide_product_review_tab( $tabs ) {
-
-			if ( isset( $tabs['reviews'] ) ) {
-				unset( $tabs['reviews'] );
-			}
-
-			return $tabs;
-		}
-
-		/**
 		 * 우리 플러그인이 우커머스보다 뒤쪽에 로딩되도록 조정
 		 *
 		 * @used-by    Woosym_Korean_Localization::after_plugin_activated
@@ -635,6 +626,80 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			if ( ! defined( $constant ) ) {
 				define( $constant, $expression );
 			}
+		}
+
+		/**
+		 * @used-by Woosym_Korean_Localization::output_unauthorized_payment()
+		 * @used-by Woosym_Korean_Localization::output_unauthorized_essential()
+		 * @used-by Woosym_Korean_Localization::output_unauthorized_extension()
+		 * @used-by Woosym_Korean_Localization::output_unauthorized_marketing()
+		 *
+		 * @param $message
+		 */
+		public static function output_unauthorized( $message ) {
+
+			?>
+			<div class="notice notice-warning">
+				<p>
+					<?php echo $message; ?>
+					<a href="<?php echo esc_url( wskl_get_setting_tab_url( 'authentication' ) ); ?>">
+						<?php _e( '인증 페이지로', 'wskl' ); ?>
+					</a>
+				</p>
+			</div>
+			<?php
+		}
+
+		/**
+		 * @callback
+		 * @action    admin_notices
+		 * @used-by   Woosym_Korean_Localization::admin_notice_unauthorized()
+		 * @used-by   Woosym_Korean_Localization::init_payment_modules()
+		 */
+		public static function output_unauthorized_payment() {
+
+			$message = __( '지블 기능 활성화 키가 인증되지 않았습니니다.', 'wskl' );
+
+			self::output_unauthorized( $message );
+		}
+
+		/**
+		 * @callback
+		 * @action    admin_notices
+		 * @used-by   Woosym_Korean_Localization::admin_notice_unauthorized()
+		 * @used-by   Woosym_Korean_Localization::init_essential_modules()
+		 */
+		public static function output_unauthorized_essential() {
+
+			$message = __( '핵심 기능 활성화 키가 인증되지 않았습니니다.', 'wskl' );
+
+			self::output_unauthorized( $message );
+		}
+
+		/**
+		 * @callback
+		 * @action    admin_notices
+		 * @used-by   Woosym_Korean_Localization::admin_notice_unauthorized()
+		 * @used-by   Woosym_Korean_Localization::init_extension_modules()
+		 */
+		public static function output_unauthorized_extension() {
+
+			$message = __( '확장 기능 활성화 키가 인증되지 않았습니니다.', 'wskl' );
+
+			self::output_unauthorized( $message );
+		}
+
+		/**
+		 * @callback
+		 * @action    admin_notices
+		 * @used-by   Woosym_Korean_Localization::admin_notice_unauthorized()
+		 * @used-by   Woosym_Korean_Localization::init_marketing_modules()
+		 */
+		public static function output_unauthorized_marketing() {
+
+			$message = __( '마케팅 자동화 활성화 키가 인증되지 않았습니니다.', 'wskl' );
+
+			self::output_unauthorized( $message );
 		}
 	}
 

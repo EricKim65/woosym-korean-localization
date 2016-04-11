@@ -51,11 +51,11 @@ use WSKL_Dabory_Members_Admin_Settings as Settings;
 						<!-- 배송과 환불 약관 -->
 						<div>
 							<h3>
-								<?php _e( '배송과 환불 약관', 'wskl' ); ?>
+								<?php _e( '배송과 환불 정보', 'wskl' ); ?>
 							</h3>
 							<ul>
-								<?php Settings::output_page_select_tag( 'page_delivery', __( '배송 약관', 'wskl' ), '' ); ?>
-								<?php Settings::output_page_select_tag( 'page_refund', __( '환불 약관', 'wskl' ), '' ); ?>
+								<?php Settings::output_page_select_tag( 'page_delivery', __( '배송 정보', 'wskl' ), '' ); ?>
+								<?php Settings::output_page_select_tag( 'page_refund', __( '환불 정보', 'wskl' ), '' ); ?>
 							</ul>
 						</div>
 						<!-- 가입 / 탈퇴 / 등록 완료 페이지 -->
@@ -146,7 +146,7 @@ use WSKL_Dabory_Members_Admin_Settings as Settings;
 						<!-- 등록 완료 페이지 설정 -->
 						<div>
 							<h3>
-								<?php _e( '등록 완료 페이지 설정', 'wskl' ); ?>
+								<?php _e( '등록 완료 설정', 'wskl' ); ?>
 							</h3>
 							<ul>
 								<?php Settings::output_checkbox(
@@ -183,17 +183,17 @@ use WSKL_Dabory_Members_Admin_Settings as Settings;
 						<div class="spacing clear"></div>
 
 						<h2>
-							<?php _e( '배송 환불 약관 설정', 'wskl' ); ?>
+							<?php _e( '배송 환불 정보 설정', 'wskl' ); ?>
 						</h2>
 						<div>
 							<h3>
-								<?php _e( '배송 약관 설정', 'wskl' ); ?>
+								<?php _e( '배송 정보 설정', 'wskl' ); ?>
 							</h3>
 							<ul>
 								<?php Settings::output_checkbox(
 									'show_delivery',
-									__( '배송 약관 보이기', 'wskl' ),
-									__( '상품 상세 페이지에 배송 약관을 보여줍니다.', 'wskl' )
+									__( '배송 정보 보이기', 'wskl' ),
+									__( '상품 상세 페이지에 배송 정보를 보여줍니다.', 'wskl' )
 								); ?>
 							</ul>
 						</div>
@@ -204,8 +204,8 @@ use WSKL_Dabory_Members_Admin_Settings as Settings;
 							<ul>
 								<?php Settings::output_checkbox(
 									'show_refund',
-									__( '환불 약관 보이기', 'wskl' ),
-									__( '상품 상세 페이지에 환불 약관을 보여줍니다.', 'wskl' )
+									__( '환불 정보 보이기', 'wskl' ),
+									__( '상품 상세 페이지에 환불 정보를 보여줍니다.', 'wskl' )
 								); ?>
 							</ul>
 						</div>
