@@ -60,34 +60,6 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 		return self::$_instance;
 	}
 
-	public static function output_unauthorized_payment() {
-
-		$message = __( '지블 기능 활성화 키가 인증되지 않았습니니다.', 'wskl' );
-
-		self::output_unauthorized( $message );
-	}
-
-	public static function output_unauthorized( $message ) {
-
-		?>
-		<div class="notice notice-warning">
-			<p>
-				<?php echo $message; ?>
-				<a href="<?php echo esc_url( wskl_get_setting_tab_url( 'authentication' ) ); ?>">
-					<?php _e( '인증 페이지로', 'wskl' ); ?>
-				</a>
-			</p>
-		</div>
-		<?php
-	}
-
-	public static function output_unauthorized_marketing() {
-
-		$message = __( '마케팅 자동화 활성화 키가 인증되지 않았습니니다.', 'wskl' );
-
-		self::output_unauthorized( $message );
-	}
-
 	public function __clone() {
 
 		_doing_it_wrong(
@@ -1128,38 +1100,6 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 		if ( wskl_debug_enabled() ) {
 			$settings['developer'] = include( WSKL_PATH . '/includes/admin/settings/developer.php' );
-		}
-
-		// 비인증 경고
-		if ( isset( $_GET['page'] ) && $_GET['page'] == WSKL_MENU_SLUG ) {
-
-			// 지불
-			if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'checkout-payment-gate' ) {
-
-				if ( ! wskl_license_authorized( 'payment' ) ) {
-					add_action(
-						'admin_notices',
-						array(
-							__CLASS__,
-							'output_unauthorized_payment',
-						)
-					);
-				}
-			}
-
-			// 마케팅자동화 비인증
-			if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'marketing' ) {
-
-				if ( ! wskl_license_authorized( 'marketing' ) ) {
-					add_action(
-						'admin_notices',
-						array(
-							__CLASS__,
-							'output_unauthorized_marketing',
-						)
-					);
-				}
-			}
 		}
 
 		$settings = apply_filters( 'wskl_settings_fields', $settings );
