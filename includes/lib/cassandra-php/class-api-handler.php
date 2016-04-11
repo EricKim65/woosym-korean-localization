@@ -103,6 +103,7 @@ class Rest_Api_Helper {
 			'body'    => &$body,
 		);
 
+		/** @var \WP_Error|array $response */
 		$response = wp_remote_request( $url, $args );
 
 		if ( is_wp_error( $response ) ) {
@@ -287,6 +288,7 @@ class SalesAPI {
 		$order
 	) {
 
+		/** @var \WC_Order $order */
 		$order = wc_get_order( $order );
 
 		assert(
