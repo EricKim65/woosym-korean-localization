@@ -88,3 +88,8 @@ ul.validation_error_list {
 #wpmem_reg span.mismatch::after {
     content: "";
 }
+
+#wpmem_reg input.width-auto {
+    width: auto;
+    float: left;
+}

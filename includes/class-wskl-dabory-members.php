@@ -48,7 +48,7 @@ class WSKL_Dabory_Members {
 
 		if ( wskl_is_option_enabled( 'members_show_delivery' ) ) {
 			$tabs['delivery_terms'] = array(
-				'title'    => __( '배송 약관', 'wskl' ),
+				'title'    => __( '배송 정보', 'wskl' ),
 				'priority' => 20,
 				'callback' => array( __CLASS__, 'output_delivery_terms' ),
 			);
@@ -56,7 +56,7 @@ class WSKL_Dabory_Members {
 
 		if ( wskl_is_option_enabled( 'members_show_refund' ) ) {
 			$tabs['refund_terms'] = array(
-				'title'    => __( '환불 약관', 'wskl' ),
+				'title'    => __( '환불 정보', 'wskl' ),
 				'priority' => 20,
 				'callback' => array( __CLASS__, 'output_refund_terms' ),
 			);

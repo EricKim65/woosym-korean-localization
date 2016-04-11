@@ -79,6 +79,11 @@ class WSKL_Dabory_Members_Registration {
 		$toggle
 	) {
 
+		$zip_fields = apply_filters(
+			'dabory_members_postcode_zip_fields',
+			array( 'zip', )
+		);
+
 		$readonly_fields = apply_filters(
 			'dabory_members_postcode_readonly_fields',
 			array( 'zip', 'addr1', 'billing_postcode', 'billing_address_1' )
@@ -91,12 +96,19 @@ class WSKL_Dabory_Members_Registration {
 
 		foreach ( $rows as &$row ) {
 
+			/** 우편번호 버튼의 자리를 위해 zip input 길이를 조정 */
+			if ( in_array( $row['meta'], $zip_fields ) ) {
+				$row['field'] = preg_replace( '/class="(.+?)"/', 'class="$1 width-auto"', $row['field'] );
+			}
+
+			/** 읽기 전용 속성 부여 */
 			if ( in_array( $row['meta'], $readonly_fields ) ) {
 				$row['field'] = preg_replace( '/(<input.+?)\/?>/', '$1 readonly />', $row['field'] );
 			}
 
+			/** 버튼 삽입 */
 			if ( in_array( $row['meta'], $field_to_include_postcode_button ) ) {
-				$row['field'] .= '<button id="dabory-postcode-button" type="button" class="button" >' .
+				$row['field'] .= '<button id="dabory-postcode-button" type="button" class="button clear" >' .
 				                 __( '우편번호 찾기', 'wskl' ) . '</button>';
 			}
 		}
