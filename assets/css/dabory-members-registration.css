@@ -60,7 +60,7 @@ ul.validation_error_list {
 }
 
 #wpmem_reg span.bad::after {
-    content: "\0000A * *";
+    content: "\0000A **";
 }
 
 #wpmem_reg span.good {
@@ -69,7 +69,7 @@ ul.validation_error_list {
 }
 
 #wpmem_reg span.good::after {
-    content: "\0000A * * *";
+    content: "\0000A ***";
 }
 
 #wpmem_reg span.strong {
@@ -78,7 +78,7 @@ ul.validation_error_list {
 }
 
 #wpmem_reg span.strong::after {
-    content: "\0000A * * * *";
+    content: "\0000A ****";
 }
 
 #wpmem_reg span.mismatch {
@@ -93,3 +93,8 @@ ul.validation_error_list {
     width: auto;
     float: left;
 }
+
+#dabory-postcode-button {
+    width: auto;
+}
+
