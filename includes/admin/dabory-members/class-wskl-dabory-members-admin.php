@@ -1,6 +1,6 @@
 <?php
 
-require_once( WSKL_PATH . '/includes/admin/class-wskl-dabory-members-admin-settings.php' );
+require_once( WSKL_PATH . '/includes/admin/dabory-members/class-wskl-dabory-members-admin-settings.php' );
 
 
 class WSKL_Dabory_Members_Admin {

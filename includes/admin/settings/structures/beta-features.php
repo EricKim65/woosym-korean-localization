@@ -1,6 +1,6 @@
 <?php
 
-$lab = array(
+$beta_features = array(
 	'title'       => __( '다보리 베타', 'wskl' ),
 	'description' => __( '특정 기능을 위한 베타 기능', 'wskl' ),
 	'fields'      => array(
@@ -14,4 +14,4 @@ $lab = array(
 	),
 );
 
-return $lab;
+return $beta_features;

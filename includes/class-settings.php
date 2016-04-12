@@ -103,20 +103,6 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 	private function settings_fields() {  // specify settings fields
 
-		$tmp_arr = explode( "/", $_SERVER['PHP_SELF'] );
-
-		$prefix = '';
-		foreach ( $tmp_arr as $value ) {
-
-			if ( $value != '' ) {
-				$prefix .= '/' . $value;
-			}
-
-			if ( $value == 'wp-admin' ) {
-				break;
-			}
-		}
-
 		$pg_agency = get_option( wskl_get_option_name( 'pg_agency' ) );
 
 		$settings['preview'] = array(
@@ -272,7 +258,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				),
 				array(
 					'id'          => 'extension_license',
-					'label'       => __( '확장기능(C,S,B) 키값 ', 'wskl' ),
+					'label'       => __( '확장기능(C,S,R) 키값 ', 'wskl' ),
 					'description' => $extension_description,
 					'type'        => 'longtext',
 					'default'     => '',
@@ -289,8 +275,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			),
 		);
 
-
-		$settings['checkout-payment-gate'] = array(
+		$settings['checkout-payment-gates'] = array(
 			'title'       => __( '지불기능(A)', 'wskl' ),
 			'description' => __(
 				'국내의 모든 지불 대행 회사의 결제 플러그인을 지원합니다.<br/>
@@ -340,9 +325,9 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			case 'kcp':
 			case 'inicis':
 			case 'ags':
-				$agencies_common_fields                      = include( WSKL_PATH . '/includes/admin/settings/checkout-payment-gate/fields/classic-pg-agencies-common-fields-1.php' );
-				$settings['checkout-payment-gate']['fields'] = array_merge(
-					$settings['checkout-payment-gate']['fields'],
+				$agencies_common_fields                       = include( WSKL_PATH . '/includes/admin/settings/structures/checkout-payment-gates/fields/classic-pg-agencies-common-fields-1.php' );
+				$settings['checkout-payment-gates']['fields'] = array_merge(
+					$settings['checkout-payment-gates']['fields'],
 					$agencies_common_fields
 				);
 				break;
@@ -350,7 +335,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			// 페이앱 전용 필드 #1
 			case 'payapp':
 				array_push(
-					$settings['checkout-payment-gate']['fields'],
+					$settings['checkout-payment-gates']['fields'],
 
 					array(
 						'id'          => 'checkout_methods',
@@ -370,7 +355,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			// 아임포트 전용 필드 #1
 			case 'iamport':
 				array_push(
-					$settings['checkout-payment-gate']['fields'],
+					$settings['checkout-payment-gates']['fields'],
 
 					array(
 						'id'          => 'checkout_methods',
@@ -399,20 +384,19 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				break;
 		}
 
-
 		switch ( $pg_agency ) {
 
 			// 페이앱 전용 필드 #2: 인증사항
 			case 'payapp':
-				$settings['checkout-payment-gate']['fields'] = array_merge(
-					$settings['checkout-payment-gate']['fields'],
-					include( WSKL_PATH . '/includes/admin/settings/checkout-payment-gate/fields/payapp/payapp-fields.php' )
+				$settings['checkout-payment-gates']['fields'] = array_merge(
+					$settings['checkout-payment-gates']['fields'],
+					include( WSKL_PATH . '/includes/admin/settings/structures/checkout-payment-gates/fields/payapp/payapp-fields.php' )
 				);
 				break;
 
 			case 'kcp':
 				array_push(
-					$settings['checkout-payment-gate']['fields'],
+					$settings['checkout-payment-gates']['fields'],
 					array(
 						'id'          => 'kcp_sitename',
 						'label'       => __( '사이트이름', 'wskl' ),
@@ -471,7 +455,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 			case 'inicis':
 				array_push(
-					$settings['checkout-payment-gate']['fields'],
+					$settings['checkout-payment-gates']['fields'],
 					array(
 						'id'          => 'inicis_admin',
 						'label'       => __( '키패스워드', 'wskl' ),
@@ -533,7 +517,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 			case 'ags':
 				array_push(
-					$settings['checkout-payment-gate']['fields'],
+					$settings['checkout-payment-gates']['fields'],
 					array(
 						'id'          => 'ags_storenm',
 						'label'       => __( '상점명', 'wskl' ),
@@ -616,7 +600,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 			case 'iamport':
 				array_push(
-					$settings['checkout-payment-gate']['fields'],
+					$settings['checkout-payment-gates']['fields'],
 					array(
 						'id'          => 'iamport_user_code',
 						'label'       => __( '가맹점 식별코드', 'wskl' ),
@@ -670,7 +654,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 		// 페이앱, 아임포트는 추가설정내용 없음.
 		if ( ! in_array( $pg_agency, array( 'payapp', 'iamport' ) ) ) {
 			array_push(
-				$settings['checkout-payment-gate']['fields'],
+				$settings['checkout-payment-gates']['fields'],
 				array(
 					'id'          => 'dummy_1',
 					'label'       => __( '추가설정내용', 'wskl' ),
@@ -696,7 +680,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			);
 		}
 
-		$settings['checkout-shipping'] = array(
+		$settings['essential-features'] = array(
 			'title'       => __( '핵심기능(B)', 'wskl' ),
 			'description' => __(
 				'여기서 결제 페이지의 배송정보 입력 방법 배송 방법등을 설정한다.',
@@ -823,7 +807,6 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 		$agents_keys   = array_keys( $agents );
 		$agent_default = $agents_keys[0];
 
-
 		// members description
 		$members_description = __( '회원 등록, 탈퇴 기능을 제공합니다. 상품 페이지의 배송과 환불의 약관도 간편히 작성할 수 있습니다.', 'wskl' );
 		$members_description .= __(
@@ -838,52 +821,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			);
 		}
 
-		$settings['ship_tracking'] = array(
-			'title'       => __( '편의기능(C)', 'wskl' ),
-			'description' => __(
-				'배송회사와의 송장번호를 통하여 연결을 할 수 있도록 합니다.</br>아래에서 사용 택배회사가 없을 경우 service@econoq.co.kr 로 메일 주시면 추가해드리겠습니다.',
-				'wskl'
-			),
-			'fields'      => array(
-				array(
-					'id'          => 'enable_ship_track',
-					'label'       => __( '배송 추적 기능 활성화', 'wskl' ),
-					'description' => __( '배송 추적 기능 사용여부를 설정합니다.', 'wskl' ),
-					'type'        => 'checkbox',
-					'default'     => '',
-				),
-				array(
-					'id'          => 'shipping_companies',
-					'label'       => __( '배송회사 지정', 'wskl' ),
-					'description' => __( '사용중인 배송회사를 지정해 주십시오.', 'wskl' ),
-					'type'        => 'checkbox_multi',
-					'options'     => $agents,
-					'data'        => get_option( 'shipping_companies' ),
-					'default'     => $agents[ $agent_default ],
-				),
-				array(
-					'id'          => 'enable_direct_purchase',
-					'label'       => __( '바로구매 버튼 사용', 'wskl' ),
-					'description' => __( '바로구매 버튼을 사용합니다.', 'wskl' ),
-					'type'        => 'checkbox',
-					'default'     => '',
-				),
-				array(
-					'id'          => 'enable_dabory_members',
-					'label'       => __( '다보리 멤버스 활성화', 'wskl' ),
-					'description' => $members_description,
-					'type'        => 'checkbox',
-					'default'     => '',
-				),
-				array(
-					'id'          => 'hide_product_review_tab',
-					'label'       => __( '상품 리뷰 숨김', 'wskl' ),
-					'description' => __( '상품 페이지의 리뷰 탭을 보이지 않게 합니다.', 'wskl' ),
-					'type'        => 'checkbox',
-					'default'     => '',
-				),
-			),
-		);
+		$settings['convenience-features'] = include( WSKL_PATH . '/includes/admin/settings/structures/convenience-features.php' );
 
 		$settings['social-login'] = array(
 			'title'       => __( '소셜기능(S)', 'wskl' ),
@@ -908,7 +846,6 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				),
 			),
 		);
-
 
 		if ( get_option( WSKL_PREFIX . 'fb_login' ) == 'on' ) {
 			array_push(
@@ -984,7 +921,6 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			)
 		);
 
-
 		if ( get_option( $this->_prefix . 'naver_login' ) == 'on' ) {
 			array_push(
 				$settings['social-login']['fields'],
@@ -1048,7 +984,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			);
 		}
 
-		$settings['b_security'] = array(
+		$settings['protection-features'] = array(
 			'title'       => __( '차단보안기능(R)', 'wskl' ),
 			'description' => __(
 				'특별한 관리없이 악성댓글이나 악성트래픽이 대폭 감소합니다. 한국인 대상 사이트의 경우 한국,미국만 오픈해도 됩니다.',
@@ -1093,14 +1029,14 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			),
 		);
 
-		$settings['marketing'] = include( WSKL_PATH . '/includes/admin/settings/marketing-automation.php' );
+		$settings['marketing'] = include( WSKL_PATH . '/includes/admin/settings/structures/marketing-automation.php' );
 
 		if ( wskl_lab_enabled() ) {
-			$settings['lab'] = include( WSKL_PATH . '/includes/admin/settings/lab.php' );
+			$settings['beta-features'] = include( WSKL_PATH . '/includes/admin/settings/structures/beta-features.php' );
 		}
 
 		if ( wskl_debug_enabled() ) {
-			$settings['developer'] = include( WSKL_PATH . '/includes/admin/settings/developer.php' );
+			$settings['developer'] = include( WSKL_PATH . '/includes/admin/settings/structures/developer.php' );
 		}
 
 		$settings = apply_filters( 'wskl_settings_fields', $settings );

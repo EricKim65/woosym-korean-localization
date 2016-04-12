@@ -23,6 +23,9 @@ class WSKL_Extension_Module {
 		/** 소셜 로그인 */
 		wskl_load_module( '/includes/lib/class-social-login.php', 'enable_social_login' );
 
+		/** IP blocking */
+		wskl_load_module( '/includes/class-wskl-ip-block.php', 'enable_countryip_block' );
+
 		if ( WSKL()->is_request( 'frontend' ) ) {
 
 			// 상품 리뷰 탭 숨김

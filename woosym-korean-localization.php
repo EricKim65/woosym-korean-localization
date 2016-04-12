@@ -165,9 +165,6 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				);
 			}
 
-			/** IP blocking */
-			wskl_load_module( '/includes/class-wskl-ip-block.php', 'enable_countryip_block' );
-
 			if ( wskl_debug_enabled() ) {
 				wskl_load_module( '/includes/lib/wskl-debugging.php' );
 			}
@@ -182,7 +179,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			$this->admin_notice_unauthorized(
 				'payment',
-				'checkout-payment-gate',
+				'checkout-payment-gates',
 				array( __CLASS__, 'output_unauthorized_payment' )
 			);
 
@@ -202,7 +199,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			$authorized = $this->admin_notice_unauthorized(
 				'essential',
-				'checkout-shipping',
+				'essential-features',
 				array( __CLASS__, 'output_unauthorized_essential' )
 			);
 
@@ -506,21 +503,21 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				),
 				array(
 					'parent' => 'wskl-root',
-					'id'     => 'wskl-checkout-payment-gate',
+					'id'     => 'wskl-checkout-payment-gates',
 					'title'  => __( '지불기능', 'wskl' ),
-					'href'   => wskl_get_setting_tab_url( 'checkout-payment-gate' ),
+					'href'   => wskl_get_setting_tab_url( 'checkout-payment-gates' ),
 				),
 				array(
 					'parent' => 'wskl-root',
-					'id'     => 'wskl-checkout-shipping',
+					'id'     => 'wskl-essential-features',
 					'title'  => __( '핵심기능', 'wskl' ),
-					'href'   => wskl_get_setting_tab_url( 'checkout-shipping' ),
+					'href'   => wskl_get_setting_tab_url( 'essential-features' ),
 				),
 				array(
 					'parent' => 'wskl-root',
-					'id'     => 'wskl-ship_tracking',
+					'id'     => 'wskl-convenience-features',
 					'title'  => __( '편의기능', 'wskl' ),
-					'href'   => wskl_get_setting_tab_url( 'ship_tracking' ),
+					'href'   => wskl_get_setting_tab_url( 'convenience-features' ),
 				),
 				array(
 					'parent' => 'wskl-root',
@@ -530,9 +527,9 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				),
 				array(
 					'parent' => 'wskl-root',
-					'id'     => 'wskl-b_security',
+					'id'     => 'wskl-protection-features',
 					'title'  => __( '차단보안기능', 'wskl' ),
-					'href'   => wskl_get_setting_tab_url( 'b_security' ),
+					'href'   => wskl_get_setting_tab_url( 'protection-features' ),
 				),
 				array(
 					'parent' => 'wskl-root',
@@ -545,9 +542,9 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			if ( wskl_lab_enabled() ) {
 				$sub_menus[] = array(
 					'parent' => 'wskl-root',
-					'id'     => 'wskl-lab',
+					'id'     => 'wskl-beta-features',
 					'title'  => __( '다보리 실험실', 'wskl' ),
-					'href'   => wskl_get_setting_tab_url( 'lab' ),
+					'href'   => wskl_get_setting_tab_url( 'beta-features' ),
 				);
 			}
 

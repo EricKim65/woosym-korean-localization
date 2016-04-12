@@ -19,22 +19,23 @@ class WSKL_Dabory_Members {
 		}
 
 		if ( is_admin() ) {
-			wskl_load_module( '/includes/admin/class-wskl-dabory-members-admin.php', 'enable_dabory_members' );
+			wskl_load_module(
+				'/includes/admin/dabory-members/class-wskl-dabory-members-admin.php',
+				'enable_dabory_members'
+			);
 		}
 
 		// 회원 등록 서브모듈
-		wskl_load_module( '/includes/lib/dabory-members/class-wskl-dabory-members-registration.php' );
+		wskl_load_module( '/includes/dabory-members/class-wskl-dabory-members-registration.php' );
 
 		// 회원 탈퇴 서브모듈
 		wskl_load_module(
-			'/includes/lib/dabory-members/class-wskl-dabory-members-withdrawal.php',
+			'/includes/dabory-members/class-wskl-dabory-members-withdrawal.php',
 			'members_enable_withdrawal_shortcode'
 		);
 
 		// tinymce 버튼 삽입 서브모듈
-		wskl_load_module(
-			'/includes/lib/dabory-members/class-wskl-dabory-members-tinymce-buttons.php'
-		);
+		wskl_load_module( '/includes/dabory-members/class-wskl-dabory-members-tinymce-buttons.php' );
 
 		// 탈퇴한 회원의 로그인 방지
 		add_filter( 'authenticate', array( __CLASS__, 'filter_authentication' ), 100, 1 );
