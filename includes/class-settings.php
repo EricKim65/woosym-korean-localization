@@ -802,25 +802,6 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			),
 		);
 
-		// agent helper added
-		$agents        = WSKL_Agent_Helper::get_agent_list();
-		$agents_keys   = array_keys( $agents );
-		$agent_default = $agents_keys[0];
-
-		// members description
-		$members_description = __( '회원 등록, 탈퇴 기능을 제공합니다. 상품 페이지의 배송과 환불의 약관도 간편히 작성할 수 있습니다.', 'wskl' );
-		$members_description .= __(
-			                        '<br />※ 이 기능은 <a href="https://wordpress.org/plugins/wp-members/" target="_blank">WP-Members 플러그인(무료)</a>이 설치, 활성화 되어 있어야 합니다.',
-			                        'wskl'
-		                        ) . ' ';
-		if ( wskl_is_option_enabled( 'enable_dabory_members' ) ) {
-			$members_description .= sprintf(
-				'<a href="%s">%s</a>',
-				esc_url( wskl_wp_members_url() ),
-				__( '다보리 멤버스 설정으로 이동', 'wskl' )
-			);
-		}
-
 		$settings['convenience-features'] = include( WSKL_PATH . '/includes/admin/settings/structures/convenience-features.php' );
 
 		$settings['social-login'] = array(

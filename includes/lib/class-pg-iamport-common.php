@@ -288,8 +288,8 @@ function init_wc_gateway_wskl_iamport() {
 
 				// 다보리 설정 URL
 				$tab_href = add_query_arg( array(
-					                           'page' => WSKL_MENU_SLUG,
-					                           'tab'  => 'checkout-payment-gate',
+					'page' => WSKL_MENU_SLUG,
+					'tab'  => 'checkout-payment-gates',
 				                           ),
 				                           admin_url( 'admin.php ' ) );
 

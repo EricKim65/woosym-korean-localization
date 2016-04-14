@@ -566,6 +566,16 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				);
 			}
 
+			if ( wskl_is_option_enabled( 'enable_dabory_sms' ) ) {
+
+				$sub_menus[] = array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-dabory-sms',
+					'title'  => __( '다보리 SMS 설정', 'wskl' ),
+					'href'   => '',
+				);
+			}
+
 			if ( wskl_is_option_enabled( 'enable_config_editor' ) ) {
 				$sub_menus[] = array(
 					'parent' => 'wskl-root',

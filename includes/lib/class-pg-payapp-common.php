@@ -292,8 +292,8 @@ EOD;
 
 				// 다보리 설정 URL
 				$tab_href = add_query_arg( array(
-					                           'page' => WSKL_MENU_SLUG,
-					                           'tab'  => 'checkout-payment-gate',
+					'page' => WSKL_MENU_SLUG,
+					'tab'  => 'checkout-payment-gates',
 				                           ), admin_url( 'admin.php ' ) );
 
 				// Method title: 우커머스 > 설정 > 결제 (checkout) 탭에서 확인
