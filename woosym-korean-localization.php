@@ -111,7 +111,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			require_once( WSKL_PATH . '/includes/lib/sym-mvc/wskl-sym-mvc-framework.php' );
 			require_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth-info.php' );
-			require_once( WSKL_PATH . '/includes/lib/wskl-functions.php' );
+			require_once( WSKL_PATH . '/includes/libraries/wskl-functions.php' );
 			require_once( WSKL_PATH . '/includes/lib/wskl-plugin.php' );
 			require_once( WSKL_PATH . '/includes/lib/wskl-template-functions.php' );
 		}
