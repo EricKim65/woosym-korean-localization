@@ -20,9 +20,9 @@ final class WSKL_Dabory_SMS_Provider_MDalin extends WSKL_Dabory_SMS_Provider {
 
 	public static function factory() {
 
-		$id       = wskl_get_option( 'dabory_sms_provider_id' );
-		$password = wskl_get_option( 'dabory_sms_provider_password' );
-		$sender   = wskl_get_option( 'dabory_sms_sender_phone' );
+		$id       = wskl_get_option( 'sms_provider_id' );
+		$password = wskl_get_option( 'sms_provider_password' );
+		$sender   = wskl_get_option( 'sms_sender_phone' );
 
 		return new static( $id, $password, $sender );
 	}

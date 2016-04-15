@@ -10,6 +10,7 @@ class WSKL_Admin_Dabory_SMS {
 		add_filter( 'woocommerce_get_settings_pages', array( __CLASS__, 'add_settings_pages' ) );
 
 		add_action( 'wp_ajax_dabory-sms-tester', array( __CLASS__, 'do_message_testing' ) );
+		add_action( 'wp_ajax_dabory-sms-point', array( __CLASS__, 'do_message_point' ) );
 	}
 
 	public static function add_settings_pages( array $settings ) {
@@ -44,6 +45,34 @@ class WSKL_Admin_Dabory_SMS {
 
 		} catch( Exception $e ) {
 			
+			wp_send_json_error( $e->getMessage() );
+		}
+
+		die();
+	}
+
+	public static function do_message_point() {
+
+		if ( ! wp_verify_nonce( $_POST['dabory-sms-point-nonce'], 'dabory-sms-point-nonce' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+			die();
+		}
+
+		wskl_load_module( '/includes/libraries/dabory-sms/provider/mdalin/class-wskl-dabory-sms-provider-mdalin.php' );
+
+		try {
+
+			$dalin     = WSKL_Dabory_SMS_Provider_MDalin::factory();
+			$sms_point = $dalin->point_check(
+				array(
+					'remote_request' => 'sms',
+				)
+			);
+
+			wp_send_json_success( array( 'sms' => $sms_point ) );
+
+		} catch( Exception $e ) {
+
 			wp_send_json_error( $e->getMessage() );
 		}
 
