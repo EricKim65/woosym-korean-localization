@@ -76,5 +76,15 @@
 				margin-right: 50px;
 			}
 		</style>
+
+		<?php
+		//		require_once( WSKL_PATH . '/includes/libraries/dabory-sms/providers/mdalin/class-wskl-dabory-sms-providers-mdalin.php' );
+		//		require_once( WSKL_PATH . '/includes/libraries/dabory-sms/class-wskl-sms-text-substitution.php' );
+		//		$order = wc_get_order( 140 );
+		//		$sub = new WSKL_SMS_Text_Substitution();
+		//		$template = wskl_get_option( 'sms_new_order_message_content' );
+		//		$output = $sub->substitute( $template, $order, wp_get_current_user() );
+		//		var_dump( $output );
+		?>
 	</td>
 </tr>

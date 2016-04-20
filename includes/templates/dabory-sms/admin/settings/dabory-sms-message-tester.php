@@ -9,6 +9,7 @@
 		<span class="description">
 			<?php _e( '발신번호로 테스트 문자를 보냅니다. SMS 포인트를 소모합니다.', 'wskl' ); ?>
 		</span>
+		<div id="message-output" style="margin-top: 20px;"></div>
 		<script type="application/javascript">
 			(function ($) {
 				$('button#sms-message-tester').click(function () {
@@ -16,7 +17,6 @@
 						$.ajax({
 							'url': ajaxurl,
 							'method': 'post',
-							'async': true,
 							'data': {
 								'action': 'dabory-sms-tester',
 								'dabory-sms-tester-nonce': '<?php echo wp_create_nonce(
@@ -24,11 +24,14 @@
 								) ?>'
 							},
 							success: function (response) {
-								if (response.success) {
-									alert('<?php _e( '문자를 성공적으로 보냈습니다.', 'wskl' );?>');
-								} else {
-									alert(response.data);
-								}
+								var code = response.data[0];
+								var msg = response.data[1];
+								var point = response.data[2];
+
+								alert(code + ", " + msg + ", 잔여건수: " + point);
+							},
+							error: function (jqXHR) {
+								console.log(jqXHR.responseText);
 							}
 						});
 					}
@@ -63,12 +66,15 @@
 							) ?>'
 						},
 						success: function (response) {
-							console.log(response);
+							// console.log(response);
 							if (response.success) {
 								$('div#point-output').html('SMS: ' + response.data.sms + 'point(s)');
 							} else {
 								$('div#point-output').html('Error: ' + response.data);
 							}
+						},
+						error: function (jqXHR) {
+							console.log(jqXHR.responseText);
 						}
 					});
 				});

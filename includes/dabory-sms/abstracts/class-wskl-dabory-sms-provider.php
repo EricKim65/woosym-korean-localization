@@ -3,11 +3,24 @@
 wskl_check_abspath();
 
 
+/**
+ * Class WSKL_Dabory_SMS_Provider
+ *
+ * @since 3.3.0
+ */
 abstract class WSKL_Dabory_SMS_Provider {
 
 	protected $host = '';
 
-	abstract public function send_message( array $args );
+	/**
+	 * @return WSKL_Dabory_SMS_Provider
+	 */
+	static public function factory() {
+
+		throw new BadMethodCallException( 'you have to override this static function!' );
+	}
+
+	abstract public function send_message( array $args, $message_type = 'sms' );
 
 	abstract public function point_check( array $args );
 
