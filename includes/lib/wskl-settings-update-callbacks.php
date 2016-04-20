@@ -20,7 +20,8 @@ function callback_enable_dabory_members(
 	$option
 ) {
 
-	if ( filter_var( $value, FILTER_VALIDATE_BOOLEAN ) ) {
+	$enabled = filter_var( $value, FILTER_VALIDATE_BOOLEAN );
+	if ( $enabled ) {
 		if ( get_role( 'withdrawer' ) === NULL ) {
 			add_role( 'withdrawer', __( '탈퇴 회원', 'wskl' ) );
 		}

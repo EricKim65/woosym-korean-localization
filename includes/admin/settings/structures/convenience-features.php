@@ -58,7 +58,8 @@ $convenience_features = array(
 		array(
 			'id'          => 'enable_dabory_sms',
 			'label'       => __( 'SMS 기능 활성화', 'wskl' ),
-			'description' => __( '문자 메시지를 보낼 수 있습니다!', 'wskl' ),
+			'description' => __( '문자 메시지를 보낼 수 있습니다!', 'wskl' ) . '<br/>' .
+			                 '<a href="' . wskl_dabory_sms_url() . '">' . __( '다보리 SMS 설정으로 이동', 'wskl' ) . '</a>',
 			'type'        => 'checkbox',
 			'default'     => '',
 		),

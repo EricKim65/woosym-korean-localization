@@ -4,6 +4,11 @@ wskl_check_abspath();
 
 /**
  * Class WSKL_Dabory_Members
+ *
+ * NOTE: 틸퇴 회원 user role 에 대해서는 wskl-settings-update-callback.php 참고할 것.
+ *       다보리 멤버스 활성화와 관계 없이 탈퇴 회원은 구분되어야 하므로 이렇게 분리된 것임.
+ *
+ * @see callback_enable_dabory_members()
  */
 class WSKL_Dabory_Members {
 

@@ -343,25 +343,22 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				unset( $links[0] );
 			}
 
-			$dabory_url = add_query_arg(
-				'page',
-				WSKL_MENU_SLUG,
-				admin_url( 'admin.php' )
-			);
-
-			$settings_link = wskl_html_anchor(
-				__( 'Settings' ),
-				array( 'href' => $dabory_url, ),
-				TRUE
-			);
-
+			$dabory_url        = add_query_arg( 'page', WSKL_MENU_SLUG, admin_url( 'admin.php' ) );
+			$settings_link     = wskl_html_anchor( __( 'Settings' ), array( 'href' => $dabory_url, ), TRUE );
 			$links['settings'] = $settings_link;
 
-			if ( wskl_is_option_enabled( 'enable_dabory_members' ) ) {
-
-				$links[] = wskl_html_anchor(
+			if ( wskl_is_option_enabled( 'enable_dabory_members' ) && ! isset( $links['dabory-members'] ) ) {
+				$links['dabory-members'] = wskl_html_anchor(
 					__( '다보리 멤버스', 'wskl' ),
 					array( 'href' => wskl_wp_members_url() ),
+					TRUE
+				);
+			}
+
+			if ( wskl_is_option_enabled( 'enable_dabory_sms' ) && ! isset( $links['dabory-sms'] ) ) {
+				$links['dabory-sms'] = wskl_html_anchor(
+					__( '다보리 SMS', 'wskl' ),
+					array( 'href' => wskl_dabory_sms_url() ),
 					TRUE
 				);
 			}
