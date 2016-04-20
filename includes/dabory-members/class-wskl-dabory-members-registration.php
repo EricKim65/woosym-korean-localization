@@ -1,6 +1,6 @@
 <?php
 
-include_once( WSKL_PATH . '/includes/admin/dabory-members/class-wskl-dabory-members-admin-settings.php' );
+include_once( WSKL_PATH . '/includes/dabory-members/admin/class-wskl-dabory-members-admin-settings.php' );
 
 use WSKL_Dabory_Members_Admin_Settings as Settings;
 

@@ -20,7 +20,7 @@ class WSKL_Dabory_Members {
 
 		if ( is_admin() ) {
 			wskl_load_module(
-				'/includes/admin/dabory-members/class-wskl-dabory-members-admin.php',
+				'/includes/dabory-members/admin/class-wskl-dabory-members-admin.php',
 				'enable_dabory_members'
 			);
 		}
