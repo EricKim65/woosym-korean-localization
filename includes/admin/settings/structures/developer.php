@@ -83,7 +83,13 @@ $developer = array(
 			'type'        => 'text',
 			'default'     => '',
 		),
-
+		array(
+			'id'          => 'develop_emulate_sms',
+			'label'       => __( 'SMS Emulation', 'wskl' ),
+			'description' => __( 'SMS 메시지를 실제로 보내지는 않음. SMS 로직 테스트에 사용. 전송에 사용된 파라미터는 로그에 기록됨.', 'wskl' ),
+			'type'        => 'checkbox',
+			'default'     => '',
+		),
 	),
 );
 
