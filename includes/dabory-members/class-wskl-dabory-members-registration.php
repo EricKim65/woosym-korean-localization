@@ -325,7 +325,7 @@ class WSKL_Dabory_Members_Registration {
 
 		$post           = WP_Post::get_instance( $post_id );
 		$title          = esc_html( $post->post_title );
-		$content        = wpautop( wptexturize( esc_html( $post->post_content ) ) );
+		$content        = wpautop( wptexturize( $post->post_content ) );
 		$agreement_text = __( '약관에 동의합니다.', 'wskl' );
 		$last           = $is_last ? 'last' : '';
 		$checked        = ( wskl_POST( 'checkbox-' . $key ) == 'yes' ) ? 'checked' : '';
