@@ -28,6 +28,10 @@ class WSKL_Dabory_SMS_Admin {
 		 * Handling dabory-sms-point ajax request.
 		 */
 		add_action( 'wp_ajax_dabory-sms-point', array( __CLASS__, 'do_message_point' ) );
+
+		if ( wskl_is_option_enabled( 'develop_emulate_sms' ) ) {
+			add_action( 'admin_notices', array( __CLASS__, 'output_develop_emulate_sms' ) );
+		}
 	}
 
 	/**
@@ -108,6 +112,11 @@ class WSKL_Dabory_SMS_Admin {
 		}
 
 		die();
+	}
+
+	public static function output_develop_emulate_sms() {
+
+		echo '<div class="notice notice-warning"><p>' . __( '다보리 SMS: SMS Emulation 상태입니다.', 'wskl' ) . '</p></div>';
 	}
 }
 
