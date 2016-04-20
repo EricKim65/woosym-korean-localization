@@ -11,6 +11,7 @@ class WSKL_Dabory_Members_TinyMCE_Buttons {
 	public static function init() {
 
 		add_action( 'load-post-new.php', array( __CLASS__, 'load_tinymce' ) );
+		add_action( 'load-post.php', array( __CLASS__, 'load_tinymce' ) );
 	}
 
 	public static function load_tinymce() {
