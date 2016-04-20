@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:       우커머스-심포니 통합 플러그인
- * Version:           3.3.0-alpha2
+ * Version:           3.3.0
  * Plugin URI:        https://www.dabory.com/
  * Description:       우커머스를 카페24 같이 편리하게 만들어주는 한국 쇼핑몰 환경 표준 플러그인.
  * Author:            (주)심포니소프트 - 다보리
@@ -97,7 +97,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
 			define( 'WSKL_PLUGIN', 'woosym-korean-localization/woosym-korean-localization.php' );
-			define( 'WSKL_VERSION', '3.3.0-alpha2' );
+			define( 'WSKL_VERSION', '3.3.0' );
 
 			if ( ! defined( 'WSKL_DEBUG' ) ) {
 				define( 'WSKL_DEBUG', FALSE );
@@ -111,7 +111,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			require_once( WSKL_PATH . '/includes/lib/sym-mvc/wskl-sym-mvc-framework.php' );
 			require_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth-info.php' );
-			require_once( WSKL_PATH . '/includes/libraries/wskl-functions.php' );
+			require_once( WSKL_PATH . '/includes/lib/wskl-functions.php' );
 			require_once( WSKL_PATH . '/includes/lib/wskl-plugin.php' );
 			require_once( WSKL_PATH . '/includes/lib/wskl-template-functions.php' );
 		}
@@ -572,7 +572,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 					'parent' => 'wskl-root',
 					'id'     => 'wskl-dabory-sms',
 					'title'  => __( '다보리 SMS 설정', 'wskl' ),
-					'href'   => '',
+					'href'   => wskl_dabory_sms_url(),
 				);
 			}
 
