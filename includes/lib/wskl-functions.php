@@ -153,14 +153,16 @@ function wskl_REQUEST( $key_name, $sanitize = '', $default = '' ) {
 
 function wskl_verify_nonce( $nonce_action, $nonce_value ) {
 
-	class NonceVerificationFailureException extends Exception {
+	if ( ! class_exists( 'NonceVerificationFailureException' ) ) {
 
-		public function __construct() {
+		class NonceVerificationFailureException extends Exception {
 
-			$this->message = 'Nonce verification failed.';
+			public function __construct() {
+
+				$this->message = 'Nonce verification failed.';
+			}
 		}
 	}
-
 
 	if ( ! wp_verify_nonce( $nonce_value, $nonce_action ) ) {
 		throw new NonceVerificationFailureException();
@@ -198,6 +200,17 @@ function wskl_wp_members_url( $tab = 'dabory-members' ) {
 function wskl_wp_config_editor_url() {
 
 	return add_query_arg( 'page', 'wskl_config_editor', admin_url( 'admin.php' ) );
+}
+
+function wskl_dabory_sms_url() {
+
+	return add_query_arg(
+		array(
+			'page' => 'wc-settings',
+			'tab'  => 'wskl-dabory-sms',
+		),
+		admin_url( 'admin.php' )
+	);
 }
 
 
@@ -313,4 +326,36 @@ function wskl_check_abspath() {
 function wskl_dump( $obj ) {
 
 	echo '<p><pre>' . print_r( $obj, TRUE ) . ' </pre>';
+}
+
+function wskl_get_order_item_description( $order, $first_item_description_limit = 0 ) {
+
+	$order = wc_get_order( $order );
+
+	if ( ! $order ) {
+		return '';
+	}
+
+	$items      = $order->get_items();
+	$item_count = $order->get_item_count();
+	$first_item = reset( $items );
+
+	if ( ! $item_count ) {
+		return '';
+	}
+
+	if ( $first_item_description_limit >= 1 ) {
+		$the_first = mb_substr( $first_item['name'], 0, $first_item_description_limit ) . '...';
+	} else {
+		$the_first = $first_item['name'];
+	}
+
+	if ( $item_count == 1 ) {
+		$description = $the_first;
+	} else {
+		$fmt         = _n( '외 %d개 상품', '외 %d개 상품들', $item_count - 1, 'wskl' );
+		$description = $the_first . sprintf( $fmt, $item_count - 1 );
+	}
+
+	return $description;
 }
