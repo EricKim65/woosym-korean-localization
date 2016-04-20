@@ -807,7 +807,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 		$settings['social-login'] = array(
 			'title'       => __( '소셜기능(S)', 'wskl' ),
 			'description' => __(
-				'계정관리와  로그인 관련 설정입니다.(소셜 아이콘은 includeds/lib/custom 폴더를 참조)',
+				'계정관리와  로그인 관련 설정입니다.(소셜 아이콘은 includes/lib/custom 폴더를 참조)',
 				'wskl'
 			),
 			'fields'      => array(
