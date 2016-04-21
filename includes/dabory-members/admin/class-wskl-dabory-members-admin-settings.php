@@ -75,7 +75,7 @@ class WSKL_Dabory_Members_Admin_Settings {
 			// 비밀번호 문자조합 (checkbox)
 			array( 'password_mixed_chars', 'sanitize_text_field', 'no' ),
 
-			array( 'registration_custom_css', 'sanitize_text_field', '' ),
+			array( 'registration_custom_css', 'esc_textarea', '' ),
 
 			// 등록 완료 페이지 보이기 (checkbox)
 			array( 'show_registration_complete', 'sanitize_text_field', 'no' ),
