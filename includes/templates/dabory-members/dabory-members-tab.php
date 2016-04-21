@@ -141,6 +141,19 @@ use WSKL_Dabory_Members_Admin_Settings as Settings;
 									__( '비밀번호 강도 표시', 'wskl' ),
 									__( '입력한 비밀번호의 강도를 표시하여 보다 강력한 패스워드를 생성하도록 유도합니다.', 'wskl' )
 								); ?>
+								<li>
+									<?php
+									$css_option_name  = Settings::get_option_name( 'registration_custom_css' );
+									$css_option_value = Settings::get_option( 'registration_custom_css' );
+									?>
+									<label for="<?php echo $css_option_name; ?>">
+										<?php _e( '등록 페이지 커스텀 CSS', 'wskl' ); ?>
+									</label>
+									<textarea id="<?php echo $css_option_name; ?>"
+									          name="<?php echo $css_option_name; ?>"
+									          rows="10"
+									          cols="60"><?php echo esc_textarea( $css_option_value ); ?></textarea>
+								</li>
 							</ul>
 						</div>
 						<!-- 등록 완료 페이지 설정 -->

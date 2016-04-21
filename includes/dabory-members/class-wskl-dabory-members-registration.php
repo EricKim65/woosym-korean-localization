@@ -294,8 +294,15 @@ PHP_EOD;
 
 	public function customize_register_form( $rows, $toggle ) {
 
-		if ( $toggle != 'register' && $toggle != 'edit' ) {
+		if ( $toggle != 'new' && $toggle != 'edit' ) {
 			return $rows;
+		}
+
+		$custom_css = esc_textarea( wskl_get_option( 'members_registration_custom_css' ) );
+		if ( ! empty( $custom_css ) ) {
+//			wp_add_inline_style( 'wskl-frontend', $custom_css );
+			$script = "<style type=\"text/css\">{$custom_css}</style>";
+			echo $script;
 		}
 
 		// 주소 찾기 기능
