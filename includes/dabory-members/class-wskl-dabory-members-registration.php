@@ -369,7 +369,7 @@ PHP_EOD;
 			/** 버튼 삽입 */
 			if ( in_array( $row['meta'], $field_to_include_postcode_button ) ) {
 				$row['field'] .= sprintf(
-					'<input id="dabory-postcode-button" type="button" class="button clear" value="%s" />',
+					'<input id="dabory-postcode-button" type="button" class="button" value="%s" />',
 					__( '우편번호 찾기', 'wskl' )
 				);
 			}
