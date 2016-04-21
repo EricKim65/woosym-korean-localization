@@ -31,7 +31,7 @@ class WSKL_Dabory_Members_TinyMCE_Buttons {
 		// WP version 3.9 updated to tinymce 4.0
 		if ( version_compare( get_bloginfo( 'version' ), '3.9', '>=' ) ) {
 			$plugin_array['dabory_members_shortcodes'] = plugin_dir_url( WSKL_MAIN_FILE )
-			                                             . 'assets/js/dabory-members-shortcodes-tinymce-4.js?ver='
+			                                             . 'assets/js/dabory-members/shortcodes-tinymce-4.js?ver='
 			                                             . WSKL_VERSION;
 		} else {
 

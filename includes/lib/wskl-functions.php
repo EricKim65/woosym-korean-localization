@@ -359,3 +359,37 @@ function wskl_get_order_item_description( $order, $first_item_description_limit 
 
 	return $description;
 }
+
+function wskl_check_shortcode_in_post( $tag, $param_regex = FALSE, $content_regex = FALSE, $_post = FALSE ) {
+
+	global $post;
+
+	if ( ! $_post ) {
+		$_post = $post;
+	}
+
+	$pattern = get_shortcode_regex();
+	$matches = array();
+
+	if ( ! preg_match( "/{$pattern}/s", $_post->post_content, $matches ) ) {
+		return FALSE;
+	}
+
+	if ( count( $matches ) < 3 || $matches[2] != $tag ) {
+		return FALSE;
+	}
+
+	if ( $param_regex ) {
+		if ( ! preg_match( "/{$param_regex}/", $matches[3] ) ) {
+			return FALSE;
+		}
+	}
+
+	if ( $content_regex ) {
+		if ( ! preg_match( "/{$content_regex}/s", $matches[5] ) ) {
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+}

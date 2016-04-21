@@ -152,7 +152,7 @@ use WSKL_Dabory_Members_Admin_Settings as Settings;
 								<?php Settings::output_checkbox(
 									'show_registration_complete',
 									__( '페이지 보이기', 'wskl' ),
-									__( '가입 완료시 등록 완료 메시지를 보여줍니다.', 'wskl' )
+									__( '가입 완료되면 설정된 가입 완료 페이지를 보여줍니다.', 'wskl' )
 								); ?>
 								<?php Settings::output_checkbox(
 									'logged_in_after_registration',

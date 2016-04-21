@@ -1,0 +1,14 @@
+/** 우편번호 버튼 */
+#wpmem_reg #dabory-postcode-button {
+    margin-left: 10px;
+}
+
+/* 우편번호와 우편번호 찾기 버튼을 한 열에 */
+#wpmem_reg input.width-auto {
+    width: auto;
+    float: left;
+}
+
+#dabory-postcode-button {
+    width: auto;
+}

@@ -15,40 +15,29 @@ class WSKL_Dabory_Members_Withdrawal {
 		$status = wskl_GET( 'status' );
 
 		// user is logged out when the withdrawal process is completed.
+		// therefore this condition must be treated first.
 		if ( $status == 'complete' ) {
 			$context = array(
 				'status'  => 'complete',
 				'message' => $completed_message,
 			);
-			wskl_get_template( 'dabory-members-withdrawal.php', $context );
-
-			return ob_get_clean();
-		}
-
-		if ( ! is_user_logged_in() ) {
-			wskl_get_template(
-				'dabory-members-withdrawal.php',
-				array(
+		} else {
+			if ( ! is_user_logged_in() ) {
+				$context = array(
 					'status'  => 'failure',
 					'message' => __( '먼저 로그인 하세요', 'wskl' ),
-				)
-			);
-
-			return ob_get_clean();
+				);
+			} else if ( $status == 'failure' ) {
+				$context = array(
+					'status'  => 'failure',
+					'message' => wskl_GET( 'message' ),
+				);
+			} else {
+				$context = array();
+			}
 		}
 
-		if ( $status == 'failure' ) {
-			$context = array(
-				'status'  => 'failure',
-				'message' => wskl_GET( 'message' ),
-			);
-			wskl_get_template( 'dabory-members-withdrawal.php', $context );
-
-			return ob_get_clean();
-		}
-
-
-		wskl_get_template( 'dabory-members-withdrawal.php' );
+		wskl_get_template( 'dabory-members/dabory-members-withdrawal.php', $context );
 
 		return ob_get_clean();
 	}
@@ -74,7 +63,7 @@ class WSKL_Dabory_Members_Withdrawal {
 
 		self::evaluate_and_redirect_if_failed(
 			wp_check_password( $password, $user->user_pass, $user->ID ),
-			__( '패스워드가 일치하지 않습니다.', 'wskl' )
+			__( '비밀번호가 일치하지 않습니다.', 'wskl' )
 		);
 
 		if ( wskl_is_option_enabled( 'members_delete_after_withdrawal' ) ) {

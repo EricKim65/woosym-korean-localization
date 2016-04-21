@@ -29,25 +29,19 @@ class WSKL_Dabory_Members_Registration {
 
 		self::$agreement_keys = apply_filters( 'dabory_members_agreement_keys', self::$agreement_keys );
 
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'add_registration_scripts' ) );
-
 		// 약관 출력
 		if ( wskl_is_option_enabled( 'members_show_terms' ) ) {
 			add_action( 'wpmem_pre_register_data', array( __CLASS__, 'validate_agreements' ) );
 			add_filter( 'wpmem_register_form_rows', array( __CLASS__, 'include_terms' ), 10, 2 );
 		}
 
-		// 주소 찾기 기능
-		if ( wskl_is_option_enabled( 'members_enable_postcode_button' ) ) {
-			add_filter( 'wpmem_register_form_rows', array( __CLASS__, 'include_postcode_button' ), 10, 2 );
-		}
+		// 유저 등록, 프로필 수정 맥락에서 폼 커스터마이즈.
+		add_filter( 'wpmem_register_form_rows', array( __CLASS__, 'customize_register_form' ), 10, 2 );
 
-		// 패스워드 강도 미터기 기능
-		if ( wskl_is_option_enabled( 'members_password_strength_meter' ) ) {
-			add_filter( 'wpmem_register_form_rows', array( __CLASS__, 'include_password_strength_meter' ), 10, 1 );
-		}
+		// 로그인 유저의 폼 출력 맥락에서 폼 ㄱ커스터마이즈.
+		add_filter( 'wpmem_login_form_rows', array( __CLASS__, 'customize_login_form' ), 10, 2 );
 
-		// 패스워드 관련 validation check
+		// 비밀번호 관련 validation check
 		add_action( 'wpmem_pre_register_data', array( __CLASS__, 'validate_password' ) );
 
 		// 등록 완료 후 로그인 처리
@@ -59,145 +53,6 @@ class WSKL_Dabory_Members_Registration {
 		if ( wskl_is_option_enabled( 'members_show_registration_complete' ) ) {
 			add_action( 'wpmem_register_redirect', array( __CLASS__, 'redirect_to_welcome_page' ), 9 );
 		}
-	}
-
-	/**
-	 * 주소찾기 버튼 삽입
-	 *
-	 * @callback
-	 * @filter     wpmem_register_form_rows
-	 * @used-by    WSKL_Dabory_Members_Registration::init()
-	 *
-	 * @param $rows
-	 * @param $toggle
-	 *
-	 * @return mixed
-	 */
-	public static function include_postcode_button(
-		$rows,
-		/** @noinspection PhpUnusedParameterInspection */
-		$toggle
-	) {
-
-		$zip_fields = apply_filters(
-			'dabory_members_postcode_zip_fields',
-			array( 'zip', )
-		);
-
-		$readonly_fields = apply_filters(
-			'dabory_members_postcode_readonly_fields',
-			array( 'zip', 'addr1', 'billing_postcode', 'billing_address_1' )
-		);
-
-		$field_to_include_postcode_button = apply_filters(
-			'dabory_members_postcode_field_to_include_postcode_button',
-			array( 'zip', 'billing_postcode' )
-		);
-
-		foreach ( $rows as &$row ) {
-
-			/** 우편번호 버튼의 자리를 위해 zip input 길이를 조정 */
-			if ( in_array( $row['meta'], $zip_fields ) ) {
-				$row['field'] = preg_replace( '/class="(.+?)"/', 'class="$1 width-auto"', $row['field'] );
-			}
-
-			/** 읽기 전용 속성 부여 */
-			if ( in_array( $row['meta'], $readonly_fields ) ) {
-				$row['field'] = preg_replace( '/(<input.+?)\/?>/', '$1 readonly />', $row['field'] );
-			}
-
-			/** 버튼 삽입 */
-			if ( in_array( $row['meta'], $field_to_include_postcode_button ) ) {
-				$row['field'] .= '<button id="dabory-postcode-button" type="button" class="button clear" >' .
-				                 __( '우편번호 찾기', 'wskl' ) . '</button>';
-			}
-		}
-
-		return $rows;
-	}
-
-	/**
-	 * @callback
-	 * @filter    wpmem_register_form_rows
-	 * @used-by   WSKL_Dabory_Members_Registration::init()
-	 *
-	 * @param  array $rows
-	 *
-	 * @return array
-	 */
-	public static function include_password_strength_meter( $rows ) {
-
-		foreach ( $rows as &$row ) {
-			if ( $row['meta'] == 'password' ) {
-				$row['field_after'] = '<span class="password-strength-meter">' . __(
-						'패스워드를 입력하세요.',
-						'wskl'
-					) . '</span>' . $row['field_after'];
-			}
-		}
-
-		return $rows;
-	}
-
-	/**
-	 * @callback
-	 * @action    wp_enqueue_scripts
-	 */
-	public static function add_registration_scripts() {
-
-		if ( ! self::is_wp_members_register_page() ) {
-			return;
-		}
-
-		wp_enqueue_style(
-			'dabory-members-registration',
-			plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/dabory-members-registration.css'
-		);
-
-		if ( wskl_is_option_enabled( 'members_enable_postcode_button' ) ) {
-
-			wskl_enqueue_daum_postcode_scripts();
-
-			wskl_enqueue_script(
-				'dabory-members-postcode',
-				'assets/js/dabory-members-postcode.js',
-				array( 'jquery', 'daum-postcode-v2' ),
-				WSKL_VERSION,
-				TRUE
-			);
-		}
-
-		// password strength meter. Since WP Version 2.8 (https://codex.wordpress.org/Version_2.8)
-		if ( wskl_is_option_enabled( 'members_password_strength_meter' ) ) {
-			wskl_enqueue_script(
-				'dabory-members-registration',
-				'assets/js/dabory-members-registration.js',
-				array( 'jquery', 'password-strength-meter' ),
-				WSKL_VERSION,
-				TRUE,
-				'passwordMeterObj',
-				array(
-					'passwordEmpty' => __( '패스워드를 입력하세요.', 'wskl' ),
-				)
-			);
-		}
-	}
-
-	/**
-	 * 글로벌 변수 $post 때문에 콜백 함수에서만 사용해야 한다.
-	 * 현재 페이지가 registration 쇼트코드를 사용한 가입 페이지인지 확인.
-	 *
-	 * @return bool
-	 */
-	public static function is_wp_members_register_page() {
-
-		global $post;
-
-		if ( $post ) {
-			return (bool) preg_match( '/\[wpmem_form\s+register\s+\/\]/', $post->post_content );
-		}
-
-		return FALSE;
 	}
 
 	/**
@@ -227,7 +82,7 @@ class WSKL_Dabory_Members_Registration {
 			$agreed  = wskl_POST( 'checkbox-' . $key ) == 'yes';
 			$post_id = intval( wskl_get_option( 'members_page_' . $key ) );
 
-			if ( $post_id && ! $agreed ) {
+			if ( $post_id > 0 && ! $agreed ) {
 				$post                            = WP_Post::get_instance( $post_id );
 				$message                         = apply_filters(
 					'dabory_members_validate_agreements_message',
@@ -248,7 +103,7 @@ class WSKL_Dabory_Members_Registration {
 	}
 
 	/**
-	 * 약관 항목을 사삽입
+	 * 약관 항목을 삽입
 	 *
 	 * @callback
 	 * @filter   wpmem_register_form_rows
@@ -263,16 +118,13 @@ class WSKL_Dabory_Members_Registration {
 	 *
 	 * @return array
 	 */
-	public static function include_terms(
-		$rows,
-		/** @noinspection PhpUnusedParameterInspection */
-		$toggle
-	) {
+	public static function include_terms( $rows, $toggle ) {
 
-		wp_enqueue_style(
-			'dabory-members-registration',
-			plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/dabory-members-registration.css'
-		);
+		if ( $toggle != 'new' ) {
+			return $rows;
+		}
+
+		self::add_registration_scripts();
 
 		$terms_rows = array(
 			array(
@@ -305,6 +157,24 @@ class WSKL_Dabory_Members_Registration {
 		return array_merge( $terms_rows, $rows );
 	}
 
+	private static function add_registration_scripts() {
+
+		if ( wskl_is_option_enabled( 'members_show_terms' ) ) {
+
+			wp_enqueue_style(
+				'dabory-members-registration',
+				plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/dabory-members/registration.css'
+			);
+
+			wskl_enqueue_script(
+				'dabory-members-registration',
+				'assets/js/dabory-members/registration.js',
+				array( 'jquery', ),
+				WSKL_VERSION
+			);
+		}
+	}
+
 	/**
 	 * 약관 페이지 필드 작성
 	 *
@@ -319,7 +189,7 @@ class WSKL_Dabory_Members_Registration {
 
 		$post_id = intval( wskl_get_option( 'members_page_' . $key ) );
 
-		if ( ! $post_id ) {
+		if ( $post_id < 1 ) {
 			return '';
 		}
 
@@ -363,18 +233,21 @@ PHP_EOD;
 
 		global $wpmem_themsg;
 
-		$min_length = intval( wskl_get_option( 'members_password_min_length' ), Settings::get_password_min_length() );
+		$min_length = intval( wskl_get_option( 'members_password_min_length', Settings::get_password_min_length() ) );
 
-		// 패스워드 최소 길이 설정
+		// 비밀번호 최소 길이 설정
 		if ( wskl_is_option_enabled( 'members_enable_password_length' ) ) {
 			if ( isset( $fields['password'] ) && $min_length ) {
 				if ( strlen( $fields['password'] ) < $min_length ) {
-					$wpmem_themsg = _n( '비밀번호는 %d자 이상으로 작성해 주세요.', '비밀번호는 %d자 이상으로 작성해 주세요.', $min_length, 'wskl' );
+					$wpmem_themsg = sprintf(
+						_n( '비밀번호는 %s자 이상으로 작성해 주세요.', '비밀번호는 %s자 이상으로 작성해 주세요.', $min_length, 'wskl' ),
+						$min_length
+					);
 				}
 			}
 		}
 
-		// 패스워드 문자 조합 설정
+		// 비밀번호 문자 조합 설정
 		if ( wskl_is_option_enabled( 'members_password_mixed_chars' ) ) {
 			if ( ! self::check_password_mixed_chars( $fields['password'] ) ) {
 				$wpmem_themsg = __( '비밀번호에는 특수문자와 숫자가 각각 1글자 이상씩 포함되어야 합니다.', 'wskl' );
@@ -417,6 +290,191 @@ PHP_EOD;
 				wp_die( $user->get_error_message() );
 			}
 		}
+	}
+
+	public function customize_register_form( $rows, $toggle ) {
+
+		if ( $toggle != 'register' && $toggle != 'edit' ) {
+			return $rows;
+		}
+
+		// 주소 찾기 기능
+		if ( wskl_is_option_enabled( 'members_enable_postcode_button' ) ) {
+			$rows = self::include_postcode_button( $rows );
+		}
+
+		// 비밀번호 강도 표시 알림
+		if ( wskl_is_option_enabled( 'members_password_strength_meter' ) ) {
+			self::add_psm_scripts( 'password', 'confirm_password' );
+		}
+
+		foreach ( $rows as &$row ) {
+			if ( $row['meta'] == 'password' ) {
+				$row['field_after'] = self::get_password_guide_output() . $row['field_after'];
+			}
+		}
+
+		return $rows;
+	}
+
+	/**
+	 * 주소찾기 버튼 삽입
+	 *
+	 * @callback
+	 * @filter     wpmem_register_form_rows
+	 * @used-by    WSKL_Dabory_Members_Registration::init()
+	 *
+	 * @param $rows
+	 *
+	 * @return mixed
+	 */
+	private static function include_postcode_button( $rows ) {
+
+		self::add_postcode_scripts();
+
+		$zip_fields = apply_filters(
+			'dabory_members_postcode_zip_fields',
+			array( 'zip', )
+		);
+
+		$readonly_fields = apply_filters(
+			'dabory_members_postcode_readonly_fields',
+			array( 'zip', 'addr1', 'billing_postcode', 'billing_address_1' )
+		);
+
+		$field_to_include_postcode_button = apply_filters(
+			'dabory_members_postcode_field_to_include_postcode_button',
+			array( 'zip', 'billing_postcode' )
+		);
+
+		foreach ( $rows as &$row ) {
+
+			/** 우편번호 버튼의 자리를 위해 zip input 길이를 조정 */
+			if ( in_array( $row['meta'], $zip_fields ) ) {
+				$row['field'] = preg_replace( '/class="(.+?)"/', 'class="$1 width-auto"', $row['field'] );
+			}
+
+			/** 읽기 전용 속성 부여 */
+			if ( in_array( $row['meta'], $readonly_fields ) ) {
+				$row['field'] = preg_replace( '/(<input.+?)\/?>/', '$1 readonly />', $row['field'] );
+			}
+
+			/** 버튼 삽입 */
+			if ( in_array( $row['meta'], $field_to_include_postcode_button ) ) {
+				$row['field'] .= '<button id="dabory-postcode-button" type="button" class="button clear" >' .
+				                 __( '우편번호 찾기', 'wskl' ) . '</button>';
+			}
+		}
+
+		return $rows;
+	}
+
+	private static function add_postcode_scripts() {
+
+		if ( wskl_is_option_enabled( 'members_enable_postcode_button' ) ) {
+
+			wp_enqueue_style(
+				'dabory-members-postcode',
+				plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/dabory-members/postcode.css'
+			);
+
+			wskl_enqueue_daum_postcode_scripts();
+
+			wskl_enqueue_script(
+				'dabory-members-postcode',
+				'assets/js/dabory-members/postcode.js',
+				array( 'jquery', 'daum-postcode-v2' ),
+				WSKL_VERSION,
+				TRUE
+			);
+		}
+	}
+
+	private static function add_psm_scripts( $password_name, $password_confirm_name ) {
+
+		if ( wskl_is_option_enabled( 'members_password_strength_meter' ) ) {
+
+			wp_enqueue_style(
+				'dabory-members-password-strength',
+				plugin_dir_url( WSKL_MAIN_FILE ) . 'assets/css/dabory-members/password-strength.css'
+			);
+
+			wskl_enqueue_script(
+				'dabory-members-password-strength',
+				'assets/js/dabory-members/password-strength.js',
+				array( 'jquery', 'password-strength-meter' ),
+				WSKL_VERSION,
+				TRUE,
+				'passwordMeterObj',
+				array(
+					'passwordEmpty'            => __( '비밀번호를 입력하세요.', 'wskl' ),
+					// password strength meter. Since WP Version 2.8 (https://codex.wordpress.org/Version_2.8)
+					'usePasswordStrengthMeter' => wskl_is_option_enabled( 'members_password_strength_meter' ),
+					'weakPasswordString'       => __( '. 보다 강력한 비밀번호를 입력해야 합니다.', 'wskl' ),
+					'fairPasswordString'       => __( '. 사용할 수 있는 비밀번호입니다.', 'wskl' ),
+					'passwordName'             => $password_name,
+					'passwordConfirmName'      => $password_confirm_name,
+				)
+			);
+		}
+	}
+
+	private function get_password_guide_output() {
+
+		$buffer = array();
+
+		// 비밀번호 최소 길이 알림
+		if ( wskl_is_option_enabled( 'members_enable_password_length' ) ) {
+
+			$min_length          = Settings::get_password_min_length();
+			$min_password_output = '<div class="description">'
+			                       . sprintf(
+				                       _n( '비밀번호는 최소 %s자 이상입니다.', '비밀번호는 최소 %s자 이상입니다.', $min_length, 'wskl' ),
+				                       $min_length
+			                       )
+			                       . '</div>';
+
+			$buffer[] = $min_password_output;
+		}
+		// 비밀번호 문자 조합 알림
+		if ( wskl_is_option_enabled( 'members_password_mixed_chars' ) ) {
+
+			$mixed_chars = '<div>' . __( '비밀번호에는 특수문자, 숫자가 최소 1개씩 있어야 합니다.', 'wskl' ) . '</div>';
+
+			$buffer[] = $mixed_chars;
+		}
+		// 비밀번호 강도 표시 알림
+		if ( wskl_is_option_enabled( 'members_password_strength_meter' ) ) {
+			$password_strength = '<div>'
+			                     . '<span class="password-strength-meter">'
+			                     . __( '비밀번호를 입력하세요.', 'wskl' )
+			                     . '</span></div>';
+
+			$buffer[] = $password_strength;
+		}
+
+		return implode( '', $buffer );
+	}
+
+	public function customize_login_form( $rows, $action ) {
+
+		if ( $action != 'pwdchange' ) {
+			return $rows;
+		}
+
+		// 주소 찾기 기능
+		if ( wskl_is_option_enabled( 'members_enable_postcode_button' ) ) {
+			$rows = self::include_postcode_button( $rows );
+		}
+
+		// 비밀번호 강도 표시 알림
+		if ( wskl_is_option_enabled( 'members_password_strength_meter' ) ) {
+			self::add_psm_scripts( 'pass1', 'pass2' );
+		}
+
+		$rows[0]['field_after'] = self::get_password_guide_output() . $rows[0]['field_after'];
+
+		return $rows;
 	}
 }
 

@@ -70,7 +70,7 @@ class WSKL_Dabory_Members_Admin {
 
 		switch ( $tab ) {
 			case 'dabory-members':
-				wskl_get_template( '/dabory-members-tab.php' );
+				wskl_get_template( '/dabory-members/dabory-members-tab.php' );
 				break;
 		}
 	}
@@ -91,7 +91,7 @@ class WSKL_Dabory_Members_Admin {
 
 			wskl_enqueue_script(
 				'dabory-members-js',
-				'assets/js/dabory-members-admin.js',
+				'assets/js/dabory-members/admin.js',
 				array( 'jquery' ),
 				WSKL_VERSION,
 				TRUE,
@@ -105,7 +105,7 @@ class WSKL_Dabory_Members_Admin {
 				'dabory-members-css',
 				plugin_dir_url(
 					WSKL_MAIN_FILE
-				) . 'assets/css/dabory-members-admin.css'
+				) . 'assets/css/dabory-members/admin.css'
 			);
 		}
 	}

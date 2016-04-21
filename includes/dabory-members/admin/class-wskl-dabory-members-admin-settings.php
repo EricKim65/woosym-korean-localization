@@ -61,6 +61,7 @@ class WSKL_Dabory_Members_Admin_Settings {
 			array( 'page_privacy', 'intval', 0 ),
 			array( 'page_3rd_party', 'intval', 0 ),
 			array( 'page_delivery', 'intval', 0 ),
+			array( 'page_refund', 'intval', 0 ),
 			array( 'page_registration', 'intval', 0 ),
 			array( 'page_registration_complete', 'intval', 0 ),
 			array( 'page_withdrawal', 'intval', 0 ),
@@ -86,7 +87,7 @@ class WSKL_Dabory_Members_Admin_Settings {
 			// 환불 약관 보이기 (checkbox)
 			array( 'show_refund', 'sanitize_text_field', 'no' ),
 
-			// 패스워드 길이 설정 (checkbox)
+			// 비밀번호 길이 설정 (checkbox)
 			array( 'enable_password_length', 'sanitize_text_field', 'no' ),
 
 			// 비밀번호 최소 길이 (number)
