@@ -5,7 +5,7 @@
 
 /* 우편번호와 우편번호 찾기 버튼을 한 열에 */
 #wpmem_reg input.width-auto {
-    width: auto;
+    width: 45%;
     float: left;
 }
 
