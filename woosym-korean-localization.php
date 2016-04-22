@@ -25,10 +25,10 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 		private $_settings = NULL;
 
-		public static function instance( $prefix, $file, $version ) {
+		public static function instance() {
 
 			if ( is_null( self::$_instance ) ) {
-				self::$_instance = new static( $prefix, $file, $version );
+				self::$_instance = new static();
 			}
 
 			return self::$_instance;
@@ -54,13 +54,18 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 		/**
 		 * Woosym_Korean_Localization constructor.
-		 *
-		 * @param string $file
-		 * @param string $version
 		 */
-		public function __construct( $file = '', $version = '1.0.0' ) {
+		public function __construct() {
 
 			do_action( 'wskl_before_init' );
+
+			do_action( 'wskl_loaded' );
+
+		}
+
+		public function startup() {
+
+			do_action( 'wskl_before_startup' );
 
 			$this->init_constants();
 
@@ -76,9 +81,8 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			$this->init_modules();
 
-			do_action( 'wskl_loaded' );
-
-		} // End __construct ()
+			do_action( 'wskl_after_startup' );
+		}
 
 		/**
 		 * @return Woosym_Korean_Localization_Settings
@@ -380,7 +384,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			$order_id
 		) {
 
-			echo __( '<p><h5>주문에 감사드리며 항상 정성을 다 하겠습니다 !</h5></p>', 'wskl' );
+			echo __( '<p><h5>주문에 감사드리며 항상 정성을 다하겠습니다!</h5></p>', 'wskl' );
 		}
 
 		public function check_compatibility() {
@@ -616,7 +620,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 		 *
 		 * @return bool
 		 */
-		public function is_request( $type ) {
+		public static function is_request( $type ) {
 
 			switch ( $type ) {
 				case 'admin' :
@@ -718,7 +722,10 @@ endif;
 
 function WSKL() {
 
-	return Woosym_Korean_Localization::instance( WSKL_PREFIX, WSKL_MAIN_FILE, WSKL_VERSION );
+	return Woosym_Korean_Localization::instance();
 }
 
-$GLOBALS['wskl'] = WSKL();
+$wskl = WSKL();
+$wskl->startup();
+
+$GLOBALS['wskl']            = $wskl;

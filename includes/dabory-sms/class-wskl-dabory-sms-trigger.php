@@ -24,52 +24,52 @@ class WSKL_Dabory_SMS_Trigger {
 
 		$instance = new static();
 
-		if ( wskl_is_option_enabled( 'sms_new_order_enabled' ) ) {
+		if ( wskl_is_option_enabled( 'sms_new-order_enabled' ) ) {
 
 			$instance->init_new_order_hooks();
 		}
 
-		if ( wskl_is_option_enabled( 'sms_cancelled_order_enabled' ) ) {
+		if ( wskl_is_option_enabled( 'sms_cancelled-order_enabled' ) ) {
 
 			$instance->init_cancelled_order_hooks();
 		}
 
-		if ( wskl_is_option_enabled( 'sms_failed_order_enabled' ) ) {
+		if ( wskl_is_option_enabled( 'sms_failed-order_enabled' ) ) {
 
 			$instance->init_failed_order_hooks();
 		}
 
-		if ( wskl_is_option_enabled( 'sms_processing_order_enabled' ) ) {
+		if ( wskl_is_option_enabled( 'sms_processing-order_enabled' ) ) {
 
 			$instance->init_processing_order_hooks();
 		}
 
-		if ( wskl_is_option_enabled( 'sms_completed_order_enabled' ) ) {
+		if ( wskl_is_option_enabled( 'sms_completed-order_enabled' ) ) {
 
 			$instance->init_completed_order_hooks();
 		}
 
-		if ( wskl_is_option_enabled( 'sms_refunded_order_enabled' ) ) {
+		if ( wskl_is_option_enabled( 'sms_refunded-order_enabled' ) ) {
 
 			$instance->init_refunded_order_hooks();
 		}
 
-		if ( wskl_is_option_enabled( 'sms_customer_note_enabled' ) ) {
+		if ( wskl_is_option_enabled( 'sms_customer-note_enabled' ) ) {
 
 			$instance->init_customer_note_hooks();
 		}
 
-		if ( wskl_is_option_enabled( 'sms_customer_new_account_enabled' ) ) {
+		if ( wskl_is_option_enabled( 'sms_customer-new-account_enabled' ) ) {
 
 			$instance->init_customer_new_account_hooks();
 		}
 
-		if ( wskl_is_option_enabled( 'sms_customer_reset_password_enabled' ) ) {
+		if ( wskl_is_option_enabled( 'sms_customer-reset-password_enabled' ) ) {
 
 			$instance->init_customer_reset_password_hooks();
 		}
 
-		if ( wskl_is_option_enabled( 'sms_payment_bacs_enabled' ) ) {
+		if ( wskl_is_option_enabled( 'sms_payment-bacs_enabled' ) ) {
 
 			$instance->init_payment_bacs_hooks();
 		}
@@ -321,7 +321,7 @@ class WSKL_Dabory_SMS_Trigger {
 
 		if ( empty( $customer_phone ) ) {
 
-			$this->log( 'customer phone is empty! Triggering halted', __METHOD__ );
+			$this->log( 'customer phone is empty! Triggering halted.', __METHOD__ );
 
 			return FALSE;
 		}
@@ -340,6 +340,12 @@ class WSKL_Dabory_SMS_Trigger {
 		} else {
 			$receivers     = $customer_phone;
 			$num_receivers = 1;
+		}
+
+		if ( ! $num_receivers ) {
+			$this->log( 'The number of recipient is 0! Triggering halted.', __METHOD__ );
+
+			return FALSE;
 		}
 
 		// message substitution
@@ -633,6 +639,13 @@ class WSKL_Dabory_SMS_Trigger {
 	public function trigger_payment_bacs( $order_id /*, $posted */ ) {
 
 		$phase = 'payment-bacs';
+
+		$order          = wc_get_order( $order_id );
+		$payment_method = $order->payment_method;
+
+		if ( $payment_method != 'bacs' ) {
+			return;
+		}
 
 		if ( ! $this->trigger_common( $order_id, NULL, $phase ) ) {
 			$this->log( "'Trigger for '{$phase}' finished unsuccessfully.", __METHOD__ );

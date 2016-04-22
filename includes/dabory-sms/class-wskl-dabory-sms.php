@@ -1,7 +1,6 @@
 <?php
-require_once( WSKL_PATH . '/includes/dabory-sms/providers/mdalin/class-wskl-dabory-sms-provider-mdalin.php' );
 require_once( WSKL_PATH . '/includes/dabory-sms/class-wskl-sms-text-substitution.php' );
-require_once( WSKL_PATH . '/includes/dabory-sms/class-wskl-dabory-sms-trigger.php' );
+
 
 
 /**
@@ -48,6 +47,7 @@ class WSKL_Dabory_SMS {
 			wskl_load_module( '/includes/dabory-sms/admin/class-wskl-dabory-sms-admin.php' );
 		}
 
+		wskl_load_module( '/includes/dabory-sms/class-wskl-dabory-sms-trigger.php' );
 		WSKL_Dabory_SMS_Trigger::init();
 	}
 }
