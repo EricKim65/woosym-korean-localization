@@ -80,6 +80,13 @@ $convenience_features = array(
 			'default'     => '',
 		),
 		array(
+			'id'          => 'enable_bacs_transfer_callback',
+			'label'       => __( '무통장입금 자동확인', 'wskl' ),
+			'description' => __( '기능을 사용하려면 플러그인 제작사와 상의해주십시요.', 'wskl' ),
+			'type'        => 'checkbox',
+			'default'     => '',
+		),
+		array(
 			'id'          => 'hide_product_review_tab',
 			'label'       => __( '상품 리뷰 숨김', 'wskl' ),
 			'description' => __( '상품 페이지의 리뷰 탭을 보이지 않게 합니다.', 'wskl' ),
