@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:       우커머스-심포니 통합 플러그인
- * Version:           3.3.0
+ * Version:           3.3.1
  * Plugin URI:        https://www.dabory.com/
  * Description:       우커머스를 카페24 같이 편리하게 만들어주는 한국 쇼핑몰 환경 표준 플러그인.
  * Author:            (주)심포니소프트 - 다보리
@@ -101,7 +101,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
 			define( 'WSKL_PLUGIN', 'woosym-korean-localization/woosym-korean-localization.php' );
-			define( 'WSKL_VERSION', '3.3.0' );
+			define( 'WSKL_VERSION', '3.3.1' );
 
 			if ( ! defined( 'WSKL_DEBUG' ) ) {
 				define( 'WSKL_DEBUG', FALSE );
@@ -373,7 +373,12 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 		function order_received_title( $title, $id ) {
 
 			if ( is_order_received_page() && get_the_ID() === $id ) {
-				$title = "주문이 완료되었습니다.";
+
+				$alternative_text = wskl_get_option( 'thankyou_page_title_text' );
+
+				if ( ! empty( $alternative_text ) ) {
+					return $alternative_text;
+				}
 			}
 
 			return $title;
@@ -384,7 +389,11 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			$order_id
 		) {
 
-			echo __( '<p><h5>주문에 감사드리며 항상 정성을 다하겠습니다!</h5></p>', 'wskl' );
+			$text = wskl_get_option( 'woocommerce_thankyou_text' );
+			if ( ! empty( $text ) ) {
+
+				echo wp_kses_post( $text );
+			}
 		}
 
 		public function check_compatibility() {
@@ -728,4 +737,4 @@ function WSKL() {
 $wskl = WSKL();
 $wskl->startup();
 
-$GLOBALS['wskl']            = $wskl;
+$GLOBALS['wskl'] = $wskl;

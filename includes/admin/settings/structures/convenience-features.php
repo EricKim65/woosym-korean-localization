@@ -15,11 +15,12 @@ $members_description .= sprintf(
 		                        TRUE
 	                        )
                         ) . ' ';
+
 if ( wskl_is_option_enabled( 'enable_dabory_members' ) ) {
-	$members_description .= sprintf(
-		'<a href="%s">%s</a>',
-		esc_url( wskl_wp_members_url() ),
-		__( '다보리 멤버스 설정으로 이동', 'wskl' )
+	$members_description .= wskl_html_anchor(
+		__( '다보리 멤버스 설정으로 이동', 'wskl' ),
+		array( 'href' => wskl_wp_members_url() ),
+		TRUE
 	);
 }
 
@@ -83,6 +84,25 @@ $convenience_features = array(
 			'label'       => __( '상품 리뷰 숨김', 'wskl' ),
 			'description' => __( '상품 페이지의 리뷰 탭을 보이지 않게 합니다.', 'wskl' ),
 			'type'        => 'checkbox',
+			'default'     => '',
+		),
+		array(
+			'id'          => 'thankyou_page_title_text',
+			'label'       => __( '주문 완료 페이지 제목 변경', 'wskl' ),
+			'description' => __(
+				'<br/>주문 완료 페이지의 제목을 변경할 수 있습니다. 기본값은 포스트 제목입니다. 기본값을 쓰려면 칸을 비워 두세요.<br/>예) 주문이 완료되었습니다.',
+				'wskl'
+			),
+			'type'        => 'text',
+			'default'     => '',
+		),
+		array(
+			'id'          => 'woocommerce_thankyou_text',
+			'label'       => __( '주문 완료 페이지 감사 메시지', 'wskl' ),
+			'description' => __( '주문 완료 페이지에 고객에게 전달할 간단한 메시지를 작성할 수 있습니다. 몇몇 html 태그를 사용할 수도 있습니다.', 'wskl' )
+			                 . '<br />'
+			                 . esc_html__( '예) <p><h5>주문에 감사드리며 항상 정성을 다하겠습니다!</h5></p>', 'wskl' ),
+			'type'        => 'textarea',
 			'default'     => '',
 		),
 	),
