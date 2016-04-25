@@ -187,6 +187,9 @@ if ( ! class_exists( 'WSKL_Sym_Mvc_Admin_API' ) ) :
 					<?php
 					break;
 
+				case 'separator':
+					$html .= ' ';
+					break;
 			}
 
 			switch ( $field['type'] ) {
