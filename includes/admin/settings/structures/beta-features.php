@@ -11,6 +11,13 @@ $beta_features = array(
 			'type'        => 'checkbox',
 			'default'     => '',
 		),
+		array(
+			'id'          => 'bacs_callback_uid',
+			'label'       => __( 'APIBOX 아이디', 'wskl' ),
+			'description' => __( '무통장입금 자동통보 콜백정보를 확인하기 위해 필요.', 'wskl' ),
+			'type'        => 'text',
+			'default'     => '',
+		),
 	),
 );
 
