@@ -25,7 +25,10 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 			$this->last_login_column_hooks();
 		}
 
-		add_action( 'wskl_wp_members_section_footer_notice_area', array( $this, 'section_footer_notice_area' ), 10, 0 );
+		add_action( 'wskl_wp_members_section_footer_footer_area', array( $this, 'section_footer_area' ), 10, 0 );
+		add_action( 'wskl_wp_members_field_test_email', array( $this, 'field_test_email' ), 10, 0 );
+
+		add_action( 'wp_ajax_wskl_inactive-accounts_test_email', array( $this, 'send_test_email' ) );
 	}
 
 	private function last_login_column_hooks() {
@@ -216,7 +219,7 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 						array(
 							'type'     => 'input',
 							'key'      => 'sender_name',
-							'label'    => __( '발신자', 'wskl' ),
+							'label'    => __( '발신자 이름', 'wskl' ),
 							'desc'     => __( '발신자 이름을 별도로 설정할 수 있습니다.', 'wskl' ),
 							'attrs'    => array(
 								'type'  => 'text',
@@ -226,9 +229,12 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 							'default'  => '',
 							'sanitize' => 'sanitize_text_field',
 						),
+						array(
+							'type' => 'test_email',
+						),
 					),
 					'footer' => array(
-						'type' => 'notice_area',
+						'type' => 'footer_area',
 					),
 				),
 			),
@@ -268,8 +274,49 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		wp_clear_scheduled_hook( 'wskl_inactive_accounts_test_hook' );
 	}
 
-	public function section_footer_notice_area() {
+	public function section_footer_area() {
 
+		echo '<br/>';
+		echo '<h4>' . __( '최근 휴면 계정 작업 기록', 'wskl' ) . '</h4>';
+
+		$recent_jobs = wskl_get_option( 'inactive-accounts_recent_jobs' );
+
+		if ( ! $recent_jobs ) {
+			echo __( '작업 기록이 없습니다.' );
+		} else {
+
+			krsort( $recent_jobs );
+
+			echo '<table class="wide widefat">';
+			echo '<thead><tr>';
+			echo '<th>' . __( '작업시간', 'wskl' ) . '</th>';
+			echo '<th>' . __( '휴면 통지', 'wskl' ) . '</th>';
+			echo '<th>' . __( '휴면 처리', 'wskl' ) . '</th>';
+			echo '</tr></thead>';
+			echo '<tbody>';
+			foreach ( $recent_jobs as $jobs ) {
+				$timestamp          = wskl_get_from_assoc( $jobs, 'timestamp' );
+				$total_notified     = wskl_get_from_assoc( $jobs, 'total_notified' );
+				$total_disabled     = wskl_get_from_assoc( $jobs, 'total_disabled' );
+				$notification_spent = wskl_get_from_assoc( $jobs, 'notification_spent' );
+				$deactivation_spent = wskl_get_from_assoc( $jobs, 'deactivation_spent' );
+
+				echo '<tr>';
+				echo '<td>' . wskl_datetime_string( $timestamp ) . '</td>';
+				echo '<td>' . sprintf(
+						_n( '%s명', '%s명', $total_notified, 'wskl' ),
+						$total_notified
+					) . '&nbsp;' . sprintf( '(%.03fms)', $notification_spent * 1000 ) . '</td>';
+				echo '<td>' . sprintf(
+						_n( '%s명', '%s명', $total_disabled, 'wskl' ),
+						$total_disabled
+					) . '&nbsp;' . sprintf( '(%.03fms)', $deactivation_spent * 1000 ) . '</td>';
+				echo '</tr>';
+			}
+			echo '</tbody></table>';
+		}
+
+		echo '<br/>';
 		echo '<h4>' . __( '휴면 계정을 처음 사용하는 분께 알림', 'wskl' ) . '</h4>';
 		echo '<p>' . __(
 				'워드프레스와 우커머스는 \'마지막 로그인\' 시각을 기록하지 않습니다. 그러므로 본 모듈을 처음 작동시킨 시점에는 마지막 로그인 시각 데이터가 존재하지 않습니다.<br/>이 데이터는 모듈 작동 중 각기 회원이 로그인한 시점에 매번 갱신됩니다.',
@@ -281,5 +328,44 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 			) . '</p>';
 
 		echo '<h4>' . __( '계정 복구에 대해', 'wskl' ) . '</h4>';
+	}
+
+	public function field_test_email() {
+
+		include 'code.php';
+	}
+
+	public function send_test_email() {
+
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], '_wpnonce' ) ) {
+			die();
+		}
+
+		add_action(
+			'wp_mail_failed',
+			function ( WP_Error $wp_error ) {
+
+				$message = sprintf(
+					'wp_mail failed: %s %s. Error data: %s',
+					$wp_error->get_error_code(),
+					$wp_error->get_error_message(),
+					print_r( $wp_error->get_error_data(), TRUE )
+				);
+				error_log( $message );
+			}
+		);
+
+		$mail_address = wskl_get_option( 'inactive-accounts_sender_address' );
+		if ( ! is_email( $mail_address ) ) {
+			_e( '메일 주소가 정확하지 않습니다.', 'wskl' );
+		}
+
+		if ( wp_mail( $mail_address, __( '휴면 계정 테스트 메일입니다.', 'wskl' ), __( '휴면 계정 테스트 메일입니다.', 'wskl' ) ) ) {
+			_e( '테스트 메일을 보냈습니다.', 'wskl' );
+		} else {
+			_e( '메일 발송 에러. 로그를 확인하세요.', 'wskl' );
+		}
+
+		die();
 	}
 }

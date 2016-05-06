@@ -265,7 +265,7 @@ function wskl_get_alert_staged_users( $min_timestamp, $max_timestamp, $role ) {
 	return $query->get_results();
 }
 
-function wskl_deactivate_account( WP_User $user, array $meta_keys_preserve, $role_to_dismiss ) {
+function wskl_deactivate_account( WP_User $user, $timestamp, array $meta_keys_preserve, $role_to_dismiss ) {
 
 	/** @var wpdb $wpdb */
 	global $wpdb;
@@ -297,7 +297,7 @@ function wskl_deactivate_account( WP_User $user, array $meta_keys_preserve, $rol
 	$user->remove_role( $role_to_dismiss );
 	$user->add_role( 'deactivated' );
 
-	wskl_set_user_deactivated( $user->ID );
+	wskl_set_user_deactivated( $user->ID, $timestamp );
 }
 
 function wskl_get_users_with_missing_meta_key( $meta_key, $role ) {

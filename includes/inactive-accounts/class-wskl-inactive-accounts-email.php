@@ -6,10 +6,6 @@ class WSKL_Inactive_Accounts_Email {
 	public static function init() {
 
 		add_action( 'wp_mail_failed', array( __CLASS__, 'handle_email_error' ) );
-
-		add_filter( 'wp_mail_content_type', array( __CLASS__, 'content_type' ), 10, 0 );
-		add_filter( 'wp_mail_from', array( __CLASS__, 'mail_from' ) );
-		add_filter( 'wp_mail_from_name', array( __CLASS__, 'mail_from_name' ) );
 	}
 
 	public static function handle_email_error( WP_Error $wp_error ) {
@@ -75,31 +71,6 @@ class WSKL_Inactive_Accounts_Email {
 		}
 
 		return $recipient;
-	}
-
-	public static function content_type() {
-
-		return 'text/html';
-	}
-
-	public static function mail_from( $from_email ) {
-
-		$mail_address = wskl_get_option( 'inactive-accounts_sender_address' );
-		if ( $mail_address && is_email( $mail_address ) ) {
-			return $mail_address;
-		}
-
-		return $from_email;
-	}
-
-	public static function mail_from_name( $from_name ) {
-
-		$name = wskl_get_option( 'inactive-accounts_sender_name' );
-		if ( $name ) {
-			return $name;
-		}
-
-		return $from_name;
 	}
 }
 

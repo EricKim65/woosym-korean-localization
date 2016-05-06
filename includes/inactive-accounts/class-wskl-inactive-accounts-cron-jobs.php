@@ -3,11 +3,46 @@
 
 class WSKL_Inactive_Accounts_Cron_Jobs {
 
+	private $cron_job_id = NULL;
+
 	public function __construct() {
 
+		$this->cron_job_id = time();
+	}
+
+	public static function content_type() {
+
+		return 'text/html';
+	}
+
+	public static function mail_from( $from_email ) {
+
+		$mail_address = wskl_get_option( 'inactive-accounts_sender_address' );
+		if ( $mail_address && is_email( $mail_address ) ) {
+			return $mail_address;
+		}
+
+		return $from_email;
+	}
+
+	public static function mail_from_name( $from_name ) {
+
+		$name = wskl_get_option( 'inactive-accounts_sender_name' );
+		if ( $name ) {
+			return $name;
+		}
+
+		return $from_name;
+	}
+
+	public function __destruct() {
 	}
 
 	public function do_inactive_account_filtering() {
+
+		add_filter( 'wp_mail_content_type', array( __CLASS__, 'content_type' ), 10, 0 );
+		add_filter( 'wp_mail_from', array( __CLASS__, 'mail_from' ) );
+		add_filter( 'wp_mail_from_name', array( __CLASS__, 'mail_from_name' ) );
 
 		$post_alert        = wskl_get_option( 'inactive-accounts_post_alert' );
 		$post_deactivation = wskl_get_option( 'inactive-accounts_post_deactivation' );
@@ -43,12 +78,36 @@ class WSKL_Inactive_Accounts_Cron_Jobs {
 		$start = microtime( TRUE );
 		$this->process_alert( $to_notified );
 		$finish = microtime( TRUE );
-		error_log( sprintf( 'Alert job finished. Execution time: %.04fms', ( $finish - $start ) * 1000 ) );
+
+		$notification_spent = $finish - $start;
+		error_log( sprintf( 'Alert job finished. Execution time: %.04fms', $notification_spent * 1000 ) );
 
 		$start = microtime( TRUE );
 		$this->process_deactivation( $to_disabled, $target_role );
 		$finish = microtime( TRUE );
-		error_log( sprintf( 'Deactivate job finished. Execution time: %.04fms', ( $finish - $start ) * 1000 ) );
+
+		$deactivation_spent = $finish - $start;
+		error_log( sprintf( 'Deactivate job finished. Execution time: %.04fms', ( $deactivation_spent ) * 1000 ) );
+
+		remove_filter( 'wp_mail_content_type', array( __CLASS__, 'content_type' ) );
+		remove_filter( 'wp_mail_from', array( __CLASS__, 'mail_from' ) );
+		remove_filter( 'wp_mail_from_name', array( __CLASS__, 'mail_from_name' ) );
+
+		$recent_jobs                       = wskl_get_option( 'inactive-accounts_recent_jobs', array() );
+		$recent_jobs[ $this->cron_job_id ] = array(
+			'timestamp'          => $this->cron_job_id,
+			'total_notified'     => count( $to_notified ),
+			'total_disabled'     => count( $to_disabled ),
+			'notification_spent' => $notification_spent,  // microsecond
+			'deactivation_spent' => $deactivation_spent,  // microsecond
+		);
+
+		$cnt = count( $recent_jobs );
+		if ( $cnt > 7 ) {
+			$recent_jobs = array_slice( $recent_jobs, - 7, 7 );
+		}
+		ksort( $recent_jobs );
+		wskl_update_option( 'inactive-accounts_recent_jobs', $recent_jobs );
 	}
 
 	public function process_alert( array &$to_notified ) {
@@ -56,9 +115,8 @@ class WSKL_Inactive_Accounts_Cron_Jobs {
 		$post_id    = wskl_get_option( 'inactive-accounts_post_alert' );
 		$shortcodes = WSKL()->submodules()->get_submodule( 'inactive-accounts' )->shortcodes;
 
-		$now = time();
 		foreach ( $to_notified as $user ) {
-			wskl_set_user_alerted( $user->ID, $now );
+			wskl_set_user_alerted( $user->ID, $this->cron_job_id );
 		}
 
 		WSKL_Inactive_Accounts_Email::send_email( $to_notified, $post_id, $shortcodes );
@@ -74,7 +132,7 @@ class WSKL_Inactive_Accounts_Cron_Jobs {
 		);
 
 		foreach ( $to_disabled as $user ) {
-			wskl_deactivate_account( $user, $keys_to_preserve, $target_role );
+			wskl_deactivate_account( $user, $this->cron_job_id, $keys_to_preserve, $target_role );
 		}
 
 		WSKL_Inactive_Accounts_Email::send_email( $to_disabled, $post_id, $shortcodes );
