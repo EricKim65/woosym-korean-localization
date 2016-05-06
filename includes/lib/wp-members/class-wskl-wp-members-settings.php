@@ -320,7 +320,7 @@ if ( ! class_exists( 'WSKL_WP_Members_Settings' ) ) :
 
 		public function section_footer_new_page() { ?>
 			<p>
-				<a href="<?php echo admin_url( 'post-new.php' ); ?>" target="_blank">
+				<a href="<?php echo admin_url( 'post-new.php?post_type=page' ); ?>" target="_blank">
 					<?php _e( '여기를 눌러 새 페이지를 작성할 수 있습니다.', 'wskl' ); ?>
 				</a>
 			</p>
