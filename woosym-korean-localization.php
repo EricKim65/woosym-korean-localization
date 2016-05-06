@@ -16,6 +16,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// plugin's defines
+define( 'WSKL_PATH', __DIR__ );
+define( 'WSKL_MAIN_FILE', __FILE__ );
+define( 'WSKL_PLUGIN', basename( __DIR__ ) . '/' . basename( WSKL_MAIN_FILE ) );
+define( 'WSKL_PREFIX', 'wskl_' );
+define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
+define( 'WSKL_VERSION', '3.3.1' );
+
+define( 'WSKL_NAME', '우커머스-심포니 통합 플러그인' );
+
+define( 'DAUM_POSTCODE_HTTP', 'http://dmaps.daum.net/map_js_init/postcode.v2.js' );
+define( 'DAUM_POSTCODE_HTTPS', 'https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js' );
+
+define( 'WP_MEMBERS_PLUGIN', 'wp-members/wp-members.php' );
+
 
 if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
@@ -24,6 +39,9 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 		private static $_instance = NULL;
 
 		private $_settings = NULL;
+
+		/** @var WSKL_Submodules */
+		private $_submodules = NULL;
 
 		public static function instance() {
 
@@ -77,6 +95,8 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				return;
 			}
 
+			$this->_submodules = new WSKL_Submodules();
+
 			$this->init_hooks();
 
 			$this->init_modules();
@@ -84,6 +104,10 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			do_action( 'wskl_after_startup' );
 		}
 
+		public function init_constants() {
+
+			self::define( 'WSKL_DEBUG', FALSE );
+		}
 		/**
 		 * @return Woosym_Korean_Localization_Settings
 		 */
@@ -92,23 +116,9 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			return $this->_settings;
 		}
 
-		public function init_constants() {
+		public function submodules() {
 
-			// plugin's defines
-			define( 'WSKL_PATH', __DIR__ );
-			define( 'WSKL_MAIN_FILE', __FILE__ );
-			define( 'WSKL_PREFIX', 'wskl_' );
-
-			define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
-			define( 'WSKL_PLUGIN', 'woosym-korean-localization/woosym-korean-localization.php' );
-			define( 'WSKL_VERSION', '3.3.1' );
-
-			if ( ! defined( 'WSKL_DEBUG' ) ) {
-				define( 'WSKL_DEBUG', FALSE );
-			}
-
-			$this->define( 'DAUM_POSTCODE_HTTP', 'http://dmaps.daum.net/map_js_init/postcode.v2.js' );
-			$this->define( 'DAUM_POSTCODE_HTTPS', 'https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js' );
+			return $this->_submodules;
 		}
 
 		public function includes() {
@@ -118,6 +128,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			require_once( WSKL_PATH . '/includes/lib/wskl-functions.php' );
 			require_once( WSKL_PATH . '/includes/lib/wskl-plugin.php' );
 			require_once( WSKL_PATH . '/includes/lib/wskl-template-functions.php' );
+			require_once( WSKL_PATH . '/includes/lib/class-wskl-submodules.php' );
 		}
 
 		/**
@@ -130,6 +141,8 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			register_activation_hook( WSKL_MAIN_FILE, array( $this, 'on_plugin_activated' ) );
 			register_deactivation_hook( WSKL_MAIN_FILE, array( $this, 'on_plugin_deactivated' ) );
+
+			add_action( 'plugins_loaded', array( $this, 'load_text_domain' ) );
 
 			/** right after the activation */
 			add_action( 'activated_plugin', array( $this, 'after_plugin_activated' ) );
@@ -576,6 +589,15 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				);
 			}
 
+			if ( wskl_is_option_enabled( 'enable_inactive_accounts' ) ) {
+				$sub_menus[] = array(
+					'parent' => 'wskl-root',
+					'id'     => 'wskl-inactive-accounts',
+					'title'  => __( '휴면계정 설정', 'wskl' ),
+					'href'   => wskl_wp_members_url( 'inactive-accounts' ),
+				);
+			}
+
 			if ( wskl_is_option_enabled( 'enable_dabory_sms' ) ) {
 
 				$sub_menus[] = array(
@@ -620,6 +642,11 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			}
 		}
 
+		public function load_text_domain() {
+
+			load_plugin_textdomain( 'wskl', FALSE, WSKL_PATH . '/lang' );
+		}
+
 		/**
 		 * clone of WooCommerce::is_request
 		 *
@@ -645,7 +672,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			throw new LogicException( 'is_request() does not support type: ' . $type );
 		}
 
-		private function define( $constant, $expression ) {
+		public static function define( $constant, $expression ) {
 
 			if ( ! defined( $constant ) ) {
 				define( $constant, $expression );

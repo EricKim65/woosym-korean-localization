@@ -8,19 +8,17 @@ use WSKL_Dabory_Members_Admin_Settings as Settings;
 
 ?>
 
-
 <div class="metabox-holder">
 	<div id="post-body">
 		<div id="post-body-content">
 			<div class="postbox">
 				<h3><?php _e( '다보리 멤버스', 'wskl' ); ?></h3>
-				<div class="inside">
-					<form id="updatesettings" name="updatesettings" method="post" action="<?php echo esc_url(
-						$_SERVER['REQUEST_URI']
-					); ?>">
+				<div class="dabory-members inside">
+					<form id="updatesettings" name="updatesettings" method="post"
+					      action="<?php echo esc_url( $_SERVER['REQUEST_URI'] ); ?>">
 						<?php wp_nonce_field( 'wskl_83830_nonce', 'wskl_members_nonce' ); ?>
 						<p>
-							다보리 플러그인에서 제공하는 WP-Members 플러그인 확장입니다.
+							<?php echo WSKL_NAME; ?>에서 제공하는 WP-Members 플러그인 확장입니다.
 						</p>
 						<h2>
 							<?php _e( '페이지 설정', 'wskl' ); ?>
@@ -34,12 +32,12 @@ use WSKL_Dabory_Members_Admin_Settings as Settings;
 								<?php Settings::output_page_select_tag(
 									'page_tos',
 									__( '이용약관 페이지', 'wskl' ),
-									__( '', 'wkl' )
+									__( '', 'wskl' )
 								); ?>
 								<?php Settings::output_page_select_tag(
 									'page_privacy',
 									__( '개인정보 보호정책 페이지', 'wskl' ),
-									__( '', 'wkl' )
+									__( '', 'wskl' )
 								); ?>
 								<?php Settings::output_page_select_tag(
 									'page_3rd_party',

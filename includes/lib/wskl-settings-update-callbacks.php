@@ -29,3 +29,21 @@ function callback_enable_dabory_members(
 		remove_role( 'withdrawer' );
 	}
 }
+
+function callback_enable_inactive_accounts(
+	/** @noinspection PhpUnusedParameterInspection */
+	$old_value,
+	$value,
+	/** @noinspection PhpUnusedParameterInspection */
+	$option
+) {
+
+	$enabled = filter_var( $value, FILTER_VALIDATE_BOOLEAN );
+	if ( $enabled ) {
+		if ( get_role( 'deactivated' ) === NULL ) {
+			add_role( 'deactivated', __( '휴면 회원', 'wskl' ) );
+		}
+	} else {
+		remove_role( 'deactivated' );
+	}
+}

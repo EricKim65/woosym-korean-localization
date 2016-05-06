@@ -9,7 +9,7 @@ class WSKL_Extension_Module {
 		wskl_load_module( '/includes/class-wskl-shipping-tracking.php', 'enable_ship_track' );
 
 		/** 바로 구매 */
-		wskl_load_module( '/includes/lib/class-direct-purchase.php', 'enable_direct_purchase' );
+		wskl_load_module( '/includes/class-wskl-direct-purchase.php', 'enable_direct_purchase' );
 
 		/** 다보리 배송 */
 		wskl_load_module( '/includes/class-wskl-shipping-method.php', 'enable_korean_shipping' );

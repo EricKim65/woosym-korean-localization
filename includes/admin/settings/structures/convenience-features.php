@@ -7,33 +7,22 @@ $agent_default = $agents_keys[0];
 // members description
 $members_description = __( '회원 등록, 탈퇴 기능을 제공합니다. 상품 페이지의 배송과 환불의 약관도 간편히 작성할 수 있습니다.', 'wskl' );
 $members_description .= '<br />';
-$members_description .= sprintf(
-	                        __( '※ 이 기능은 %s이 설치, 활성화 되어 있어야 합니다.', 'wskl' ),
-	                        wskl_html_anchor(
-		                        __( 'WP-Members 플러그인(무료)', 'wskl' ),
-		                        array( 'href' => 'https://wordpress.org/plugins/wp-members/', 'target' => '_blank' ),
-		                        TRUE
-	                        )
-                        ) . ' ';
-
-if ( wskl_is_option_enabled( 'enable_dabory_members' ) ) {
-	$members_description .= wskl_html_anchor(
-		__( '다보리 멤버스 설정으로 이동', 'wskl' ),
-		array( 'href' => wskl_wp_members_url() ),
-		TRUE
-	);
-}
+$members_description .= wskl_inform_plugin_dependency(
+	'enable_dabory_members',                               // 안내문 출력 조건이 되는 옵션 이름
+	__( 'WP-Members 플러그인(무료)', 'wskl' ),               // 의존 플러그인의 이름
+	'https://wordpress.org/plugins/wp-members/',           // 의존 플러그인의 URL
+	__( '다보리 멤버스 설정으로 이동', 'wskl' ),               // 이 옵션이 켜져 있을 때 생성되는 우리 플러그인의 설정 링크 텍스트
+	wskl_wp_members_url()                                  // 우리 플러그인의 설정 URL
+);
 
 $sms_description = __( '문자 메시지를 보낼 수 있습니다!', 'wskl' );
-
-if ( wskl_is_option_enabled( 'enable_dabory_sms' ) ) {
-	$sms_description .= '<br/>';
-	$sms_description .= wskl_html_anchor(
+$sms_description .= '<br />' . wskl_inform_plugin_dependency(
+		'enable_dabory_sms',
+		'',
+		'',
 		__( '※ 다보리 SMS 설정으로 이동', 'wskl' ),
-		array( 'href' => wskl_dabory_sms_url() ),
-		TRUE
+		wskl_dabory_sms_url()
 	);
-}
 
 $convenience_features = array(
 	'title'       => __( '편의기능(C)', 'wskl' ),

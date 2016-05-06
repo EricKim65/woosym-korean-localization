@@ -136,8 +136,16 @@ if ( ! class_exists( 'WSKL_Plugins_React' ) ) :
 		 */
 		public static function wp_members() {
 
-			if ( wskl_woocommerce_found() && wskl_is_option_enabled( 'enable_dabory_members' ) ) {
+			if ( wskl_is_option_enabled( 'enable_dabory_members' ) ) {
 				add_action( 'admin_notices', array( __CLASS__, 'output_wp_member_is_inactive' ) );
+			}
+
+			if ( wskl_is_option_enabled( 'enabled_inactive_accounts' ) ) {
+				add_action( 'admin_notices', array( __CLASS__, 'output_inactive_accounts' ) );
+
+				if ( ! defined( 'DISABLE_WP_CRON' ) || ! DISABLE_WP_CRON ) {
+					add_action( 'admin_notices', array( __CLASS__, 'output_cron_is_disabled' ) );
+				}
 			}
 		}
 
@@ -152,6 +160,33 @@ if ( ! class_exists( 'WSKL_Plugins_React' ) ) :
 				'<div class="error notice"><p>%s</p></div>',
 				__(
 					'다보리 알림: WP Members 플러그인이 비활성화되어 있습니다. 다보리 멤버스의 기능을 사용하려면 이 플러그인을 활성화시켜 주세요.',
+					'wskl'
+				)
+			);
+		}
+
+		/**
+		 * @callback
+		 * @action     admin_notices
+		 * @used-by    WSKL_Plugins_React::wp_members()
+		 */
+		public static function output_inactive_accounts() {
+
+			printf(
+				'<div class="error notice"><p>%s</p></div>',
+				__(
+					'다보리 알림: WP Members 플러그인이 비활성화되어 있습니다. 휴면계정 관리 기능을 사용하려면 이 플러그인을 활성화시켜 주세요.',
+					'wskl'
+				)
+			);
+		}
+
+		public static function output_cron_is_disabled() {
+
+			printf(
+				'<div class="error notice"><p>%s</p></div>',
+				__(
+					'다보리 알림: 크론 사용이 중지되어 있습니다. 휴면계정 관리 기능을 사용하려면 크론을 사용해야 합니다.',
 					'wskl'
 				)
 			);

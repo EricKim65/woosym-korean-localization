@@ -1,5 +1,14 @@
 <?php
 
+$inactive_account_description = __( '휴면계정 관리 기능을 활성화합니다.', 'wskl' ) . '<br />'
+                                . wskl_inform_plugin_dependency(
+	                                'enable_inactive_accounts',
+	                                __( 'WP-Members 플러그인(무료)', 'wskl' ),
+	                                'https://wordpress.org/plugins/wp-members/',
+	                                __( '휴면계정 관리 설정으로 이동', 'wskl' ),
+	                                wskl_wp_members_url( 'inactive-accounts' )
+                                );
+
 $essential_features = array(
 	'title'       => __( '핵심기능(B)', 'wskl' ),
 	'description' => __(
@@ -11,6 +20,13 @@ $essential_features = array(
 			'id'          => 'enable_sym_checkout',
 			'label'       => __( '한국형 주소 찾기', 'wskl' ),
 			'description' => __( '한국형 주소 찾기와 결제 페이지를 활성화합니다.', 'wskl' ),
+			'type'        => 'checkbox',
+			'default'     => '',
+		),
+		array(
+			'id'          => 'enable_inactive_accounts',
+			'label'       => __( '휴면계정 관리', 'wskl' ),
+			'description' => $inactive_account_description,
 			'type'        => 'checkbox',
 			'default'     => '',
 		),

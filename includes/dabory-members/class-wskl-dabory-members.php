@@ -12,14 +12,12 @@ wskl_check_abspath();
  */
 class WSKL_Dabory_Members {
 
-	const WP_MEMBERS = 'wp-members/wp-members.php';
-
 	/**
 	 * initialization
 	 */
 	public static function init() {
 
-		if ( wskl_is_plugin_inactive( self::WP_MEMBERS ) ) {
+		if ( wskl_is_plugin_inactive( WP_MEMBERS_PLUGIN ) ) {
 			return;
 		}
 

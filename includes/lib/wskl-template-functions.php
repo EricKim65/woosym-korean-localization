@@ -38,8 +38,10 @@ function wskl_html_open_tag( $tag, array $params = array(), $self_closing = FALS
 			$value = implode( ' ', $value );
 		}
 
-		$html .= call_user_func_array( 'wskl_html_attr',
-		                               array( $attr, $value, $esc_func ) );
+		$html .= call_user_func_array(
+			'wskl_html_attr',
+			array( $attr, $value, $esc_func )
+		);
 	}
 
 	$html .= $self_closing ? '/>' : '>';
@@ -108,4 +110,55 @@ function wskl_html_anchor( $text, array $params = array(), $return = FALSE ) {
 	}
 
 	echo $out;
+}
+
+/**
+ * 플러그인이 가진 의존성 및 설정 페이지를 출력하는 템플릿
+ *
+ * @param string $option_name               옵션 이름. Prefixing 하지 않음.
+ * @param string $plugin_name               의존 외부 플러그인의 이름
+ * @param string $plugin_link               의존 외부 플러그인의 URL
+ * @param string $setting_page_name         우리 플러그인 안에서 설정 텍스트
+ * @param string $setting_page_when_enabled 우리 플러그인 안에서 설정 URL
+ *
+ * @return string
+ */
+function wskl_inform_plugin_dependency( $option_name, $plugin_name = '', $plugin_link = '', $setting_page_name = '', $setting_page_when_enabled = '' ) {
+
+	$description = '';
+
+	if ( ! empty( $plugin_name ) ) {
+
+		$description = sprintf(
+			               apply_filters(
+				               'wskl_inform_plugin_dependency',
+				               __( '※ 이 기능은 %s이 설치, 활성화 되어 있어야 합니다.', 'wskl' ),
+				               $option_name,
+				               $plugin_name,
+				               $plugin_link,
+				               $setting_page_name,
+				               $setting_page_when_enabled
+			               ),
+			               wskl_html_anchor(
+				               $plugin_name,
+				               array( 'href' => $plugin_link, 'target' => '_blank' ),
+				               TRUE
+			               )
+		               ) . ' ';
+	}
+
+
+	if ( wskl_is_option_enabled( $option_name ) && ! empty( $setting_page_name ) ) {
+
+		$description .= apply_filters(
+			                'wskl_inform_plugin_dependency_setting_page',
+			                wskl_html_anchor(
+				                $setting_page_name,
+				                array( 'href' => $setting_page_when_enabled ),
+				                TRUE
+			                )
+		                ) . ' ';
+	}
+
+	return $description;
 }

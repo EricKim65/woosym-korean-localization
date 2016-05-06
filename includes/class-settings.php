@@ -42,6 +42,14 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			10,
 			3
 		);
+
+		/** 휴면회원 업데이트 */
+		add_action(
+			'update_option_' . wskl_get_option_name( 'enable_inactive_accounts' ),
+			'callback_enable_inactive_accounts',
+			10,
+			3
+		);
 	}
 
 	/**

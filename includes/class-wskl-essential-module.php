@@ -5,7 +5,8 @@ class WSKL_Essential_Module {
 
 	public static function init() {
 
-		// 회사명 입력 가능
+		// 휴면계정 설정
+		wskl_load_module( '/includes/inactive-accounts/class-wskl-inactive-accounts.php', 'enable_inactive_accounts' );
 
 		// 한국 원화 표시 설정
 		if ( wskl_is_option_enabled( 'korean_won' ) ) {
@@ -57,6 +58,10 @@ class WSKL_Essential_Module {
 	/**
 	 * @callback
 	 * @filter    woocommerce_currencies
+	 *
+	 * @param  array $currencies
+	 *
+	 * @return array
 	 */
 	public static function callback_currencies( $currencies ) {
 

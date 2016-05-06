@@ -1,5 +1,7 @@
 <?php
 
+wskl_check_abspath();
+
 
 class WSKL_Dabory_Members_Admin_Settings {
 
@@ -16,8 +18,8 @@ class WSKL_Dabory_Members_Admin_Settings {
 	 */
 	public static function update_dabory_members() {
 
-		if ( wskl_GET( 'tab' ) != 'dabory-members' ||
-		     wskl_POST( 'action' ) != 'update_dabory_members'
+		if ( wskl_GET( 'tab' ) != 'dabory-members'
+		     || wskl_POST( 'action' ) != 'update_dabory_members'
 		) {
 			return;
 		}
