@@ -110,7 +110,13 @@ function wskl_members_closed_context_button( $display ) {
  */
 function wskl_members_page_option_tags( $chosen_id = FALSE ) {
 
-	$pages    = get_pages();
+	$pages = get_pages(
+		array(
+			'post_type'   => 'page',
+			'post_status' => 'publish,private',
+		)
+	);
+
 	$selected = $chosen_id ? 'selected' : '';
 	$buffer   = array(
 		"<option value=\"-1\" {$selected}>" .
