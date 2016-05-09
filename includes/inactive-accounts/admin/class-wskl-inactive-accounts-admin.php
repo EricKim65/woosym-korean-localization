@@ -304,9 +304,9 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 
 		$this->cancel_event();
 
-		$next_midnight = wskl_get_midnight_timestamp() + DAY_IN_SECONDS;
+		$next_scheduled = time() + 300;
 
-		wp_schedule_event( $next_midnight, 'wskl_inactive_accounts_check_interval', 'wskl_inactive_accounts_check' );
+		wp_schedule_event( $next_scheduled, 'wskl_inactive_accounts_check_interval', 'wskl_inactive_accounts_check' );
 	}
 
 	public function cancel_event() {
