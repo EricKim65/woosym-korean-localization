@@ -419,7 +419,7 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		}
 
 		if ( wp_mail( $mail_address, __( '휴면 계정 테스트 메일입니다.', 'wskl' ), __( '휴면 계정 테스트 메일입니다.', 'wskl' ) ) ) {
-			_e( '테스트 메일을 보냈습니다.', 'wskl' );
+			_e( '테스트 메일을 보냈습니다. 스팸 메일함 확인도 잊지 마세요.', 'wskl' );
 		} else {
 			_e( '메일 발송 에러. 로그를 확인하세요.', 'wskl' );
 		}
