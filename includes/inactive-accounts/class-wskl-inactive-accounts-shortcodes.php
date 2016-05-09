@@ -21,11 +21,14 @@ class WSKL_Inactive_Accounts_Shortcodes {
 		$post_deactivation = wskl_get_option( 'inactive-accounts_post_deactivation' );
 
 		if ( ! $active_span || $post_alert < 1 || $post_deactivation < 1 ) {
+
 			$error_message = "Shortcode processing halted due to invalid setting values."
 			                 . "\$active_span=$active_span, "
 			                 . "\$post_alert=$post_alert, "
 			                 . "\$post_deactivation=$post_deactivation. ";
 			error_log( $error_message );
+
+			return;
 		}
 
 		$this->active_span = $active_span;

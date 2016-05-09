@@ -107,25 +107,27 @@ if ( ! class_exists( 'WSKL_WP_Members_Settings' ) ) :
 
 			wskl_verify_nonce( $this->nonce_action, wskl_POST( $this->nonce_param ) );
 
-			/** @var array|string $new_options string when error. */
-			$new_options = $this->extract_option_values();
+			/** @var array $extracted two keys are present: options, and error. */
+			$extracted = $this->extract_option_values();
 
-			if ( is_array( $new_options ) ) {
-				foreach ( $new_options as $key => $option_value ) {
+			if ( is_array( $extracted['options'] ) ) {
+				foreach ( $extracted['options'] as $key => $option_value ) {
 					$this->update_option( $key, $option_value );
 				}
-			} else {
+			}
+
+			if ( isset( $extracted['error'] ) && ! empty( $extracted['error'] ) ) {
 				add_settings_error(
 					$this->id,
 					'validation_error',
-					$new_options,
+					$extracted,
 					'error'
 				);
 
 				return;
 			}
 
-			do_action( 'wskl_wp_members_update_settings', $new_options );
+			do_action( 'wskl_wp_members_update_settings', $extracted );
 
 			/** success notice */
 			add_settings_error(
@@ -211,7 +213,11 @@ if ( ! class_exists( 'WSKL_WP_Members_Settings' ) ) :
 		 */
 		public function extract_option_values() {
 
-			$output  = array();
+			$output = array(
+				'options' => array(),
+				'error'   => NULL,
+			);
+
 			$options = array();
 
 			$sections = &$this->fields['sections'];
@@ -247,13 +253,15 @@ if ( ! class_exists( 'WSKL_WP_Members_Settings' ) ) :
 
 				if ( is_callable( $validate ) ) {
 					/** @var true|string $validated */
-					$validated = $validate( $val );
+					$validated = call_user_func( $validate, $val );
 					if ( TRUE !== $validated ) {
-						return sprintf( __( '항목 \'%s\' 오류: ', 'wskl' ) . $validated, $label );
+						$output['error'] = sprintf( __( '항목 \'%s\' 오류: ', 'wskl' ) . $validated, $label );
+
+						return $output;
 					}
 				}
 
-				$output[ $key ] = $val;
+				$output['options'][ $key ] = $val;
 			}
 
 			return $output;

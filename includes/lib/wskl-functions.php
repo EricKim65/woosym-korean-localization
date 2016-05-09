@@ -126,7 +126,7 @@ function wskl_get_from_assoc(
 	}
 
 	if ( is_callable( $sanitize ) ) {
-		$v = $sanitize( $v );
+		$v = call_user_func( $sanitize, $v );
 	}
 
 	return $v;
