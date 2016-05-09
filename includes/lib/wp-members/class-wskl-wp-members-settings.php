@@ -120,7 +120,7 @@ if ( ! class_exists( 'WSKL_WP_Members_Settings' ) ) :
 				add_settings_error(
 					$this->id,
 					'validation_error',
-					$extracted,
+					$extracted['error'],
 					'error'
 				);
 
