@@ -10,7 +10,9 @@
 	</span>
 	<script type="text/javascript">
 		(function ($) {
-			$('button#test_email').click(function () {
+			var button = $('button#test_email');
+
+			button.click(function () {
 				$.ajax(ajaxurl, {
 					"data": {
 						"action": "wskl_inactive-accounts_test_email",
@@ -18,7 +20,7 @@
 					},
 					'method': 'post',
 					'success': function (data) {
-						$.closest('li').child('span.description').html(data);
+						button.closest('li').children('span.description').html(data);
 					}
 				})
 			});
