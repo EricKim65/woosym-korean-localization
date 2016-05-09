@@ -189,11 +189,13 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 							'default' => '',
 						),
 						array(
-							'type'    => 'role_select',
-							'key'     => 'target_role',
-							'label'   => __( '대상 역할', 'wskl' ),
-							'desc'    => __( '선택한 사용자 역할에만 휴면 계정 관리를 합니다.', 'wskl' ),
-							'default' => '',
+							'type'     => 'role_select',
+							'key'      => 'target_role',
+							'label'    => __( '대상 역할', 'wskl' ),
+							'desc'     => __( '선택한 사용자 역할에만 휴면 계정 관리를 합니다.', 'wskl' ),
+							'default'  => '',
+							'sanitize' => 'sanitize_text_field',
+							'validate' => array( $this, 'validate_non_administrator_role' ),
 						),
 					),
 
@@ -265,13 +267,11 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		$next_midnight = wskl_get_midnight_timestamp() + DAY_IN_SECONDS;
 
 		wp_schedule_event( $next_midnight, 'wskl_inactive_accounts_check_interval', 'wskl_inactive_accounts_check' );
-		wp_schedule_event( time() + 10, 'wskl_inactive_accounts_TEST_interval', 'wskl_inactive_accounts_test' );
 	}
 
 	public function cancel_event() {
 
 		wp_clear_scheduled_hook( 'wskl_inactive_accounts_check' );
-		wp_clear_scheduled_hook( 'wskl_inactive_accounts_test_hook' );
 	}
 
 	public function section_footer_area() {
