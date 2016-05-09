@@ -196,11 +196,6 @@ class WSKL_Inactive_Accounts {
 			'display'  => sprintf( _n( '휴면계정: 매 %d 시간 마다.', '휴면계정: 매 %d 시간 마다.', 'wskl' ), $interval ),
 		);
 
-		$schedules['wskl_inactive_accounts_TEST_interval'] = array(
-			'interval' => 20,
-			'display'  => '테스트: 매 20초마다.',
-		);
-
 		return $schedules;
 	}
 
