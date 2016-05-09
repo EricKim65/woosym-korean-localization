@@ -358,6 +358,15 @@ if ( ! class_exists( 'WSKL_WP_Members_Settings' ) ) :
 
 			return __( '정확한 이메일 주소를 입력해 주세요.', 'wskl' );
 		}
+
+		public function validate_non_administrator_role( $value ) {
+
+			if ( $value != 'administrator' ) {
+				return TRUE;
+			}
+
+			return __( '관리자는 선택할 수 없습니다.', 'wskl' );
+		}
 	}
 
 endif;
