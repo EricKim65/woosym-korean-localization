@@ -126,6 +126,7 @@ class WSKL_Inactive_Accounts {
 
 		wskl_load_module( '/includes/inactive-accounts/class-wskl-inactive-accounts-cron-jobs.php' );
 		$job = new WSKL_Inactive_Accounts_Cron_Jobs();
+		$job->fill_user_login_field();
 		$job->do_inactive_account_filtering();
 
 		die();

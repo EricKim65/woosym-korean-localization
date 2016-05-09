@@ -3,6 +3,12 @@
 require_once( WSKL_PATH . '/includes/lib/wp-members/class-wskl-wp-members-settings.php' );
 
 
+/**
+ * 휴면계정 관리 관리자 제어
+ *
+ * Class WSKL_Inactive_Accounts_Admin
+ *
+ */
 class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 
 	public $id = 'inactive-accounts';
@@ -25,12 +31,19 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 			$this->last_login_column_hooks();
 		}
 
+		/** 설정 페이지의 푸터 영역에 안내 메시지 삽입 */
 		add_action( 'wskl_wp_members_section_footer_footer_area', array( $this, 'section_footer_area' ), 10, 0 );
+
+		/** 테스트 메일 송신 버튼 삽입 */
 		add_action( 'wskl_wp_members_field_test_email', array( $this, 'field_test_email' ), 10, 0 );
 
+		/** 테스트 메일 AJAX 처리 */
 		add_action( 'wp_ajax_wskl_inactive-accounts_test_email', array( $this, 'send_test_email' ) );
 	}
 
+	/**
+	 * 로그인 정보 출력 칼럼 관련 작업
+	 */
 	private function last_login_column_hooks() {
 
 		$this->gmt_offset = wskl_get_gmt_offset() * HOUR_IN_SECONDS;
@@ -54,6 +67,14 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		add_filter( 'manage_users_custom_column', array( $this, 'display_custom_columns' ), 10, 3 );
 	}
 
+	/**
+	 * @callback
+	 * @filter       manage_users_columns
+	 *
+	 * @param $columns
+	 *
+	 * @return mixed
+	 */
 	public function add_columns( $columns ) {
 
 		$columns['wskl_last_login']  = __( '마지막 로그인', 'wskl' );
@@ -63,6 +84,14 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		return $columns;
 	}
 
+	/**
+	 * @callback
+	 * @filter      manage_users_sortable_columns
+	 *
+	 * @param $sortable_columns
+	 *
+	 * @return mixed
+	 */
 	public function sortable_columns( $sortable_columns ) {
 
 		$sortable_columns['wskl_last_login']  = 'wskl_last_login';
@@ -72,6 +101,16 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		return $sortable_columns;
 	}
 
+	/**
+	 * @callback
+	 * @filter      manage_users_custom_column
+	 *
+	 * @param $value
+	 * @param $column_name
+	 * @param $user_id
+	 *
+	 * @return string|void
+	 */
 	public function display_custom_columns( $value, $column_name, $user_id ) {
 
 		switch ( $column_name ) {
@@ -105,6 +144,7 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		return wskl_datetime_string( $timestamp, TRUE );
 	}
 
+	/** 페이지의 세팅 요소를 출력하기 위한 구조 서술. */
 	public function get_fields() {
 
 		return array(
@@ -274,6 +314,10 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		wp_clear_scheduled_hook( 'wskl_inactive_accounts_check' );
 	}
 
+	/**
+	 * @callback
+	 * @action    wskl_wp_members_section_footer_footer_area
+	 */
 	public function section_footer_area() {
 
 		echo '<br/>';
@@ -328,13 +372,23 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 			) . '</p>';
 
 		echo '<h4>' . __( '계정 복구에 대해', 'wskl' ) . '</h4>';
+		echo '<p>' . __( '휴면 처리된 계정 복구는 WP-Members 플러그인의 패스워드 복구 기능을 이용해 진행할 수 있습니다.', 'wskl' )
+		     . '</p>';
 	}
 
+	/**
+	 * @callback
+	 * @action    wskl_wp_members_field_test_email
+	 */
 	public function field_test_email() {
 
 		include 'code.php';
 	}
 
+	/**
+	 * @callback
+	 * @action    wp_ajax_wskl_inactive-accounts_test_email
+	 */
 	public function send_test_email() {
 
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], '_wpnonce' ) ) {

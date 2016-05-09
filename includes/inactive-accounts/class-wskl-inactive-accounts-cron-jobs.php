@@ -1,6 +1,9 @@
 <?php
 
 
+/**
+ * Class WSKL_Inactive_Accounts_Cron_Jobs
+ */
 class WSKL_Inactive_Accounts_Cron_Jobs {
 
 	private $cron_job_id = NULL;
@@ -93,6 +96,7 @@ class WSKL_Inactive_Accounts_Cron_Jobs {
 		remove_filter( 'wp_mail_from', array( __CLASS__, 'mail_from' ) );
 		remove_filter( 'wp_mail_from_name', array( __CLASS__, 'mail_from_name' ) );
 
+		// save recent jobs, up to 7.
 		$recent_jobs                       = wskl_get_option( 'inactive-accounts_recent_jobs', array() );
 		$recent_jobs[ $this->cron_job_id ] = array(
 			'timestamp'          => $this->cron_job_id,
@@ -138,6 +142,11 @@ class WSKL_Inactive_Accounts_Cron_Jobs {
 		WSKL_Inactive_Accounts_Email::send_email( $to_disabled, $post_id, $shortcodes );
 	}
 
+	/**
+	 * 로그인 필드 값이 없는 경우는 크론 작업 시간으로 채워 줌.
+	 *
+	 * @used-by WSKL_Inactive_Accounts::do_interval_jobs()
+	 */
 	public function fill_user_login_field() {
 
 		$target_role = wskl_get_option( 'inactive-accounts_target_role' );
@@ -150,13 +159,39 @@ class WSKL_Inactive_Accounts_Cron_Jobs {
 			return;
 		}
 
-		$key   = wskl_get_option_name( 'last_login' );
-		$users = wskl_get_users_with_missing_meta_key( $key, $target_role );
-		$now   = time();
+		// Get users whose last_login meta keys are missing, or their meta values are 0 or blank.
+		$key  = wskl_get_option_name( 'last_login' );
+		$args = array(
+			'role'       => $target_role,
+			'meta_query' => array(
+				'relation' => 'OR',
+				array(
+					'key'     => $key,
+					'value'   => 0,
+					'type'    => 'NUMERIC',
+					'compare' => 'NOT EXISTS',
+				),
+				array(
+					'key'     => $key,
+					'value'   => 0,
+					'type'    => 'NUMERIC',
+					'compare' => '=',
+				),
+				array(
+					'key'     => $key,
+					'value'   => '',
+					'type'    => 'CHAR',
+					'compare' => '=',
+				),
+			),
+		);
+
+		$query   = new WP_User_Query( $args );
+		$results = $query->get_results();
 
 		/** @var WP_User $user */
-		foreach ( $users as $user ) {
-			update_user_meta( $user->ID, $key, $now );
+		foreach ( $results as $user ) {
+			update_user_meta( $user->ID, $key, $this->cron_job_id );
 		}
 	}
 }

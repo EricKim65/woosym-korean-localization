@@ -299,23 +299,3 @@ function wskl_deactivate_account( WP_User $user, $timestamp, array $meta_keys_pr
 
 	wskl_set_user_deactivated( $user->ID, $timestamp );
 }
-
-function wskl_get_users_with_missing_meta_key( $meta_key, $role ) {
-
-	$query = new WP_User_Query(
-		array(
-			'role'       => $role,
-			'meta_query' => array(
-				'relation' => 'AND',
-				array(
-					'key'     => $meta_key,
-					'value'   => 0,
-					'type'    => 'NUMERIC',
-					'compare' => 'NOT EXISTS',
-				),
-			),
-		)
-	);
-
-	return $query->get_results();
-}
