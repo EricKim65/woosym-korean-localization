@@ -1,5 +1,5 @@
 <?php
-
+require_once 'functions.php';
 
 /**
  * Class WSKL_Inactive_Accounts_Cron_Jobs
@@ -13,39 +13,14 @@ class WSKL_Inactive_Accounts_Cron_Jobs {
 		$this->cron_job_id = time();
 	}
 
-	public static function content_type() {
-
-		return 'text/html';
-	}
-
-	public static function mail_from( $from_email ) {
-
-		$mail_address = wskl_get_option( 'inactive-accounts_sender_address' );
-		if ( $mail_address && is_email( $mail_address ) ) {
-			return $mail_address;
-		}
-
-		return $from_email;
-	}
-
-	public static function mail_from_name( $from_name ) {
-
-		$name = wskl_get_option( 'inactive-accounts_sender_name' );
-		if ( $name ) {
-			return $name;
-		}
-
-		return $from_name;
-	}
-
 	public function __destruct() {
 	}
 
 	public function do_inactive_account_filtering() {
 
-		add_filter( 'wp_mail_content_type', array( __CLASS__, 'content_type' ), 10, 0 );
-		add_filter( 'wp_mail_from', array( __CLASS__, 'mail_from' ) );
-		add_filter( 'wp_mail_from_name', array( __CLASS__, 'mail_from_name' ) );
+		add_filter( 'wp_mail_content_type', 'wskl_email_content_type', 10, 0 );
+		add_filter( 'wp_mail_from', 'wskl_email_from' );
+		add_filter( 'wp_mail_from_name', 'wskl_email_from_name' );
 
 		$post_alert        = wskl_get_option( 'inactive-accounts_post_alert' );
 		$post_deactivation = wskl_get_option( 'inactive-accounts_post_deactivation' );
@@ -92,9 +67,9 @@ class WSKL_Inactive_Accounts_Cron_Jobs {
 		$deactivation_spent = $finish - $start;
 		error_log( sprintf( 'Deactivate job finished. Execution time: %.04fms', ( $deactivation_spent ) * 1000 ) );
 
-		remove_filter( 'wp_mail_content_type', array( __CLASS__, 'content_type' ) );
-		remove_filter( 'wp_mail_from', array( __CLASS__, 'mail_from' ) );
-		remove_filter( 'wp_mail_from_name', array( __CLASS__, 'mail_from_name' ) );
+		remove_filter( 'wp_mail_content_type', 'wskl_email_content_type' );
+		remove_filter( 'wp_mail_from', 'wskl_email_from' );
+		remove_filter( 'wp_mail_from_name', 'wskl_email_from_name' );
 
 		// save recent jobs, up to 7.
 		$recent_jobs                       = wskl_get_option( 'inactive-accounts_recent_jobs', array() );

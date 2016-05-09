@@ -409,6 +409,10 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 			}
 		);
 
+		add_filter( 'wp_mail_content_type', 'wskl_email_content_type', 10, 0 );
+		add_filter( 'wp_mail_from', 'wskl_email_from' );
+		add_filter( 'wp_mail_from_name', 'wskl_email_from_name' );
+
 		$mail_address = wskl_get_option( 'inactive-accounts_sender_address' );
 		if ( ! is_email( $mail_address ) ) {
 			_e( '메일 주소가 정확하지 않습니다.', 'wskl' );
@@ -419,6 +423,10 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		} else {
 			_e( '메일 발송 에러. 로그를 확인하세요.', 'wskl' );
 		}
+
+		remove_filter( 'wp_mail_content_type', 'wskl_email_content_type' );
+		remove_filter( 'wp_mail_from', 'wskl_email_from' );
+		remove_filter( 'wp_mail_from_name', 'wskl_email_from_name' );
 
 		die();
 	}

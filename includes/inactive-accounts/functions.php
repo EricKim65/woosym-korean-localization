@@ -299,3 +299,28 @@ function wskl_deactivate_account( WP_User $user, $timestamp, array $meta_keys_pr
 
 	wskl_set_user_deactivated( $user->ID, $timestamp );
 }
+
+function wskl_email_content_type() {
+
+	return 'text/html';
+}
+
+function wskl_email_from( $from_email ) {
+
+	$mail_address = wskl_get_option( 'inactive-accounts_sender_address' );
+	if ( $mail_address && is_email( $mail_address ) ) {
+		return $mail_address;
+	}
+
+	return $from_email;
+}
+
+function wskl_email_from_name( $from_name ) {
+
+	$name = wskl_get_option( 'inactive-accounts_sender_name' );
+	if ( $name ) {
+		return $name;
+	}
+
+	return $from_name;
+}
