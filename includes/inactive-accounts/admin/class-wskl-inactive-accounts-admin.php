@@ -252,7 +252,6 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 							'attrs'    => array(
 								'type'  => 'text',
 								'class' => 'text',
-								'size'  => '10',
 							),
 							'default'  => '',
 							'sanitize' => 'sanitize_email',
@@ -266,7 +265,6 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 							'attrs'    => array(
 								'type'  => 'text',
 								'class' => 'text',
-								'size'  => '10',
 							),
 							'default'  => '',
 							'sanitize' => 'sanitize_text_field',
