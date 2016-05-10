@@ -39,6 +39,9 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 
 		/** 테스트 메일 AJAX 처리 */
 		add_action( 'wp_ajax_wskl_inactive-accounts_test_email', array( $this, 'send_test_email' ) );
+
+		/** 수동 크론 콜백 동작 */
+		add_action( 'wp_ajax_manual_cron_job', array( $this, 'do_manual_cron_job' ) );
 	}
 
 	/**
@@ -229,16 +232,14 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 							'default' => '',
 						),
 						array(
-							'type'     => 'role_select',
-							'key'      => 'target_role',
-							'label'    => __( '대상 역할', 'wskl' ),
-							'desc'     => __( '선택한 사용자 역할에만 휴면 계정 관리를 합니다.', 'wskl' ),
-							'default'  => '',
-							'sanitize' => 'sanitize_text_field',
-							'validate' => array( $this, 'validate_non_administrator_role' ),
+							'type'         => 'role_checkbox',
+							'key'          => 'target_role',
+							'label'        => __( '대상 역할', 'wskl' ),
+							'desc'         => __( '선택한 사용자 역할에만 휴면 계정 관리를 합니다.', 'wskl' ),
+							'default'      => '',
+							'role_exclude' => array( 'administrator', 'wskl_deactivated' ),
 						),
 					),
-
 				),
 				array(
 					'title'  => '',
@@ -248,20 +249,25 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 							'type'     => 'input',
 							'key'      => 'sender_address',
 							'label'    => __( '발신 이메일', 'wskl' ),
-							'desc'     => __( '발신자 주소를 별도로 설정할 수 있습니다.', 'wskl' ),
+							'desc'     => sprintf(
+								__( '발신자 주소를 별도로 설정할 수 있습니다. 비워두면 사이트 관리자의 이메일(%s)을 씁니다.', 'wskl' ),
+								get_bloginfo( 'admin_email' )
+							),
 							'attrs'    => array(
 								'type'  => 'text',
 								'class' => 'text',
 							),
 							'default'  => '',
 							'sanitize' => 'sanitize_email',
-							'validate' => array( $this, 'validate_email' ),
 						),
 						array(
 							'type'     => 'input',
 							'key'      => 'sender_name',
 							'label'    => __( '발신자 이름', 'wskl' ),
-							'desc'     => __( '발신자 이름을 별도로 설정할 수 있습니다.', 'wskl' ),
+							'desc'     => sprintf(
+								__( '발신자 이름을 별도로 설정할 수 있습니다. 비워두면 사이트 제목(%s)을 씁니다.', 'wskl' ),
+								get_bloginfo( 'name' )
+							),
 							'attrs'    => array(
 								'type'  => 'text',
 								'class' => 'text',
@@ -302,7 +308,7 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 
 		$this->cancel_event();
 
-		$next_scheduled = time() + 300;
+		$next_scheduled = wskl_get_midnight_timestamp() + DAY_IN_SECONDS;
 
 		wp_schedule_event( $next_scheduled, 'wskl_inactive_accounts_check_interval', 'wskl_inactive_accounts_check' );
 	}
@@ -326,46 +332,22 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		if ( ! $recent_jobs ) {
 			echo __( '작업 기록이 없습니다.' );
 		} else {
-
 			krsort( $recent_jobs );
-
-			echo '<table class="wide widefat">';
-			echo '<thead><tr>';
-			echo '<th>' . __( '작업시간', 'wskl' ) . '</th>';
-			echo '<th>' . __( '휴면 통지', 'wskl' ) . '</th>';
-			echo '<th>' . __( '휴면 처리', 'wskl' ) . '</th>';
-			echo '</tr></thead>';
-			echo '<tbody>';
-			foreach ( $recent_jobs as $jobs ) {
-				$timestamp          = wskl_get_from_assoc( $jobs, 'timestamp' );
-				$total_notified     = wskl_get_from_assoc( $jobs, 'total_notified' );
-				$total_disabled     = wskl_get_from_assoc( $jobs, 'total_disabled' );
-				$notification_spent = wskl_get_from_assoc( $jobs, 'notification_spent' );
-				$deactivation_spent = wskl_get_from_assoc( $jobs, 'deactivation_spent' );
-
-				echo '<tr>';
-				echo '<td>' . wskl_datetime_string( $timestamp ) . '</td>';
-				echo '<td>' . sprintf(
-						_n( '%s명', '%s명', $total_notified, 'wskl' ),
-						$total_notified
-					) . '&nbsp;' . sprintf( '(%.03fms)', $notification_spent * 1000 ) . '</td>';
-				echo '<td>' . sprintf(
-						_n( '%s명', '%s명', $total_disabled, 'wskl' ),
-						$total_disabled
-					) . '&nbsp;' . sprintf( '(%.03fms)', $deactivation_spent * 1000 ) . '</td>';
-				echo '</tr>';
-			}
-			echo '</tbody></table>';
+			include 'recent-jobs-code.php';
 		}
 
 		echo '<br/>';
 		echo '<h4>' . __( '휴면 계정을 처음 사용하는 분께 알림', 'wskl' ) . '</h4>';
 		echo '<p>' . __(
-				'워드프레스와 우커머스는 \'마지막 로그인\' 시각을 기록하지 않습니다. 그러므로 본 모듈을 처음 작동시킨 시점에는 마지막 로그인 시각 데이터가 존재하지 않습니다.<br/>이 데이터는 모듈 작동 중 각기 회원이 로그인한 시점에 매번 갱신됩니다.',
+				'워드프레스와 우커머스는 \'마지막 로그인\' 시각을 기록하지 않습니다. 그러므로 본 모듈을 처음 작동시킨 시점에는 마지막 로그인 시각 데이터가 존재하지 않습니다.<br/>로그인 시각 데이터는 모듈 작동 중 각기 회원이 로그인한 시점에 매번 갱신됩니다.',
 				'wskl'
 			) . '</p>';
 		echo '<p>' . __(
 				'또한 본 모듈은 정상적인 휴면 관리를 위해 검사 주기마다 회원의 누락된 마지막 로그인 시간을 채워 넣습니다.<br/>이 때 마지막 로그인 시각은 검사 당시 시간으로 간주됩니다.',
+				'wskl'
+			) . '</p>';
+		echo '<p>' . __(
+				'모든 설정값이 제대로 채워져 있어야 정상 동작합니다. 그리고 설정 저장 버튼을 누르면 검사 시간이 재편성됩니다.<br/>최초 검사 시간은 다음날 자정인 00시 00분부터 실행되며 매 검사 주기마다 반복됩니다. 단, 워드프레스의 크론은 사용자 방문에 의해 동작하므로 약간씩 오차가 발생할 수도 있습니다.',
 				'wskl'
 			) . '</p>';
 
@@ -380,7 +362,7 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 	 */
 	public function field_test_email() {
 
-		include 'code.php';
+		include 'test-email-code.php';
 	}
 
 	/**
@@ -425,6 +407,19 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		remove_filter( 'wp_mail_content_type', 'wskl_email_content_type' );
 		remove_filter( 'wp_mail_from', 'wskl_email_from' );
 		remove_filter( 'wp_mail_from_name', 'wskl_email_from_name' );
+
+		die();
+	}
+
+	/**
+	 * @callback
+	 * @action    wp_ajax_manual_cron_job
+	 */
+	public function do_manual_cron_job() {
+
+		wskl_verify_nonce( 'manual_cron_job_nonce', $_POST['manual_cron_job_nonce'] );
+
+		do_action( 'wskl_inactive_accounts_check' );
 
 		die();
 	}

@@ -189,16 +189,25 @@ function wskl_get_midnight_timestamp( $time = 'now', $gmt = FALSE ) {
  * - $timestamp <= $maximum_timestamp
  * - 휴면 처리를 통지 받은 회원.
  *
- * @param int    $maximum_timestamp 휴면 처리 기준 timestamp
- * @param string $role              휴먼 처리 대상 유저 역할
+ * @param int          $maximum_timestamp 휴면 처리 기준 timestamp
+ * @param string|array $role              휴먼 처리 대상 유저 역할
  *
  * @return array WP_User 객체의 array
  */
 function wskl_get_deactivation_staged_users( $maximum_timestamp, $role ) {
 
+	/** @var \wpdb $wpdb */
+	global $wpdb;
+
+	if ( is_array( $role ) ) {
+		$role_exp = '(' . implode( '|', $role ) . ')';
+	} else {
+		$role_exp = "($role)";
+	}
+
 	$query = new WP_User_Query(
 		array(
-			'role'       => $role,
+			// 'role'       => $role,
 			'meta_query' => array(
 				'relation' => 'AND',
 				array(
@@ -213,6 +222,11 @@ function wskl_get_deactivation_staged_users( $maximum_timestamp, $role ) {
 					'type'    => 'NUMERIC',
 					'compare' => '>',
 				),
+				array(
+					'key'     => "{$wpdb->prefix}capabilities",
+					'value'   => $role_exp,
+					'compare' => 'REGEXP',
+				),
 			),
 		)
 	);
@@ -225,19 +239,28 @@ function wskl_get_deactivation_staged_users( $maximum_timestamp, $role ) {
  * - $min_timestamp <= timestamp < $max_timestamp
  * - 이전에 통지 받지 않은 회원.
  *
- * @param int    $min_timestamp 통지 기준 최소 timestamp
- * @param int    $max_timestamp 통지 기준 최대 timestamp
- * @param string $role
+ * @param int          $min_timestamp 통지 기준 최소 timestamp
+ * @param int          $max_timestamp 통지 기준 최대 timestamp
+ * @param string|array $role
  *
  * @return array WP_User 객체의 array
  */
 function wskl_get_alert_staged_users( $min_timestamp, $max_timestamp, $role ) {
 
+	/** @var \wpdb $wpdb */
+	global $wpdb;
+
 	$key_name = wskl_get_option_name( 'last_login' );
+
+	if ( is_array( $role ) ) {
+		$role_exp = '(' . implode( '|', $role ) . ')';
+	} else {
+		$role_exp = "($role)";
+	}
 
 	$query = new WP_User_Query(
 		array(
-			'role'       => $role,
+			// 'role'       => $role,
 			'meta_query' => array(
 				'relation' => 'AND',
 				array(
@@ -257,6 +280,11 @@ function wskl_get_alert_staged_users( $min_timestamp, $max_timestamp, $role ) {
 					'value'   => 0,
 					'type'    => 'NUMERIC',
 					'compare' => 'NOT EXISTS',
+				),
+				array(
+					'key'     => "{$wpdb->prefix}capabilities",
+					'value'   => $role_exp,
+					'compare' => 'REGEXP',
 				),
 			),
 		)
@@ -293,9 +321,9 @@ function wskl_deactivate_account( WP_User $user, $timestamp, array $meta_keys_pr
 	// create random password, and replace an existing one.
 	wp_set_password( wp_generate_password( 22, TRUE, TRUE ), $user->ID );
 
-	// update user's role as deactivated
+	// update user's role as wskl_deactivated
 	$user->remove_role( $role_to_dismiss );
-	$user->add_role( 'deactivated' );
+	$user->add_role( 'wskl_deactivated' );
 
 	wskl_set_user_deactivated( $user->ID, $timestamp );
 }
@@ -305,22 +333,28 @@ function wskl_email_content_type() {
 	return 'text/html';
 }
 
-function wskl_email_from( $from_email ) {
+function wskl_email_from(
+	/** @noinspection PhpUnusedParameterInspection */
+	$from_email
+) {
 
 	$mail_address = wskl_get_option( 'inactive-accounts_sender_address' );
 	if ( $mail_address && is_email( $mail_address ) ) {
 		return $mail_address;
 	}
 
-	return $from_email;
+	return get_bloginfo( 'admin_email' );
 }
 
-function wskl_email_from_name( $from_name ) {
+function wskl_email_from_name(
+	/** @noinspection PhpUnusedParameterInspection */
+	$from_name
+) {
 
 	$name = wskl_get_option( 'inactive-accounts_sender_name' );
 	if ( $name ) {
 		return $name;
 	}
 
-	return $from_name;
+	return get_bloginfo( 'name' );
 }

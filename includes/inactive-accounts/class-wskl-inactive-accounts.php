@@ -90,11 +90,11 @@ class WSKL_Inactive_Accounts {
 			die();
 		}
 
-		$active_span = wskl_get_option( 'inactive-accounts_active_span' );
-		$alert       = wskl_get_option( 'inactive-accounts_alert' );
-		$target_role = wskl_get_option( 'inactive-accounts_target_role' );
+		$active_span  = wskl_get_option( 'inactive-accounts_active_span' );
+		$alert        = wskl_get_option( 'inactive-accounts_alert' );
+		$target_roles = wskl_get_option( 'inactive-accounts_target_role' );
 
-		if ( ! $active_span || ! $alert || ! $target_role ) {
+		if ( ! $active_span || ! $alert || ! $target_roles ) {
 			return;
 		}
 
@@ -104,9 +104,20 @@ class WSKL_Inactive_Accounts {
 			get_user_by( 'login', 'guest3' ),
 		);
 
+		if ( is_array( $target_roles ) ) {
+			$target_role = $target_roles[0];
+		} else {
+			$target_role = $target_roles;
+		}
+
 		foreach ( $guests as $guest ) {
-			$guest->remove_role( 'deactivated' );
+			$guest->remove_role( 'wskl_deactivated' );
 			$guest->add_role( $target_role );
+		}
+
+		if ( is_array( $target_roles ) && sizeof( $target_roles ) > 1 ) {
+			$guests[1]->remove_role( $target_role );
+			$guests[1]->add_role( $target_roles[1] );
 		}
 
 		$recent        = time() - DAY_IN_SECONDS;
@@ -168,7 +179,7 @@ class WSKL_Inactive_Accounts {
 			return;
 		}
 
-		$user->remove_role( 'deactivated' );
+		$user->remove_role( 'wskl_deactivated' );
 		$user->add_role( wskl_get_option( 'inactive-accounts_target_role' ) );
 
 		wskl_delete_user_alerted( $user_id );
