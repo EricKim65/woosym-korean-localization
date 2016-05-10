@@ -25,6 +25,7 @@ if ( ! class_exists( 'WSKL_Agent_Helper' ) ) :
 
 			$agent = WSKL_Agent_Helper::get_tracking_number_agent_by_slug( $slug );
 			if ( $agent && ! empty( $number ) ) {
+				/** @noinspection PhpIncludeInspection */
 				include "track-template-{$slug}.php";
 			}
 
