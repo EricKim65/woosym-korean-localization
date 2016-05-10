@@ -393,7 +393,8 @@ class WSKL_Inactive_Accounts_Admin extends WSKL_WP_Members_Settings {
 		add_filter( 'wp_mail_from', 'wskl_email_from' );
 		add_filter( 'wp_mail_from_name', 'wskl_email_from_name' );
 
-		$mail_address = wskl_get_option( 'inactive-accounts_sender_address' );
+		$mail_address = wskl_email_from( '' );
+
 		if ( ! is_email( $mail_address ) ) {
 			_e( '메일 주소가 정확하지 않습니다.', 'wskl' );
 		}
