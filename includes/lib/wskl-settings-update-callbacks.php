@@ -22,11 +22,11 @@ function callback_enable_dabory_members(
 
 	$enabled = filter_var( $value, FILTER_VALIDATE_BOOLEAN );
 	if ( $enabled ) {
-		if ( get_role( 'withdrawer' ) === NULL ) {
-			add_role( 'withdrawer', __( '탈퇴 회원', 'wskl' ) );
+		if ( get_role( 'wskl_withdrawn' ) === NULL ) {
+			add_role( 'wskl_withdrawn', __( '탈퇴 회원', 'wskl' ) );
 		}
 	} else {
-		remove_role( 'withdrawer' );
+		remove_role( 'wskl_withdrawn' );
 	}
 }
 
@@ -40,10 +40,10 @@ function callback_enable_inactive_accounts(
 
 	$enabled = filter_var( $value, FILTER_VALIDATE_BOOLEAN );
 	if ( $enabled ) {
-		if ( get_role( 'deactivated' ) === NULL ) {
-			add_role( 'deactivated', __( '휴면 회원', 'wskl' ) );
+		if ( get_role( 'wskl_deactivated' ) === NULL ) {
+			add_role( 'wskl_deactivated', __( '휴면 회원', 'wskl' ) );
 		}
 	} else {
-		remove_role( 'deactivated' );
+		remove_role( 'wskl_deactivated' );
 	}
 }
