@@ -1,5 +1,7 @@
 <?php
 
+require_once WSKL_PATH . '/includes/lib/shipping-tracking/class-wskl-agent-helper.php'; // 배송정보 치환을 위해.
+
 
 /**
  * Class WSKL_SMS_Text_Substitution
@@ -27,41 +29,46 @@ class WSKL_SMS_Text_Substitution {
 		$blog_name = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 
 		$this->order_magic_texts = array(
-			'blog-name'     => array(
+			'blog-name'       => array(
 				'find'    => '{blog_name}',
 				'replace' => $blog_name,
 				'desc'    => __( '상점 이름.', 'wskl' ) . ' ' . esc_html( $blog_name ),
 			),
-			'order-content' => array(
+			'order-content'   => array(
 				'find' => '{order_content}',
 				'desc' => __( '주문 내역. \'상품명\', 혹은 \'상품명 외 N건\'으로 표시됩니다.', 'wskl' ),
 			),
-			'order-date'    => array(
+			'order-date'      => array(
 				'find' => '{order_date}',
 				'desc' => __( '주문 일시', 'wskl' ),
 			),
-			'order-id'      => array(
+			'order-id'        => array(
 				'find' => '{order_id}',
 				'desc' => __( '주문 ID', 'wskl' ),
 			),
-			'order-number'  => array(
+			'order-number'    => array(
 				'find' => '{order_number}',
 				'desc' => __( '주문 번호', 'wskl' ),
 			),
-			'order-total'   => array(
+			'order-total'     => array(
 				'find' => '{order_total}',
 				'desc' => __( '주문 총액', 'wskl' ),
 			),
-			'order-status'  => array(
+			'order-status'    => array(
 				'find' => '{order_status}',
 				'desc' => __( '주문 상태', 'wskl' ),
 			),
-			'site-title'    => array(
+			'site-title'      => array(
 				'find'    => '{site_title}',
 				'replace' => $blog_name,
 				'desc'    => __( '상점 이름.', 'wskl' ) . ' ' . esc_html( $blog_name ),
 			),
-			'order:custom'  => array(
+			'tracking-number' => array(
+				'find'    => '{tracking_number}',
+				'replace' => '',
+				'desc'    => __( '배송정보가 기록된 경우 "배송정보: &lt;택배회사&gt; &lt;배송번호&gt;"로 표시됩니다.', 'wskl' ),
+			),
+			'order:custom'    => array(
 				'find'    => '{order:&lt;meta_key&gt;}',
 				'replace' => '',
 				'desc'    => __( '주문 정보의 메타 키 값.', 'wskl' ),
@@ -134,6 +141,20 @@ class WSKL_SMS_Text_Substitution {
 						get_woocommerce_currency_symbol( '' ),
 						$order->order_total
 					) : '';
+					break;
+
+				case 'tracking-number':
+
+					$delivery_agent  = get_post_meta( $order->id, 'wskl-delivery-agent', TRUE );
+					$tracking_number = get_post_meta( $order->id, 'wskl-tracking-number', TRUE );
+
+					if ( $delivery_agent && ! empty( $delivery_agent ) && $tracking_number && ! empty( $tracking_number ) ) {
+						$agent = WSKL_Agent_Helper::get_tracking_number_agent_by_slug( $delivery_agent );
+						if ( $agent ) {
+							$this->replace[ $key ] = __( '배송정보', 'wskl' )
+							                         . ': ' . "{$agent->get_name()} {$tracking_number}";
+						}
+					}
 					break;
 
 				case 'order-status':
