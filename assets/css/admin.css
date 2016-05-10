@@ -7,6 +7,10 @@
     color: #E03333;
 }
 
+ol.wskl-notice {
+    margin-top: -10px;
+}
+
 .wskl-info {
     color: #3333E0;
 }
