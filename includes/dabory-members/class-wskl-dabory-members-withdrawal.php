@@ -76,7 +76,7 @@ class WSKL_Dabory_Members_Withdrawal {
 		} else {
 			// 역할을 바꿔 탈퇴 회원으로 간주
 			update_user_meta( $user->ID, 'withdrawal_reason', $reason );
-			$user->set_role( 'withdrawer' );
+			$user->set_role( 'wskl_withdrawn' );
 			wp_logout();
 		}
 

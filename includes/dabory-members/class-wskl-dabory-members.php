@@ -99,7 +99,7 @@ class WSKL_Dabory_Members {
 	 */
 	public static function filter_authentication( $user ) {
 
-		if ( $user instanceof WP_User && in_array( 'withdrawer', $user->roles ) ) {
+		if ( $user instanceof WP_User && in_array( 'wskl_withdrawn', $user->roles ) ) {
 			return NULL;
 		}
 
