@@ -111,13 +111,6 @@ $developer = array(
 			'type'        => 'checkbox',
 			'default'     => '',
 		),
-		array(
-			'id'          => 'develop_inactive_account_test_mode',
-			'label'       => __( 'INACTIVE ACCOUNT TEST MODE', 'wskl' ),
-			'description' => __( '휴면 계정 관리를 테스트모드로 동작. 다음 동작이 가능.<br>-이메일 수동 발송', 'wskl' ),
-			'type'        => 'checkbox',
-			'default'     => '',
-		),
 	),
 );
 
