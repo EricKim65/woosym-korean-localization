@@ -196,3 +196,43 @@ function wskl_members_select_tag( $key, $options, $label = '', $desc = '' ) {
 
 	echo '</select><span class="description">' . esc_html( $desc ) . '</span></li>';
 }
+
+function wskl_members_role_check_tag( $key, $label = '', $desc = '', $role_exclude = array() ) {
+
+	$selected = (array) get_option( $key );
+	$id_base  = esc_attr( $key );
+
+	// list array to associative array
+	$exclude_filter = array();
+	foreach ( $role_exclude as $r ) {
+		$exclude_filter[ $r ] = '';
+	}
+
+	// get roles
+	$roles          = array();
+	$editable_roles = get_editable_roles();
+	foreach ( $editable_roles as $role => $details ) {
+		$roles[ $role ] = translate_user_role( $details['name'] );
+	}
+
+	// exclude specified roles
+	$roles = array_diff_key( $roles, $exclude_filter );
+	asort( $roles );
+
+	echo '<li><label>' . esc_html( $label ) . '</label><fieldset>';
+	echo '<span class="description">' . esc_html( $desc ) . '</span>';
+
+	foreach ( $roles as $role => $name ) {
+		$id = esc_attr( "{$id_base}-{$role}" );
+
+		echo '<label for="' . $id . '">';
+		echo '<input type="checkbox"'
+		     . ' name="' . esc_attr( $id_base ) . '[]"'
+		     . ' id="' . esc_attr( $id ) . '"'
+		     . ' value="' . esc_attr( $role ) . '"'
+		     . ( in_array( $role, $selected ) ? ' checked ' : ' ' )
+		     . '/>';
+		echo $name . '</label><br/>';
+	}
+	echo '</fieldset></li>';
+}

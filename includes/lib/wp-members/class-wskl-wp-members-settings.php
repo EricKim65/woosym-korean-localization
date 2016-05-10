@@ -317,6 +317,11 @@ if ( ! class_exists( 'WSKL_WP_Members_Settings' ) ) :
 					wskl_members_role_select_tag( $key, $field['label'], $field['desc'] );
 					break;
 
+				case 'role_checkbox':
+					$role_exclude = isset( $field['role_exclude'] ) ? $field['role_exclude'] : array();
+					wskl_members_role_check_tag( $key, $field['label'], $field['desc'], $role_exclude );
+					break;
+
 				case 'select':
 					wskl_members_select_tag( $key, $field['label'], $field['desc'] );
 					break;
