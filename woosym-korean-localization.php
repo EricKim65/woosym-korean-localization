@@ -236,7 +236,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			$authorized = $this->admin_notice_unauthorized(
 				'extension',
-				'ship-tracking',
+				array( 'convenience-features', 'social-login', 'protection-features', ),
 				array( __CLASS__, 'output_unauthorized_extension' )
 			);
 
@@ -298,12 +298,16 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 			$authorized = wskl_license_authorized( $license_type );
 
+			if ( is_string( $tab ) ) {
+				$tab = array( $tab );
+			}
+
 			if ( ! $authorized && $this->is_request( 'admin' ) ) {
 
 				$page = wskl_GET( 'page' );
 				$_tab = wskl_GET( 'tab' );
 
-				if ( $page == WSKL_MENU_SLUG && $_tab == $tab ) {
+				if ( $page == WSKL_MENU_SLUG && in_array( $_tab, $tab ) ) {
 					add_action( 'admin_notices', $callback );
 				}
 			}
