@@ -392,7 +392,7 @@ if ( ! class_exists( 'WSKL_Dabory_SMS_Settings' ) ) :
 						'wskl'
 					),
 					'type'              => 'textarea',
-					'default'           => '[{site_title}] 주문이 완료되었습니다. #{order_number} - {order_date}',
+					'default'           => '[{site_title}] 주문이 완료되었습니다. #{order_number} - {order_date} {tracking-number}',
 					'custom_attributes' => array(
 						'rows' => 7,
 						'cols' => 80,
