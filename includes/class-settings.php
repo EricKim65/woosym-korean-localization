@@ -123,15 +123,17 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 				array(
 					'id'          => 'dummy_1',
 					'label'       => __( '제작 목적', 'wskl' ),
-					'description' => __(
-						'
-						<span class="wskl-notice">1. "워드프레스와 우커머스를 Cafe24나 고도몰처럼" 더 쉽고 더 편리하게 만들었습니다.<br/>
-						2. 쇼핑몰 영업에 꼭 필요한 기능만을 모두 담아서 최소의 비용으로 제공합니다. <br/>
-						3. "다보리 마케팅 자동화 서버와 연동"하여 중소상공인을 위한 "마케팅 자동화" 서비스를 제공합니다. <br/></span>
-
-					',
-						'wskl'
-					),
+					'description' => '<ol class="wskl-notice">'
+					                 . '<li>'
+					                 . __( '워드프레스와 우커머스를 Cafe24나 고도몰처럼" 더 쉽고 더 편리하게 만들었습니다.', 'wskl' )
+					                 . '</li>'
+					                 . '<li>'
+					                 . __( '쇼핑몰 영업에 꼭 필요한 기능만을 모두 담아서 최소의 비용으로 제공합니다.', 'wskl' )
+					                 . '</li>'
+					                 . '<li>'
+					                 . __( '"다보리 마케팅 자동화 서버와 연동"하여 중소상공인을 위한 "마케팅 자동화" 서비스를 제공합니다.', 'wskl' )
+					                 . '</li>'
+					                 . '</ol>',
 					'type'        => 'caption',
 					'default'     => '',
 				),
@@ -139,8 +141,7 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 					'id'          => 'dummy_2',
 					'label'       => __( '사용방법', 'wskl' ),
 					'description' => __(
-						'
-						<span class="wskl-notice">플러그인 인증키로 "제품 인증"을 하기 전에는 본플러그인의 기능을 사용할 수 없습니다.<br/></span>
+						'<span class="wskl-notice">플러그인 인증키로 "제품 인증"을 하기 전에는 본플러그인의 기능을 사용할 수 없습니다.<br/></span>
 						<a href="https://www.dabory.com/" target="_blank" >"다보리 플러그인 인증키 확인" 페이지로 바로가기</a>
 					',
 						'wskl'
