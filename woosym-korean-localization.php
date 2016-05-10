@@ -158,6 +158,10 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 			add_action( 'woocommerce_thankyou', array( $this, 'order_received_addition' ) );
 
 			add_action( 'admin_bar_menu', array( $this, 'callback_admin_bar_menu' ), 99 );
+
+			if ( wskl_debug_enabled() ) {
+				add_action( 'wp_ajax_wskl_refresh_log', array( $this, 'wskl_refresh_log' ) );
+			}
 		}
 
 		public function init_modules() {
@@ -645,6 +649,29 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 		public function load_text_domain() {
 
 			load_plugin_textdomain( 'wskl', FALSE, WSKL_PATH . '/lang' );
+		}
+
+		/**
+		 * @callback
+		 * @action     wp_ajax_wskl_refresh_log
+		 * @used-by    Woosym_Korean_Localization::init_hooks()
+		 */
+		function wskl_refresh_log() {
+
+			if ( ! wskl_debug_enabled() ) {
+				die();
+			}
+
+			if ( wp_verify_nonce( $_GET['_wp_nonce'], '_wpnonce' ) ) {
+				die( 'nonce verification failed' );
+			}
+
+			if ( ! current_user_can( 'manage_options' ) ) {
+				die( 'permission error' );
+			}
+
+			echo wskl_get_wp_log();
+			die();
 		}
 
 		/**
