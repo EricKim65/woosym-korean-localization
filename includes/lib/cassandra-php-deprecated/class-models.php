@@ -56,7 +56,7 @@ function convert_datetime( $datetime, $correct_timezone = TRUE, $timezone = CASS
  */
 interface APIResponseHandler {
 
-	public static function from_response( \stdclass $response );
+	public static function from_response( \stdClass $response );
 }
 
 
