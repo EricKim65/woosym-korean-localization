@@ -2,7 +2,7 @@
 
 include_once( 'api-setting.php' );
 include_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth-info.php' );
-include_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
+include_once( WSKL_PATH . '/includes/lib/cassandra-php/api-handler.php' );
 
 use wskl\lib\cassandra\ClientAPI;
 use wskl\lib\cassandra\OrderItemRelation;

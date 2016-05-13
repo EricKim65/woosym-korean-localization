@@ -1,10 +1,10 @@
 <?php
 
-require_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
+require_once( WSKL_PATH . '/includes/lib/cassandra-php/api-handler.php' );
 require_once( 'class-wskl-auth-info.php' );
 
-use wskl\lib\cassandra\ClientAPI;
-use wskl\lib\cassandra\OrderItemRelation;
+use CassandraPHP\ClientAPI;
+use CassandraPHP\OrderItemRelation;
 
 
 class WSKL_Verification {
@@ -22,11 +22,7 @@ class WSKL_Verification {
 		 * @see woocommerce/templates/checkout/payment.php
 		 * @see woocommerce/includes/wc-template-functions.php woocommerce_checkout_payment()
 		 */
-		add_action(
-			'woocommerce_review_order_before_submit',
-			array( $this, 'show_unverified_warning' ),
-			99
-		);
+		add_action( 'woocommerce_review_order_before_submit', array( $this, 'show_unverified_warning' ), 99 );
 
 		/**
 		 * @see woocommerce/includes/class-wc-payment-gateways.php get_available_payment_gateways()
@@ -120,6 +116,5 @@ class WSKL_Verification {
 		return $available_gateways;
 	}
 }
-
 
 return new WSKL_Verification();

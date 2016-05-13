@@ -1,7 +1,7 @@
 <?php
 
 require_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth-info.php' );
-require_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
+require_once( WSKL_PATH . '/includes/lib/cassandra-php/api-handler.php' );
 
 use wskl\lib\cassandra\PostAPI;
 

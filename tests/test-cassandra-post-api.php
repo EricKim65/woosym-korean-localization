@@ -1,6 +1,6 @@
 <?php
 
-include_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
+include_once( WSKL_PATH . '/includes/lib/cassandra-php/api-handler.php' );
 include_once( 'api-setting.php' );
 
 use wskl\lib\cassandra;

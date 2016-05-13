@@ -1,10 +1,10 @@
 <?php
 
-require_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
+require_once( WSKL_PATH . '/includes/lib/cassandra-php/api-handler.php' );
 require_once( 'class-wskl-auth-info.php' );
 
-use wskl\lib\cassandra\ClientAPI;
-use wskl\lib\cassandra\OrderItemRelation;
+use CassandraPHP\ClientAPI;
+use CassandraPHP\OrderItemRelation;
 
 
 class WSKL_Auth {
@@ -14,9 +14,7 @@ class WSKL_Auth {
 	/** @var \Woosym_Korean_Localization_Settings */
 	private $wskl_setting;
 
-	public function __construct(
-		\Woosym_Korean_Localization_Settings $wskl_setting
-	) {
+	public function __construct( Woosym_Korean_Localization_Settings $wskl_setting ) {
 
 		$this->wskl_setting = $wskl_setting;
 
@@ -35,6 +33,10 @@ class WSKL_Auth {
 			'wp_ajax_activate_action',
 			array( $this, 'callback_activation' )
 		);
+
+		if ( version_compare( WSKL_VERSION, '3.3.2', '>=' ) ) {
+			add_action( 'init', array( $this, 'upgrade_oir' ) );
+		}
 	}
 
 	/**
@@ -107,7 +109,6 @@ class WSKL_Auth {
 
 
 	/** @noinspection PhpInconsistentReturnPointsInspection */
-
 	/**
 	 * 스크립트 로드 콜백
 	 *
@@ -125,7 +126,6 @@ class WSKL_Auth {
 
 		//인증 관련.
 		if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'authentication' ) {
-
 			wskl_enqueue_script(
 				'license_activation',
 				'assets/js/license-activation.js',
@@ -134,11 +134,9 @@ class WSKL_Auth {
 				TRUE,
 				'activation_object',
 				array(
-					'site_url'         => site_url(),
-					'ajax_url'         => admin_url( 'admin-ajax.php' ),
-					'activation_nonce' => wp_create_nonce(
-						static::$nonce_action
-					),
+					'site_url' => site_url(),
+					'ajax_url' => admin_url( 'admin-ajax.php' ),
+					'activation_nonce' => wp_create_nonce( static::$nonce_action ),
 				)
 			);
 		}
@@ -149,10 +147,7 @@ class WSKL_Auth {
 	 */
 	public function callback_activation() {
 
-		wp_verify_nonce(
-			$_POST['activation_nonce'],
-			static::$nonce_action
-		) or die( 'nonce verification failed.' );
+		wp_verify_nonce( $_POST['activation_nonce'], static::$nonce_action ) or die( 'nonce verification failed.' );
 
 		$key_type     = sanitize_text_field( $_POST['key_type'] );
 		$key_value    = sanitize_text_field( $_POST['key_value'] );
@@ -183,5 +178,49 @@ class WSKL_Auth {
 		}
 
 		die();
+	}
+
+	/**
+	 * from version 3.3.2, namespace wskl\lib\cassandra is discarded, so that activation update is mandatory!
+	 * upgrade
+	 *
+	 * @callback
+	 * @action     init
+	 */
+	public function upgrade_oir() {
+
+		$oir_type = wskl_get_option( 'oir_type', '' );
+
+		if ( $oir_type != 'CassandraPHP\OrderItemRelation' ) {
+
+			$license_types = array( 'payment', 'essential', 'extension', 'marketing' );
+
+			foreach ( $license_types as $license_type ) {
+
+				$info_model = new WSKL_Auth_Info( $license_type );
+
+				if ( ! $info_model->is_available() ) {
+
+					$key_value = wskl_get_option( $license_type . '_license' );
+					$site_url  = site_url();
+
+					$activation = ClientAPI::activate(
+						$license_type,
+						$key_value,
+						$site_url,
+						get_bloginfo( 'name' ),
+						TRUE
+					);
+
+					// activation class upgrade
+					if ( $activation instanceof OrderItemRelation ) {
+						$info_model->set_oir( $activation );
+						$info_model->save();
+					}
+				}
+			}
+
+			wskl_update_option( 'oir_type', 'CassandraPHP\OrderItemRelation' );
+		}
 	}
 }

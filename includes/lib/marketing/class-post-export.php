@@ -1,7 +1,7 @@
 <?php
 
 require_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth-info.php' );
-require_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
+require_once( WSKL_PATH . '/includes/lib/cassandra-php/api-handler.php' );
 
 use wskl\lib\cassandra\PostAPI;
 
@@ -11,7 +11,7 @@ if( !defined( 'LAST_POST_EXPORT' ) ) {
 }
 
 
-class WSKL_Post_Export {
+class _WSKL_Post_Export {
 
 	public static function initialize() {
 

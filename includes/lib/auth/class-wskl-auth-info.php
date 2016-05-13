@@ -1,8 +1,8 @@
 <?php
 
-require_once( WSKL_PATH . '/includes/lib/cassandra-php/class-api-handler.php' );
+require_once( WSKL_PATH . '/includes/lib/cassandra-php/api-handler.php' );
 
-use wskl\lib\cassandra\OrderItemRelation;
+use CassandraPHP\OrderItemRelation;
 
 
 class WSKL_Auth_Info {
