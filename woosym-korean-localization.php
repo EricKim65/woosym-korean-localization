@@ -22,8 +22,7 @@ define( 'WSKL_MAIN_FILE', __FILE__ );
 define( 'WSKL_PLUGIN', basename( __DIR__ ) . '/' . basename( WSKL_MAIN_FILE ) );
 define( 'WSKL_PREFIX', 'wskl_' );
 define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
-define( 'WSKL_VERSION', '3.3.1' );
-
+define( 'WSKL_VERSION', '3.3.2' );
 define( 'WSKL_NAME', '우커머스-심포니 통합 플러그인' );
 
 define( 'DAUM_POSTCODE_HTTP', 'http://dmaps.daum.net/map_js_init/postcode.v2.js' );
@@ -123,11 +122,12 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 		public function includes() {
 
+			require_once( WSKL_PATH . '/includes/lib/wskl-functions.php' );
+			require_once( WSKL_PATH . '/includes/lib/wskl-template-functions.php' );
+			require_once( WSKL_PATH . '/includes/lib/wskl-plugin.php' );
+
 			require_once( WSKL_PATH . '/includes/lib/sym-mvc/wskl-sym-mvc-framework.php' );
 			require_once( WSKL_PATH . '/includes/lib/auth/class-wskl-auth-info.php' );
-			require_once( WSKL_PATH . '/includes/lib/wskl-functions.php' );
-			require_once( WSKL_PATH . '/includes/lib/wskl-plugin.php' );
-			require_once( WSKL_PATH . '/includes/lib/wskl-template-functions.php' );
 			require_once( WSKL_PATH . '/includes/lib/class-wskl-submodules.php' );
 		}
 
@@ -177,7 +177,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 				/** authorization */
 				wskl_load_module( '/includes/lib/auth/class-wskl-auth.php' );
-				new WSKL_Auth( $this->settings() );
+				$this->submodules()->add_submodule( 'auth', new WSKL_Auth( $this->settings() ) );
 
 				/** wp-config.php editor */
 				wskl_load_module(
