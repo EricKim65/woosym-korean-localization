@@ -134,8 +134,8 @@ class WSKL_Auth {
 				TRUE,
 				'activation_object',
 				array(
-					'site_url' => site_url(),
-					'ajax_url' => admin_url( 'admin-ajax.php' ),
+					'site_url'         => site_url(),
+					'ajax_url'         => admin_url( 'admin-ajax.php' ),
 					'activation_nonce' => wp_create_nonce( static::$nonce_action ),
 				)
 			);
@@ -198,8 +198,10 @@ class WSKL_Auth {
 			foreach ( $license_types as $license_type ) {
 
 				$info_model = new WSKL_Auth_Info( $license_type );
+				$key_type   = $info_model->get_key_type();
+				$key_value  = $info_model->get_key_value();
 
-				if ( ! $info_model->is_available() ) {
+				if ( ! $info_model->is_available() && ! is_null( $key_value ) && $key_type == $license_type ) {
 
 					$key_value = wskl_get_option( $license_type . '_license' );
 					$site_url  = site_url();
