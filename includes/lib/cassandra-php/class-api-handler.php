@@ -25,7 +25,7 @@ if ( ! function_exists( '\wskl\lib\cassandra\add_encrypt_algorithms' ) ) {
 	 */
 	function add_encrypt_algorithms( $handle, $r, $url ) {
 
-		if ( $url == WSKL_HOST_API_URL ) {
+		if ( strpos( $url, WSKL_HOST_API_URL ) === 0 ) {
 			curl_setopt( $handle, CURLOPT_SSL_CIPHER_LIST, 'ecdhe_ecdsa_aes_128_sha' );
 		}
 	}
