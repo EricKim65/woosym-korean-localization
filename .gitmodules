@@ -1,3 +1,9 @@
 [submodule "includes/lib/cassandra-php"]
 	path = includes/lib/cassandra-php
 	url = https://github.com/chwnam/cassandra-php.git
+[submodule "libs/cassandra-php-lib"]
+	path = libs/cassandra-php-lib
+	url = https://github.com/chwnam/cassandra-php
+[submodule "includes/lib/cassandra-php-lib"]
+	path = includes/lib/cassandra-php-lib
+	url = https://github.com/chwnam/cassandra-php
