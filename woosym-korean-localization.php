@@ -662,7 +662,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 				die();
 			}
 
-			if ( wp_verify_nonce( $_GET['_wp_nonce'], '_wpnonce' ) ) {
+			if ( ! wp_verify_nonce( $_GET['_wpnonce'], '_wpnonce' ) ) {
 				die( 'nonce verification failed' );
 			}
 
