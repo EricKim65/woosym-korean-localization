@@ -140,7 +140,7 @@ class WSKL_Social_Login {
 	public static function service_social_login_fb() {
 
 		if ( ( isset( $_GET['sym-api'] ) && $_GET['sym-api'] == 'service-social-login-fb' ) ) {
-			add_option( WSKL_PREFIX . 'sym-api-' . $_SERVER['HTTP_CLIENT_IP'], 'service-social-login-fb' );
+			update_option( WSKL_PREFIX . 'sym-api-' . $_SERVER['HTTP_CLIENT_IP'], 'service-social-login-fb' );
 		}
 
 		if ( ( isset( $_GET['sym-api'] ) && $_GET['sym-api'] == 'service-social-login-fb' ) || ( isset( $_GET['code'] ) && get_option(
@@ -242,7 +242,7 @@ class WSKL_Social_Login {
 
 
 		if ( ( isset( $_GET['sym-api'] ) && $_GET['sym-api'] == 'service-social-login-naver' ) ) {
-			add_option( WSKL_PREFIX . 'sym-api-' . $_SERVER['HTTP_CLIENT_IP'], 'service-social-login-naver' );
+			update_option( WSKL_PREFIX . 'sym-api-' . $_SERVER['HTTP_CLIENT_IP'], 'service-social-login-naver' );
 		}
 
 		if ( ( isset( $_GET['sym-api'] ) && $_GET['sym-api'] == 'service-social-login-naver' ) || ( isset( $_GET['code'] ) && get_option(
