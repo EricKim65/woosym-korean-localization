@@ -84,7 +84,16 @@ class WSKL_Social_Login {
 
 		$login_options = array();
 
-		foreach ( array( 'fb', 'naver' ) as $prefix ) {
+		$targets = array();
+		if ( wskl_is_option_enabled( 'fb_login' ) ) {
+			$targets[] = 'fb';
+		}
+
+		if ( wskl_is_option_enabled( 'naver_login' ) ) {
+			$targets[] = 'naver';
+		}
+
+		foreach ( $targets as $prefix ) {
 
 			$login_link_text = get_option( wskl_get_option_name( $prefix . '_login_link_text' ), '[icon]' );
 
@@ -118,7 +127,7 @@ class WSKL_Social_Login {
 				$login_link_text = wp_kses_post( $login_link_text );
 
 				$login_options[ $prefix ] = array(
-					'href'       => esc_url( '/index.php?sym-api=service-social-login-fb' ),
+					'href'       => esc_url( "/index.php?sym-api=service-social-login-{$prefix}" ),
 					'link_title' => $login_link_text,
 					'alt'        => $alt,
 				);
@@ -212,7 +221,7 @@ class WSKL_Social_Login {
 
 
 			} else {
-				$error = HtmlSpecialChars( $client->error );
+				$error = htmlspecialchars( $client->error );
 				wskl_sym__alert( $error );
 			}
 
@@ -230,6 +239,7 @@ class WSKL_Social_Login {
 	}
 
 	public static function service_social_login_naver() {
+
 
 		if ( ( isset( $_GET['sym-api'] ) && $_GET['sym-api'] == 'service-social-login-naver' ) ) {
 			add_option( WSKL_PREFIX . 'sym-api-' . $_SERVER['HTTP_CLIENT_IP'], 'service-social-login-naver' );
@@ -253,7 +263,7 @@ class WSKL_Social_Login {
 			$client->client_secret = get_option( wskl_get_option_name( 'naver_client_secret' ) );
 
 			if ( strlen( $client->client_id ) == 0 || strlen( $client->client_secret ) == 0 ) {
-				wskl_sym__alert( '페이스북 연동키값을 확인해 주세요.' );
+				wskl_sym__alert( '네이버 연동키값을 확인해 주세요.' );
 			}
 
 			if ( $login == 'Y' ) {
@@ -314,11 +324,11 @@ class WSKL_Social_Login {
 					exit;
 
 				} else {
-					$error = HtmlSpecialChars( $xml->result->resultcode );
+					$error = htmlspecialchars( $xml->result->resultcode );
 					alert_close( $error );
 				}
 			} else {
-				$error = HtmlSpecialChars( $client->error );
+				$error = htmlspecialchars( $client->error );
 				alert_close( $error );
 			}
 		}
@@ -326,7 +336,7 @@ class WSKL_Social_Login {
 
 	public static function process_social_login() {
 
-		if ( isset( $_GET['sym-api'] ) AND $_GET['sym-api'] == 'process-social-login' ) {
+		if ( isset( $_GET['sym-api'] ) && $_GET['sym-api'] == 'process-social-login' ) {
 			list( $social_code, $social_id, $user_name, $user_nick, $user_email ) = explode(
 				"|",
 				static::decryptIt( $_GET['token'] )
