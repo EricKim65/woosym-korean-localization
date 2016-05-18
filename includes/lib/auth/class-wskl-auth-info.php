@@ -1,6 +1,6 @@
 <?php
 
-require_once( WSKL_PATH . '/includes/lib/cassandra-php/api-handler.php' );
+require_once( WSKL_PATH . '/includes/lib/cassandra-php-lib/api-handler.php' );
 
 use CassandraPHP\OrderItemRelation;
 
