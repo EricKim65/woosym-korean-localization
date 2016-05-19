@@ -218,10 +218,16 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 		private function init_essential_modules() {
 
+//			$authorized = $this->admin_notice_unauthorized(
+//				'essential',
+//				'essential-features',
+//				array( __CLASS__, 'output_unauthorized_essential' )
+//			);
+
 			$authorized = $this->admin_notice_unauthorized(
-				'essential',
+				'payment',
 				'essential-features',
-				array( __CLASS__, 'output_unauthorized_essential' )
+				array( __CLASS__, 'output_unauthorized_payment' )
 			);
 
 			if ( ! $authorized ) {
@@ -234,10 +240,16 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 		private function init_extension_modules() {
 
+//			$authorized = $this->admin_notice_unauthorized(
+//				'extension',
+//				'convenience-features',
+//				array( __CLASS__, 'output_unauthorized_extension' )
+//			);
+
 			$authorized = $this->admin_notice_unauthorized(
-				'extension',
-				'ship-tracking',
-				array( __CLASS__, 'output_unauthorized_extension' )
+				'payment',
+				array( 'convenience-features', 'social-login', 'protection-features' ),
+				array( __CLASS__, 'output_unauthorized_payment' )
 			);
 
 			if ( ! $authorized ) {
@@ -284,7 +296,7 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 
 		/**
 		 * @param $license_type
-		 * @param $tab
+		 * @param mixed $tabs
 		 * @param $callback
 		 *
 		 * @used-by Woosym_Korean_Localization::init_payment_modules()
@@ -294,16 +306,20 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 		 *
 		 * @return bool
 		 */
-		private function admin_notice_unauthorized( $license_type, $tab, $callback ) {
+		private function admin_notice_unauthorized( $license_type, $tabs, $callback ) {
 
 			$authorized = wskl_license_authorized( $license_type );
 
 			if ( ! $authorized && $this->is_request( 'admin' ) ) {
 
+				if ( is_string( $tabs ) ) {
+					$tabs = array( $tabs );
+				}
+
 				$page = wskl_GET( 'page' );
 				$_tab = wskl_GET( 'tab' );
 
-				if ( $page == WSKL_MENU_SLUG && $_tab == $tab ) {
+				if ( $page == WSKL_MENU_SLUG && in_array( $_tab, $tabs ) ) {
 					add_action( 'admin_notices', $callback );
 				}
 			}
@@ -736,7 +752,8 @@ if ( ! class_exists( 'Woosym_Korean_Localization' ) ) :
 		 */
 		public static function output_unauthorized_payment() {
 
-			$message = __( '지블 기능 활성화 키가 인증되지 않았습니니다.', 'wskl' );
+//			$message = __( '지블 기능 활성화 키가 인증되지 않았습니니다.', 'wskl' );
+			$message = __( '활성화 키가 인증되지 않았습니니다.', 'wskl' );
 
 			self::output_unauthorized( $message );
 		}

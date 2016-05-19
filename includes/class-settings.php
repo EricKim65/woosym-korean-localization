@@ -175,39 +175,39 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 		);
 
 		$payment_description              = '';
-		$essential_description            = '';
-		$extension_description            = '';
-		$marketing_automation_description = '';
+//		$essential_description            = '';
+//		$extension_description            = '';
+//		$marketing_automation_description = '';
 
 		if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'authentication' ) {
 
 			$payment_description = sprintf(
 				'%s <a href="#" id="payment_license_activation">%s</a><br/><span id="payment_license_status">%s</span>',
-				__( '지불기능 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
-				__( '지불기능 인증', 'wskl' ),
+				__( '활성화 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
+				__( '키 인증', 'wskl' ),
 				WSKL_Auth::get_license_duration_string( 'payment' )
 			);
 
-			$essential_description = sprintf(
-				'%s <a href="#" id="essential_license_activation">%s</a><br/><span id="essential_license_status">%s</span>',
-				__( '핵심기능 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
-				__( '핵심기능 인증', 'wskl' ),
-				WSKL_Auth::get_license_duration_string( 'essential' )
-			);
-
-			$extension_description = sprintf(
-				'%s <a href="#" id="extension_license_activation">%s</a><br/><span id="extension_license_status">%s</span>',
-				__( '확장기능 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
-				__( '확장기능 인증', 'wskl' ),
-				WSKL_Auth::get_license_duration_string( 'extension' )
-			);
-
-			$marketing_automation_description = sprintf(
-				'%s <a href="#" id="marketing_automation_license_activation">%s</a><br/><span id="marketing_automation_license_status">%s</span>',
-				__( '마케팅자동화 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
-				__( '마케팅자동화 인증', 'wskl' ),
-				WSKL_Auth::get_license_duration_string( 'marketing' )
-			);
+//			$essential_description = sprintf(
+//				'%s <a href="#" id="essential_license_activation">%s</a><br/><span id="essential_license_status">%s</span>',
+//				__( '핵심기능 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
+//				__( '핵심기능 인증', 'wskl' ),
+//				WSKL_Auth::get_license_duration_string( 'essential' )
+//			);
+//
+//			$extension_description = sprintf(
+//				'%s <a href="#" id="extension_license_activation">%s</a><br/><span id="extension_license_status">%s</span>',
+//				__( '확장기능 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
+//				__( '확장기능 인증', 'wskl' ),
+//				WSKL_Auth::get_license_duration_string( 'extension' )
+//			);
+//
+//			$marketing_automation_description = sprintf(
+//				'%s <a href="#" id="marketing_automation_license_activation">%s</a><br/><span id="marketing_automation_license_status">%s</span>',
+//				__( '마케팅자동화 키를 입력후 기능을 활성화하십시오.', 'wskl' ),
+//				__( '마케팅자동화 인증', 'wskl' ),
+//				WSKL_Auth::get_license_duration_string( 'marketing' )
+//			);
 		}
 
 		$settings['authentication'] = array(
@@ -235,36 +235,36 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 
 				array(
 					'id'          => 'payment_license',
-					'label'       => __( '지불기능(A) 키값', 'wskl' ),
+					'label'       => __( '활성화 키', 'wskl' ),
 					'description' => $payment_description,
 					'type'        => 'longtext',
 					'default'     => '',
 					'placeholder' => '',
 				),
-				array(
-					'id'          => 'essential_license',
-					'label'       => __( '핵심기능(B) 키값', 'wskl' ),
-					'description' => $essential_description,
-					'type'        => 'longtext',
-					'default'     => '',
-					'placeholder' => '',
-				),
-				array(
-					'id'          => 'extension_license',
-					'label'       => __( '확장기능(C,S,R) 키값 ', 'wskl' ),
-					'description' => $extension_description,
-					'type'        => 'longtext',
-					'default'     => '',
-					'placeholder' => '',
-				),
-				array(
-					'id'          => 'marketing_license',
-					'label'       => __( '마케팅자동화(D) 키값 ', 'wskl' ),
-					'description' => $marketing_automation_description,
-					'type'        => 'longtext',
-					'default'     => '',
-					'placeholder' => '',
-				),
+				//				array(
+				//					'id'          => 'essential_license',
+				//					'label'       => __( '핵심기능(B) 키값', 'wskl' ),
+				//					'description' => $essential_description,
+				//					'type'        => 'longtext',
+				//					'default'     => '',
+				//					'placeholder' => '',
+				//				),
+				//				array(
+				//					'id'          => 'extension_license',
+				//					'label'       => __( '확장기능(C,S,R) 키값 ', 'wskl' ),
+				//					'description' => $extension_description,
+				//					'type'        => 'longtext',
+				//					'default'     => '',
+				//					'placeholder' => '',
+				//				),
+				//				array(
+				//					'id'          => 'marketing_license',
+				//					'label'       => __( '마케팅 자동화 키', 'wskl' ),
+				//					'description' => $marketing_automation_description,
+				//					'type'        => 'longtext',
+				//					'default'     => '',
+				//					'placeholder' => '',
+				//				),
 			),
 		);
 
@@ -318,7 +318,8 @@ final class Woosym_Korean_Localization_Settings extends WSKL_Sym_Mvc_Settings {
 			case 'kcp':
 			case 'inicis':
 			case 'ags':
-				$agencies_common_fields                       = include( WSKL_PATH . '/includes/admin/settings/structures/checkout-payment-gates/fields/classic-pg-agencies-common-fields-1.php' );
+				$agencies_common_fields = include( WSKL_PATH . '/includes/admin/settings/structures/checkout-payment-gates/fields/classic-pg-agencies-common-fields-1.php' );
+				
 				$settings['checkout-payment-gates']['fields'] = array_merge(
 					$settings['checkout-payment-gates']['fields'],
 					$agencies_common_fields
