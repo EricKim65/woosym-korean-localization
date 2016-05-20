@@ -4,8 +4,8 @@ namespace wskl\lib\cassandra;
 
 require_once( 'class-models.php' );
 
-define( 'WSKL_HOST_API_URL', 'https://www.dabory.com/cassandra/api/v1' );  // do not add slashes
-define( 'WSKL_ALTERNATE_HOST_API_URL', 'http://www.dabory.com/cassandra/api/v1' );
+define( 'WSKL_HOST_API_URL', 'https://cassandra.dabory.com/api/v1' );  // do not add slashes
+define( 'WSKL_ALTERNATE_HOST_API_URL', 'http://cassandra.dabory.com/api/v1' );
 
 if ( ! has_action( 'http_api_curl', '\wskl\lib\cassandra\add_encrypt_algorithms' ) ) {
 	add_action( 'http_api_curl', '\wskl\lib\cassandra\add_encrypt_algorithms', 10, 3 );
