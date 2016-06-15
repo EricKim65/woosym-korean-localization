@@ -22,7 +22,7 @@ define( 'WSKL_MAIN_FILE', __FILE__ );
 define( 'WSKL_PLUGIN', basename( __DIR__ ) . '/' . basename( WSKL_MAIN_FILE ) );
 define( 'WSKL_PREFIX', 'wskl_' );
 define( 'WSKL_MENU_SLUG', WSKL_PREFIX . 'checkout_settings' );
-define( 'WSKL_VERSION', '3.3.3' );
+define( 'WSKL_VERSION', '3.3.4' );
 
 define( 'WSKL_NAME', '우커머스-심포니 통합 플러그인' );
 

@@ -9,7 +9,7 @@ use wskl\lib\cassandra\OrderItemRelation;
 
 class WSKL_Verification {
 
-	private $verified;
+	private $verified = NULL;
 
 	public function __construct() {
 
@@ -32,14 +32,35 @@ class WSKL_Verification {
 		 * @see woocommerce/includes/class-wc-payment-gateways.php get_available_payment_gateways()
 		 */
 		add_filter( 'woocommerce_available_payment_gateways', array( $this, 'check_payment_gateways' ) );
-
-		$this->verified = $this->verify();
 	}
+
+	public function show_unverified_warning() {
+
+		if ( ! is_checkout() ) {
+			return;
+		}
+
+		if ( ! $this->verify() ) {
+
+			$default_path = WSKL_PATH . '/includes/lib/auth/templates/';
+			wskl_get_template( 'checkout-unauthorized.php', array(), $default_path );
+
+			// add_filter( 'woocommerce_order_button_html', array( $this, 'remove_submit' ), 999, 0 );
+		}
+	}
+
+//	public function remove_submit() {
+//		return '';
+//	}
 
 	private function verify() {
 
 		if ( ! wskl_is_option_enabled( 'enable_sym_pg' ) ) {
 			return TRUE;
+		}
+
+		if ( ! is_null( $this->verified ) && is_bool( $this->verified ) ) {
+			return $this->verified;
 		}
 
 		$info = new WSKL_Auth_Info( 'payment' );
@@ -56,46 +77,25 @@ class WSKL_Verification {
 			$info->set_oir( $verification );
 			$info->save();
 
-			return TRUE;
+			$this->verified = TRUE;
 
 		} else if ( $verification === NULL ) { // 인증 실패
 
-			return FALSE;
+			$this->verified = FALSE;
 
 		} else if ( $verification === FALSE ) { // 인증 불가 (서버의 이상)
 
-			return $info->is_verified();
+			$this->verified = $info->is_verified();
 		}
 
-		return FALSE;
-	}
-
-//	public function remove_submit() {
-//		return '';
-//	}
-
-	public function show_unverified_warning() {
-
-		if ( ! is_checkout() ) {
-			return;
-		}
-
-		if ( ! $this->verified ) {
-
-			$default_path = WSKL_PATH . '/includes/lib/auth/templates/';
-			wc_get_template(
-				'checkout-unauthorized.php',
-				array(),
-				'',
-				$default_path
-			);
-			// add_filter( 'woocommerce_order_button_html', array( $this, 'remove_submit' ), 999, 0 );
-		}
+		return $this->verified;
 	}
 
 	public function check_payment_gateways( array $available_gateways ) {
 
 		$wskl_pay_pates = \WSKL_Payment_Gates::get_pay_gates();
+
+		$verified = $this->verify();
 
 		/** @var \WC_Payment_Gateway $gateway */
 		foreach( $available_gateways as $idx => $gateway ) {
@@ -110,7 +110,7 @@ class WSKL_Verification {
 				continue;
 			}
 
-			if( $this->verified ) {
+			if ( $verified ) {
 				continue;
 			}
 
